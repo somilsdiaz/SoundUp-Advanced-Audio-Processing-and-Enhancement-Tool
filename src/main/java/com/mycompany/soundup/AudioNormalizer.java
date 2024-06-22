@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.soundup;
-
-/**
- *
- * @author Somils
- */
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
@@ -25,8 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AudioNormalizer {
-    
-  public static void main(String[] args) {
+
+    public static void main(String[] args) {
         String directoryPath = "C:/Users/Somils/Desktop/Muestra"; // Reemplaza con la ruta de tu directorio
         try {
             List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
@@ -42,27 +33,32 @@ public class AudioNormalizer {
         }
     }
 
-    private static void normalizeAudioVolume(File audioFile) {
-        try {
-            AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
-            
-            // Processor to calculate RMS
-            RMSProcessor rmsProcessor = new RMSProcessor();
-            dispatcher.addAudioProcessor(rmsProcessor);
+private static void normalizeAudioVolume(File audioFile) {
+    try {
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
 
-            dispatcher.run();
+        // Processor to calculate RMS
+        RMSProcessor rmsProcessor = new RMSProcessor();
+        dispatcher.addAudioProcessor(rmsProcessor);
 
-            // Calculate normalization factor based on target RMS value
-            double targetRMS = 0.1; // Target RMS value
-            double currentRMS = rmsProcessor.getRMS();
-            double normalizationFactor = targetRMS / currentRMS;
-            
-            // Convert normalization factor to dB
-            double normalizationGain = 20 * Math.log10(normalizationFactor);
+        dispatcher.run();
 
-            // Apply normalization
+        // Calculate target RMS value
+        double targetRMS = 0.1; // Target RMS value
+        double currentRMS = rmsProcessor.getRMS();
+
+        // Calculate current volume in dB
+        double currentVolume = 20 * Math.log10(currentRMS);
+        // Calculate target volume in dB
+        double targetVolume = 20 * Math.log10(targetRMS);
+        // Calculate adjustment factor in dB
+        double adjustmentFactor = targetVolume - currentVolume;
+
+        // Apply normalization
+        if (adjustmentFactor > 0) {
+            // If adjustmentFactor > 0, we need to increase volume
             AudioDispatcher normalizationDispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
-            normalizationDispatcher.addAudioProcessor(new GainProcessor(normalizationGain));
+            normalizationDispatcher.addAudioProcessor(new GainProcessor(adjustmentFactor));
 
             String outputFilePath = audioFile.getParent() + "/normalized_" + audioFile.getName();
             WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), outputFilePath);
@@ -70,10 +66,15 @@ public class AudioNormalizer {
 
             normalizationDispatcher.run();
             System.out.println("Normalized: " + audioFile.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            // If adjustmentFactor <= 0, no adjustment needed
+            System.out.println("Already normalized: " + audioFile.getName());
         }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     // RMSProcessor to calculate the RMS value of the audio
     private static class RMSProcessor implements AudioProcessor {
