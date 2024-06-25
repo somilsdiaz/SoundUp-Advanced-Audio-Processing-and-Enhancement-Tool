@@ -35,8 +35,11 @@ public class StartMenu extends javax.swing.JFrame {
         
         AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
         AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
+        
+        visualizer.setOpaque(true);
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(visualizer, BorderLayout.CENTER);
+        
         this.add(jPanel2, BorderLayout.CENTER);
         this.getContentPane().setBackground(new Color(0, 0, 0, 0));
         
@@ -61,6 +64,7 @@ public class StartMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -68,13 +72,17 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));
         jPanel1.setLayout(null);
+
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0, 0));
+        jPanel2.setOpaque(false);
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(60, 90, 840, 120);
 
         jLabel1.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(47, 237, 203));
@@ -129,10 +137,6 @@ public class StartMenu extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel6);
         jLabel6.setBounds(950, 10, 30, 30);
-
-        jPanel2.setBackground(new java.awt.Color(0, 0, 0, 0));
-        jPanel1.add(jPanel2);
-        jPanel2.setBounds(70, 150, 840, 140);
 
         jLabel4.setText("jLabel4");
         jLabel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {

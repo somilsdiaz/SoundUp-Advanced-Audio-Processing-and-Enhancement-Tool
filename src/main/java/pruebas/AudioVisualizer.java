@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pruebas;
 
 import javax.sound.sampled.*;
@@ -12,26 +8,32 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class AudioVisualizer extends JPanel implements ActionListener {
     private byte[] audioBytes;
     private Timer timer;
     private int currentIndex = 0;
     private int[] barHeights;
-    
+    private BufferedImage backgroundImage;
 
     public AudioVisualizer(byte[] audioBytes) {
-        
         this.audioBytes = audioBytes;
         this.barHeights = new int[100];
         Arrays.fill(barHeights, 0);
+        setOpaque(true); // Hacer el fondo opaco para que se dibuje la imagen
         timer = new Timer(50, this); // Actualiza cada 50 ms (aproximadamente 20 FPS)
         timer.start();
-        
+        try {
+            backgroundImage = ImageIO.read(new File("src/main/java/resources/groundVisual.png")); // Carga tu imagen
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private int getHeightFromAmplitude(int amplitude) {
-        return (int) ((Math.abs(amplitude) / 128.0) * getHeight() / 2);
+        return (int) ((Math.abs(amplitude) / 128.0) * getHeight() / 1.2);
     }
 
     @Override
@@ -41,6 +43,11 @@ public class AudioVisualizer extends JPanel implements ActionListener {
             return;
         }
 
+        // Dibujar la imagen de fondo
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+
         int barWidth = getWidth() / barHeights.length;
         int maxHeight = getHeight();
 
@@ -48,7 +55,6 @@ public class AudioVisualizer extends JPanel implements ActionListener {
             int barHeight = barHeights[i];
             g.setColor(new Color(255, 0, 255)); // Color rosa
             g.fillRect(i * barWidth, maxHeight - barHeight, barWidth - 2, barHeight);
-            
         }
     }
 
@@ -72,4 +78,15 @@ public class AudioVisualizer extends JPanel implements ActionListener {
         repaint();
     }
 
+   /* public static void main(String[] args) {
+        JFrame frame = new JFrame("Audio Visualizer");
+        AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
+        AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
+        frame.add(visualizer);
+        frame.setSize(800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }*/
 }
+
+
