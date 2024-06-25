@@ -1,3 +1,4 @@
+pruebas\AudioVisualizer.class
 com\mycompany\soundup\StartMenu$5.class
 resources\ImageLabel.class
 com\mycompany\soundup\StartMenu$7.class
@@ -7,7 +8,9 @@ com\mycompany\soundup\AudioNormalizer$RMSProcessor.class
 com\mycompany\soundup\StartMenu$4.class
 com\mycompany\soundup\FolderSelector.class
 com\mycompany\soundup\SoundUp.class
+com\mycompany\soundup\SongVisualizer.class
 com\mycompany\soundup\StartMenu$6.class
 com\mycompany\soundup\StartMenu$1.class
+pruebas\AudioProcessor.class
 com\mycompany\soundup\StartMenu$3.class
 com\mycompany\soundup\AudioNormalizer.class

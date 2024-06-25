@@ -8,25 +8,38 @@ package com.mycompany.soundup;
  *
  * @author Somils
  */
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
-import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import jnafilechooser.api.JnaFileChooser;
+import pruebas.AudioProcessor;
+import pruebas.AudioVisualizer;
 
 public class StartMenu extends javax.swing.JFrame {
 
     private Point point;
+
     public StartMenu() {
         setUndecorated(true);
         initComponents();
         
         this.setLocationRelativeTo(this);
-        SetImageLabel(jLabel3, "/resources/icon.png");
+        SetImageLabel(jLabel3, "/resources/icon2.png");
         SetImageLabel(jLabel4, "/resources/background.png");
-       // SetImageLabel(jLabel5, "src/main/java/com/mycompany/soundup/images/cerrar.png");
+        
+        AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
+        AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
+        jPanel2.setLayout(new BorderLayout());
+        jPanel2.add(visualizer, BorderLayout.CENTER);
+        this.add(jPanel2, BorderLayout.CENTER);
+        this.getContentPane().setBackground(new Color(0, 0, 0, 0));
+        
     }
 
     /**
@@ -55,18 +68,19 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(47, 237, 203));
-        jLabel1.setText("SoundUp Software ");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 390, 40));
+        jLabel1.setText("SoundUp ");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(80, 30, 390, 40);
 
         jButton1.setText("SELECCIONAR DIRECTORIO");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -74,10 +88,14 @@ public class StartMenu extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, -1, -1));
+        jPanel1.add(jButton1);
+        jButton1.setBounds(360, 380, 175, 23);
 
-        jLabel2.setText("Equilibrizacion del volumen:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, -1, -1));
+        jLabel2.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Software development by Somil");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(70, 70, 166, 15);
 
         jButton2.setText("SELECCIONAR ARCHIVO DE AUDIO");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -85,10 +103,12 @@ public class StartMenu extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, -1, -1));
+        jPanel1.add(jButton2);
+        jButton2.setBounds(340, 420, 216, 23);
 
         jLabel3.setText("jLabel3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 80, 70));
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(10, 10, 70, 70);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/soundup/img/minimizar.png"))); // NOI18N
         jLabel5.setText("jLabel5");
@@ -97,7 +117,8 @@ public class StartMenu extends javax.swing.JFrame {
                 jLabel5MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 10, 30, 30));
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(910, 10, 30, 30);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
         jLabel6.setText("jLabel5");
@@ -106,7 +127,12 @@ public class StartMenu extends javax.swing.JFrame {
                 jLabel6MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 10, 30, 30));
+        jPanel1.add(jLabel6);
+        jLabel6.setBounds(950, 10, 30, 30);
+
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0, 0));
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(70, 150, 840, 140);
 
         jLabel4.setText("jLabel4");
         jLabel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -119,9 +145,19 @@ public class StartMenu extends javax.swing.JFrame {
                 jLabel4MousePressed(evt);
             }
         });
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 530));
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(0, 0, 990, 530);
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 990, 530));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 989, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -150,16 +186,16 @@ public class StartMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel4MousePressed
 
     private void jLabel4MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseDragged
-       int CurrentX = this.getLocation().x;
-       int CurrentY = this.getLocation().y;
-       
-       int MoveX = (CurrentX + evt.getX()) - (CurrentX + point.x);
-       int MoveY = (CurrentY + evt.getY()) - (CurrentY + point.y);
-       
-       int x = CurrentX + MoveX;
-       int y = CurrentY + MoveY;
-       
-       this.setLocation(x, y);
+        int CurrentX = this.getLocation().x;
+        int CurrentY = this.getLocation().y;
+
+        int MoveX = (CurrentX + evt.getX()) - (CurrentX + point.x);
+        int MoveY = (CurrentY + evt.getY()) - (CurrentY + point.y);
+
+        int x = CurrentX + MoveX;
+        int y = CurrentY + MoveY;
+
+        this.setLocation(x, y);
     }//GEN-LAST:event_jLabel4MouseDragged
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
@@ -197,12 +233,16 @@ public class StartMenu extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new StartMenu().setVisible(true);
+                
+
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -215,5 +255,6 @@ public class StartMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }
