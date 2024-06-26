@@ -28,21 +28,21 @@ public class StartMenu extends javax.swing.JFrame {
     public StartMenu() {
         setUndecorated(true);
         initComponents();
-        
+
         this.setLocationRelativeTo(this);
         SetImageLabel(jLabel3, "/resources/icon2.png");
         SetImageLabel(jLabel4, "/resources/background.png");
-        
+
         AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
         AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
-        
+
         visualizer.setOpaque(true);
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(visualizer, BorderLayout.CENTER);
-        
+
         this.add(jPanel2, BorderLayout.CENTER);
         this.getContentPane().setBackground(new Color(0, 0, 0, 0));
-        
+
     }
 
     /**
@@ -66,12 +66,14 @@ public class StartMenu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -90,29 +92,11 @@ public class StartMenu extends javax.swing.JFrame {
         jPanel1.add(jLabel1);
         jLabel1.setBounds(80, 30, 390, 40);
 
-        jButton1.setText("SELECCIONAR DIRECTORIO");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1);
-        jButton1.setBounds(360, 380, 175, 23);
-
         jLabel2.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Software development by Somil");
         jPanel1.add(jLabel2);
         jLabel2.setBounds(70, 70, 166, 15);
-
-        jButton2.setText("SELECCIONAR ARCHIVO DE AUDIO");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton2);
-        jButton2.setBounds(340, 420, 216, 23);
 
         jLabel3.setText("jLabel3");
         jPanel1.add(jLabel3);
@@ -137,6 +121,53 @@ public class StartMenu extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel6);
         jLabel6.setBounds(950, 10, 30, 30);
+
+        jPanel5.setOpaque(false);
+        jPanel5.setLayout(null);
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icon_music.png"))); // NOI18N
+        jLabel8.setText("jLabel8");
+        jLabel8.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jLabel8MouseMoved(evt);
+            }
+        });
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel8MouseExited(evt);
+            }
+        });
+        jPanel5.add(jLabel8);
+        jLabel8.setBounds(0, 0, 250, 250);
+
+        jPanel1.add(jPanel5);
+        jPanel5.setBounds(560, 260, 250, 250);
+
+        jPanel3.setOpaque(false);
+        jPanel3.setLayout(null);
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icon_dir.png"))); // NOI18N
+        jLabel7.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jLabel7MouseMoved(evt);
+            }
+        });
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel7MouseExited(evt);
+            }
+        });
+        jPanel3.add(jLabel7);
+        jLabel7.setBounds(0, 0, 250, 240);
+
+        jPanel1.add(jPanel3);
+        jPanel3.setBounds(170, 260, 250, 250);
 
         jLabel4.setText("jLabel4");
         jLabel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -166,24 +197,6 @@ public class StartMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        JnaFileChooser ch = new JnaFileChooser();
-        ch.setMode(JnaFileChooser.Mode.Directories);
-        boolean action = ch.showOpenDialog(this);
-        if (action) {
-            System.out.println(ch.getSelectedFile());
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        JnaFileChooser ch = new JnaFileChooser();
-        boolean action = ch.showOpenDialog(this);
-        if (action) {
-            System.out.println(ch.getSelectedFile());
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jLabel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MousePressed
         point = evt.getPoint();
         getComponentAt(point);
@@ -209,6 +222,43 @@ public class StartMenu extends javax.swing.JFrame {
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         System.exit(0);
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+
+        JnaFileChooser ch = new JnaFileChooser();
+        ch.setMode(JnaFileChooser.Mode.Directories);
+        boolean action = ch.showOpenDialog(this);
+        if (action) {
+            System.out.println(ch.getSelectedFile());
+        }
+    }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        JnaFileChooser ch = new JnaFileChooser();
+        boolean action = ch.showOpenDialog(this);
+        if (action) {
+            System.out.println(ch.getSelectedFile());
+        }
+
+    }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void jLabel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseMoved
+        // TODO add your handling code here:
+        SetImageLabel(jLabel7, "/resources/icon_dir_selection.png");
+        
+    }//GEN-LAST:event_jLabel7MouseMoved
+
+    private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
+        SetImageLabel(jLabel7, "/resources/icon_dir.png");
+    }//GEN-LAST:event_jLabel7MouseExited
+
+    private void jLabel8MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseMoved
+        SetImageLabel(jLabel8, "/resources/icon_music_selection.png");
+    }//GEN-LAST:event_jLabel8MouseMoved
+
+    private void jLabel8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseExited
+        SetImageLabel(jLabel8, "/resources/icon_music.png");
+    }//GEN-LAST:event_jLabel8MouseExited
 
     /**
      * @param args the command line arguments
@@ -242,7 +292,6 @@ public class StartMenu extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new StartMenu().setVisible(true);
-                
 
             }
         });
@@ -250,15 +299,17 @@ public class StartMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
     // End of variables declaration//GEN-END:variables
 }
