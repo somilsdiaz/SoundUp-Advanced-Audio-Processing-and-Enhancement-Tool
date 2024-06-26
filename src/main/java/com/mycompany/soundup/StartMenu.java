@@ -18,8 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import jnafilechooser.api.JnaFileChooser;
-import pruebas.AudioProcessor;
 import pruebas.AudioVisualizer;
+import pruebas.AudioNormalizer;
+
 
 public class StartMenu extends javax.swing.JFrame {
 
@@ -33,7 +34,7 @@ public class StartMenu extends javax.swing.JFrame {
         SetImageLabel(jLabel3, "/resources/icon2.png");
         SetImageLabel(jLabel4, "/resources/background.png");
 
-        AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
+        AudioNormalizer audioProcessor = new AudioNormalizer("src/main/java/resources/excusa.wav");
         AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
 
         visualizer.setOpaque(true);

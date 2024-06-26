@@ -12,11 +12,11 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-public class AudioProcessor {
+public class AudioNormalizer {
     private byte[] audioBytes;
     private AudioFormat format;
 
-    public AudioProcessor(String filePath) {
+    public AudioNormalizer(String filePath) {
         try {
             File audioFile = new File(filePath);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
