@@ -19,10 +19,10 @@ public class panelMusic extends javax.swing.JPanel {
     /**
      * Creates new form panelMusic
      */
-    public panelMusic() {
+    public panelMusic(String ruta, int duracion) {
         initComponents();
 
-        LineMusic line = new LineMusic();
+        LineMusic line = new LineMusic(duracion);
         jPanel4.setLayout(new BorderLayout());
         line.setOpaque(false);
         jPanel4.add(line, BorderLayout.CENTER);

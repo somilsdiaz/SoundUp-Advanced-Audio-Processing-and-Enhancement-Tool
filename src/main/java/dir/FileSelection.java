@@ -4,7 +4,15 @@
  */
 package dir;
 
+import pruebas.AudioNormalizer;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JPanel;
+import org.jaudiotagger.tag.TagException;
 
 /**
  *
@@ -12,19 +20,37 @@ import java.awt.BorderLayout;
  */
 public class FileSelection extends javax.swing.JFrame {
 
+    private Point point;
+    public String ruta1;
+    public String ruta2;
+
     /**
      * Creates new form FileSelection
      */
     public FileSelection() {
-        initComponents();
-        
-        
-        panelMusic panel = new panelMusic();
-        jPanel1.setLayout(new BorderLayout());
-        jPanel1.add(panel);
-        this.add(jPanel1);
-        
-        
+        try {
+            initComponents();
+            this.setLocationRelativeTo(this);
+            ruta1 = "src/main/java/resources/excusa.wav";
+            int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
+
+            ruta2 = "src/main/java/resources/excusa.wav";
+            int duracion2 = AudioNormalizer.DuracionCancion(ruta1);
+
+            panelMusic panel_antes = new panelMusic(ruta1, duracion1);
+            jPanel1.setLayout(new BorderLayout());
+            jPanel1.add(panel_antes);
+            this.add(jPanel1);
+
+            panelMusic panel_despues = new panelMusic(ruta2, duracion2);
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(panel_despues);
+            this.add(jPanel3);
+
+        } catch (TagException ex) {
+            Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -37,17 +63,130 @@ public class FileSelection extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(900, 650));
+        setResizable(false);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
         getContentPane().setLayout(null);
 
+        jPanel1.setBackground(new java.awt.Color(8, 7, 44));
         jPanel1.setLayout(null);
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(120, 80, 300, 400);
+        jPanel1.setBounds(80, 70, 300, 400);
+
+        jPanel3.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel3.setLayout(null);
+        getContentPane().add(jPanel3);
+        jPanel3.setBounds(490, 70, 300, 400);
+
+        jPanel2.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel2.setLayout(null);
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/soundup/img/minimizar.png"))); // NOI18N
+        jLabel5.setText("jLabel5");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel5);
+        jLabel5.setBounds(820, 10, 30, 30);
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
+        jLabel6.setText("jLabel5");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel6);
+        jLabel6.setBounds(860, 10, 30, 30);
+
+        getContentPane().add(jPanel2);
+        jPanel2.setBounds(0, 0, 900, 70);
+
+        jPanel4.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel4.setLayout(null);
+        getContentPane().add(jPanel4);
+        jPanel4.setBounds(380, 70, 110, 400);
+
+        jPanel5.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel5.setLayout(null);
+        getContentPane().add(jPanel5);
+        jPanel5.setBounds(790, 70, 110, 400);
+
+        jPanel6.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel6.setLayout(null);
+        getContentPane().add(jPanel6);
+        jPanel6.setBounds(0, 70, 80, 400);
+
+        jPanel7.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel7.setLayout(null);
+        getContentPane().add(jPanel7);
+        jPanel7.setBounds(0, 470, 900, 180);
+
+        jLabel1.setText("jLabel1");
+        jLabel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLabel1MouseDragged(evt);
+            }
+        });
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel1MousePressed(evt);
+            }
+        });
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(0, 0, 900, 650);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        this.setExtendedState(ICONIFIED);
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+
+
+    }//GEN-LAST:event_formMouseDragged
+
+    private void jLabel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseDragged
+        int CurrentX = this.getLocation().x;
+        int CurrentY = this.getLocation().y;
+
+        int MoveX = (CurrentX + evt.getX()) - (CurrentX + point.x);
+        int MoveY = (CurrentY + evt.getY()) - (CurrentY + point.y);
+
+        int x = CurrentX + MoveX;
+        int y = CurrentY + MoveY;
+
+        this.setLocation(x, y);
+    }//GEN-LAST:event_jLabel1MouseDragged
+
+    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
+        point = evt.getPoint();
+        getComponentAt(point);
+    }//GEN-LAST:event_jLabel1MousePressed
 
     /**
      * @param args the command line arguments
@@ -85,6 +224,15 @@ public class FileSelection extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     // End of variables declaration//GEN-END:variables
 }

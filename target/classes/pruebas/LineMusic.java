@@ -8,11 +8,12 @@ import java.awt.event.ActionListener;
 public class LineMusic extends JPanel implements ActionListener {
     private int currentTime = 0;
     private Timer timer;
-    private int songLength = 158; // Longitud de la canción en segundos
+    private int songLength = 0; // Longitud de la canción en segundos
     private JLabel timeLabel;
     private int margin = 10; // Margen al principio y al final
 
-    public LineMusic() {
+    public LineMusic(int duracion) {
+        songLength = duracion;
         this.timer = new Timer(1000, this); // Actualiza cada segundo
         this.timer.start();
         this.timeLabel = new JLabel(formatTime(0)); // Inicializa el temporizador en 00:00

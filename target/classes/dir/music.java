@@ -25,7 +25,7 @@ public class music extends javax.swing.JFrame {
         initComponents();
 
      //   this.setLocationRelativeTo(this);
-        LineMusic line = new LineMusic();
+  /*      LineMusic line = new LineMusic();
         jPanel4.setLayout(new BorderLayout());
         line.setOpaque(false);
         jPanel4.add(line, BorderLayout.CENTER);
@@ -38,7 +38,7 @@ public class music extends javax.swing.JFrame {
         visualizer.setOpaque(false);
         jPanel3.add(visualizer, BorderLayout.CENTER);
         this.add(jPanel3, BorderLayout.CENTER);
-        this.getContentPane().setBackground(new Color(0, 0, 0, 0));
+        this.getContentPane().setBackground(new Color(0, 0, 0, 0));*/
         
         
 
