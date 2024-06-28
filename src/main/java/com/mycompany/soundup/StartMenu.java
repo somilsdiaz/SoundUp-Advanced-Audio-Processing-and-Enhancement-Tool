@@ -20,6 +20,8 @@ import javax.swing.SwingUtilities;
 import jnafilechooser.api.JnaFileChooser;
 import pruebas.AudioVisualizer;
 import pruebas.AudioNormalizer;
+import dir.FileSelection;
+import java.io.File;
 
 
 public class StartMenu extends javax.swing.JFrame {
@@ -238,15 +240,29 @@ public class StartMenu extends javax.swing.JFrame {
         JnaFileChooser ch = new JnaFileChooser();
         boolean action = ch.showOpenDialog(this);
         if (action) {
-            System.out.println(ch.getSelectedFile());
+            File selectedFile = ch.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+            //System.out.println(filePath);
+            if (AudioEnhance.necesitaNormalizacion(filePath)) {
+                String rutaArchivoMejorado = AudioEnhance.Mejorar(filePath, 0);
+                this.dispose();
+                FileSelection fileselection = new FileSelection(filePath, rutaArchivoMejorado);
+                fileselection.setVisible(true);
+
+            } else {
+                 MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
+                 cambiosrealizados.setVisible(true);
         }
+
+    }
+
 
     }//GEN-LAST:event_jLabel8MouseClicked
 
     private void jLabel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseMoved
         // TODO add your handling code here:
         SetImageLabel(jLabel7, "/resources/icon_dir_selection.png");
-        
+
     }//GEN-LAST:event_jLabel7MouseMoved
 
     private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
@@ -265,39 +281,39 @@ public class StartMenu extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StartMenu().setVisible(true);
-
-            }
-        });
-
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(StartMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new StartMenu().setVisible(true);
+
+        }
+    });
+
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

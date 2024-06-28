@@ -6,6 +6,10 @@ package dir;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import pruebas.AudioNormalizer;
 import pruebas.AudioVisualizer2;
 import pruebas.LineMusic;
@@ -16,29 +20,30 @@ import pruebas.LineMusic;
  */
 public class panelMusic extends javax.swing.JPanel {
 
+    private int duracion;
+    private String ruta;
+    LineMusic line;
+    AudioNormalizer audioProcessor;
+    AudioVisualizer2 visualizer;
+    private int status = 0;
+
     /**
      * Creates new form panelMusic
      */
-    public panelMusic(String ruta, int duracion) {
+    public panelMusic(String route, int duration) {
         initComponents();
+        duracion = duration;
+        ruta = route;
+        //this.getContentPane().setBackground(new Color(0, 0, 0, 0));
+    }
 
-        LineMusic line = new LineMusic(duracion);
-        jPanel4.setLayout(new BorderLayout());
-        line.setOpaque(false);
-        jPanel4.add(line, BorderLayout.CENTER);
-        this.add(jPanel4, BorderLayout.CENTER);
-      //this.getContentPane().setBackground(new Color(0, 0, 0, 0));
-
-        AudioNormalizer audioProcessor = new AudioNormalizer("src/main/java/resources/excusa.wav");
-        AudioVisualizer2 visualizer = new AudioVisualizer2(audioProcessor.getAudioBytes());
-        jPanel3.setLayout(new BorderLayout());
-        visualizer.setOpaque(false);
-        jPanel3.add(visualizer, BorderLayout.CENTER);
-        this.add(jPanel3, BorderLayout.CENTER);
-      //this.getContentPane().setBackground(new Color(0, 0, 0, 0));
-
-        
-      
+    private void SetImageLabel(JLabel labelName, String root) {
+        ImageIcon image = new ImageIcon(getClass().getResource(root));
+        Icon icon = new ImageIcon(
+                image.getImage().getScaledInstance(labelName.getWidth(), labelName.getHeight(), Image.SCALE_DEFAULT)
+        );
+        labelName.setIcon(icon);
+        this.repaint();
     }
 
     /**
@@ -55,6 +60,7 @@ public class panelMusic extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setOpaque(false);
         setLayout(null);
@@ -64,8 +70,13 @@ public class panelMusic extends javax.swing.JPanel {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
         jLabel2.setText("jLabel2");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
         jPanel2.add(jLabel2);
-        jLabel2.setBounds(120, 260, 40, 40);
+        jLabel2.setBounds(100, 260, 40, 40);
 
         jPanel3.setBackground(new java.awt.Color(8, 7, 44));
         jPanel3.setLayout(null);
@@ -93,14 +104,69 @@ public class panelMusic extends javax.swing.JPanel {
         jPanel2.add(jLabel1);
         jLabel1.setBounds(40, 20, 200, 200);
 
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pause.png"))); // NOI18N
+        jLabel3.setText("jLabel2");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(150, 260, 40, 40);
+
         add(jPanel2);
         jPanel2.setBounds(0, 0, 300, 400);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        //LIMPIAR JPANEL PARA PINTAR
+        jPanel3.removeAll();
+        jPanel4.removeAll();
+
+        //LINEA DE REPRODUCCION
+        line = new LineMusic(duracion);
+        jPanel4.setLayout(new BorderLayout());
+        line.setOpaque(false);
+        jPanel4.add(line, BorderLayout.CENTER);
+        this.add(jPanel4, BorderLayout.CENTER);
+
+        //BARRAS DE REPRODUCCION
+        audioProcessor = new AudioNormalizer(ruta);
+        visualizer = new AudioVisualizer2(audioProcessor.getAudioBytes());
+        jPanel3.setLayout(new BorderLayout());
+        visualizer.setOpaque(false);
+        jPanel3.add(visualizer, BorderLayout.CENTER);
+        this.add(jPanel3, BorderLayout.CENTER);
+
+        AudioNormalizer.reproducirCancion(ruta);
+        line.start();
+        visualizer.startBars();
+
+
+    }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        int tiempo;
+        if (status == 0) {
+            AudioNormalizer.detenerCancion();
+            line.stop();
+            visualizer.stopBars();
+            status = 1;
+        } else if (status == 1) {
+            //  AudioNormalizer.reproducirCancion(ruta);
+            tiempo = line.start();
+            visualizer.startBars();
+            status = 0;
+            AudioNormalizer.reproducirCancionDesde(ruta, tiempo);
+
+        }
+    }//GEN-LAST:event_jLabel3MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

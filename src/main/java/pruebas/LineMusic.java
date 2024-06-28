@@ -11,6 +11,7 @@ public class LineMusic extends JPanel implements ActionListener {
     private int songLength = 0; // Longitud de la canción en segundos
     private JLabel timeLabel;
     private int margin = 10; // Margen al principio y al final
+    private boolean isPaused = false;
 
     public LineMusic(int duracion) {
         songLength = duracion;
@@ -46,7 +47,7 @@ public class LineMusic extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (currentTime >= songLength) {
             timer.stop(); // Detén el temporizador cuando la canción termine
-        } else {
+        } else if (!isPaused) {
             currentTime++;
             timeLabel.setText(formatTime(currentTime)); // Actualiza el tiempo con el nuevo formato
             repaint();
@@ -59,12 +60,14 @@ public class LineMusic extends JPanel implements ActionListener {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
- /*   public static void main(String[] args) {
-        JFrame frame = new JFrame("Simple Audio Visualizer");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(200, 200);
-        LineMusic visualizer = new LineMusic();
-        frame.add(visualizer);
-        frame.setVisible(true);
-    */
+    public void stop() {
+        isPaused = true;
+        timer.stop();
+    }
+
+    public int start() {
+        isPaused = false;
+        timer.start();
+        return currentTime;
+    }
 }

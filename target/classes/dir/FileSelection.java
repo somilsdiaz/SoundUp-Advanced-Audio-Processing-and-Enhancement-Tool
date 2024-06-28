@@ -4,14 +4,16 @@
  */
 package dir;
 
+import com.mycompany.soundup.AudioEnhance;
+import com.mycompany.soundup.AudioEnhanceReplace;
+import com.mycompany.soundup.MsgEmerge;
+import com.mycompany.soundup.StartMenu;
 import pruebas.AudioNormalizer;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
+
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
 import org.jaudiotagger.tag.TagException;
 
 /**
@@ -21,28 +23,26 @@ import org.jaudiotagger.tag.TagException;
 public class FileSelection extends javax.swing.JFrame {
 
     private Point point;
-    public String ruta1;
-    public String ruta2;
+    private String route1;
+    private String route2;
 
     /**
      * Creates new form FileSelection
      */
-    public FileSelection() {
+    public FileSelection(String ruta1, String ruta2) {
         try {
             initComponents();
+            route1 = ruta1;
+            route2 = ruta2;
             this.setLocationRelativeTo(this);
-            ruta1 = "src/main/java/resources/excusa.wav";
             int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
-
-            ruta2 = "src/main/java/resources/excusa.wav";
-            int duracion2 = AudioNormalizer.DuracionCancion(ruta1);
 
             panelMusic panel_antes = new panelMusic(ruta1, duracion1);
             jPanel1.setLayout(new BorderLayout());
             jPanel1.add(panel_antes);
             this.add(jPanel1);
 
-            panelMusic panel_despues = new panelMusic(ruta2, duracion2);
+            panelMusic panel_despues = new panelMusic(ruta2, duracion1);
             jPanel3.setLayout(new BorderLayout());
             jPanel3.add(panel_despues);
             this.add(jPanel3);
@@ -71,7 +71,7 @@ public class FileSelection extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -80,6 +80,14 @@ public class FileSelection extends javax.swing.JFrame {
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
             }
         });
         getContentPane().setLayout(null);
@@ -113,6 +121,9 @@ public class FileSelection extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel6MouseEntered(evt);
+            }
         });
         jPanel2.add(jLabel6);
         jLabel6.setBounds(860, 10, 30, 30);
@@ -137,22 +148,18 @@ public class FileSelection extends javax.swing.JFrame {
 
         jPanel7.setBackground(new java.awt.Color(30, 43, 75));
         jPanel7.setLayout(null);
+
+        jButton1.setText("APLICAR CAMBIOS");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel7.add(jButton1);
+        jButton1.setBounds(350, 80, 160, 50);
+
         getContentPane().add(jPanel7);
         jPanel7.setBounds(0, 470, 900, 180);
-
-        jLabel1.setText("jLabel1");
-        jLabel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jLabel1MouseDragged(evt);
-            }
-        });
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel1MousePressed(evt);
-            }
-        });
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 900, 650);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -162,15 +169,14 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        System.exit(0);
+        AudioEnhance.eliminarArchivo(route2);
+        this.dispose();
+        
+        StartMenu menu = new StartMenu();
+        menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
-
-
-    }//GEN-LAST:event_formMouseDragged
-
-    private void jLabel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseDragged
         int CurrentX = this.getLocation().x;
         int CurrentY = this.getLocation().y;
 
@@ -181,12 +187,31 @@ public class FileSelection extends javax.swing.JFrame {
         int y = CurrentY + MoveY;
 
         this.setLocation(x, y);
-    }//GEN-LAST:event_jLabel1MouseDragged
+    }//GEN-LAST:event_formMouseDragged
 
-    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+
+    }//GEN-LAST:event_formMouseClicked
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
         point = evt.getPoint();
         getComponentAt(point);
-    }//GEN-LAST:event_jLabel1MousePressed
+    }//GEN-LAST:event_formMousePressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here
+        AudioNormalizer.detenerCancion();
+        AudioNormalizer.finalizarProcesoCancion(route1);
+        AudioNormalizer.finalizarProcesoCancion(route2);
+        AudioEnhance.eliminarArchivo(route2);
+        AudioEnhance.Mejorar(route1, 1);
+        MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+        cambiosrealizados.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel6MouseEntered
 
     /**
      * @param args the command line arguments
@@ -218,13 +243,13 @@ public class FileSelection extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSelection().setVisible(true);
+                new FileSelection("vacio", "vacio").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;

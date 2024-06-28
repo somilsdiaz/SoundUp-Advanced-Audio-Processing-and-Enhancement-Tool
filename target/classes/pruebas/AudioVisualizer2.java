@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-
 public class AudioVisualizer2 extends JPanel implements ActionListener {
 
     private byte[] audioBytes;
@@ -17,6 +16,7 @@ public class AudioVisualizer2 extends JPanel implements ActionListener {
     private int fps = 60; // Cuadros por segundo
     private int bytesPerFrame = sampleRate / fps; // Bytes por cuadro
     private long startTime;
+    private boolean isPaused = false;
 
     public AudioVisualizer2(byte[] audioBytes) {
         this.audioBytes = audioBytes;
@@ -53,8 +53,12 @@ public class AudioVisualizer2 extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (isPaused) {
+            return;
+        }
+
         long elapsedTime = System.currentTimeMillis() - startTime;
-        currentIndex = (int)((elapsedTime / 1000.0) * sampleRate);
+        currentIndex = (int) ((elapsedTime / 1000.0) * sampleRate);
 
         if (currentIndex >= audioBytes.length) {
             timer.stop(); // Detén el temporizador cuando se termine el audio
@@ -77,5 +81,14 @@ public class AudioVisualizer2 extends JPanel implements ActionListener {
 
         repaint();
     }
-}
 
+    public void stopBars() {
+        isPaused = true;
+    }
+
+    public void startBars() {
+        isPaused = false;
+        startTime = System.currentTimeMillis() - (currentIndex / sampleRate * 1000); // Ajusta el tiempo de inicio para continuar desde donde se detuvo
+        timer.start();
+    }
+}
