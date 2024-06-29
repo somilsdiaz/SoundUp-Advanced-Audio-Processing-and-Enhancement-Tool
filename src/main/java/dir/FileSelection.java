@@ -5,7 +5,6 @@
 package dir;
 
 import com.mycompany.soundup.AudioEnhance;
-import com.mycompany.soundup.AudioEnhanceReplace;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.StartMenu;
 import pruebas.AudioNormalizer;
@@ -169,9 +168,10 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        AudioNormalizer.finalizarProcesoCancion(route2);
         AudioEnhance.eliminarArchivo(route2);
         this.dispose();
-        
+
         StartMenu menu = new StartMenu();
         menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
@@ -207,6 +207,7 @@ public class FileSelection extends javax.swing.JFrame {
         AudioEnhance.Mejorar(route1, 1);
         MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
         cambiosrealizados.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered

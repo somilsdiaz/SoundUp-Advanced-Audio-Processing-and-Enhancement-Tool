@@ -1,7 +1,6 @@
 pruebas\AudioVisualizer.class
 com\mycompany\soundup\MsgEmerge$3.class
 dir\principal.class
-resources\ImageLabel.class
 com\mycompany\soundup\StartMenu$7.class
 pruebas\AudioNormalizer$1.class
 com\mycompany\soundup\AudioEnhance$RMSProcessor.class
@@ -26,12 +25,11 @@ com\mycompany\soundup\StartMenu$5.class
 dir\FileSelection$6.class
 com\mycompany\soundup\StartMenu$2.class
 com\mycompany\soundup\MsgEmerge$4.class
+dir\DirectoryTree$Node.class
 dir\principal$1.class
 com\mycompany\soundup\SoundUp.class
-com\mycompany\soundup\AudioEnhanceReplace$RMSProcessor.class
 com\mycompany\soundup\StartMenu$9.class
 com\mycompany\soundup\StartMenu$6.class
 com\mycompany\soundup\MsgEmerge.class
-com\mycompany\soundup\AudioEnhanceReplace.class
 com\mycompany\soundup\StartMenu$3.class
 pruebas\LineMusic.class
