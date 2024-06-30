@@ -4,6 +4,7 @@
  */
 package dir;
 
+import com.mycompany.soundup.AudioEnhanceDir;
 import com.mycompany.soundup.StartMenu;
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -17,10 +18,12 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
+    String route;
     private Point point;
 
     public principal(String ruta) {
         initComponents();
+        route = ruta;
         this.setLocationRelativeTo(this);
         panelDir pd = new panelDir(ruta);
         jPanel3.setLayout(new BorderLayout());
@@ -123,6 +126,8 @@ public class principal extends javax.swing.JFrame {
         /*     AudioNormalizer.finalizarProcesoCancion(route2);
         AudioEnhanceFile.eliminarArchivo(route2);*/
         //Falta implementar metodo para eliminar todas las canciones que tienen el "_normalized" al principio
+        AudioEnhanceDir.eliminarArchivosNormalizados(route);
+
         this.dispose();
 
         StartMenu menu = new StartMenu();

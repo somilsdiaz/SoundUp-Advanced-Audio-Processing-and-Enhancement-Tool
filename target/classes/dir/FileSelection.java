@@ -217,6 +217,8 @@ public class FileSelection extends javax.swing.JFrame {
             this.dispose();
             cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
             //termine el proceso haz que se quite la ventana de cargando.
+            StartMenu st = new StartMenu();
+            st.setVisible(true);
 
             // Actualizar el estado del JFrame
             SwingUtilities.invokeLater(() -> {

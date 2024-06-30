@@ -57,6 +57,7 @@ dir\FileSelectionDir.class
 dir\FileSelection$6.class
 com\mycompany\soundup\StartMenu$2.class
 com\mycompany\soundup\MsgEmerge$4.class
+com\mycompany\soundup\AudioEnhanceDir$1.class
 dir\principal$4.class
 com\mycompany\soundup\StartMenu$9.class
 pruebas\LoadingCircle.class
