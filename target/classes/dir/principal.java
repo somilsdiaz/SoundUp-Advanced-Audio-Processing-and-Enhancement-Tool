@@ -4,6 +4,8 @@
  */
 package dir;
 
+import java.awt.BorderLayout;
+
 /**
  *
  * @author Somils
@@ -13,8 +15,13 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
-    public principal() {
+    public principal(String ruta) {
         initComponents();
+        this.setLocationRelativeTo(this);
+        panelDir pd = new panelDir(ruta);
+        jPanel3.setLayout(new BorderLayout());
+        jPanel3.add(pd);
+        this.add(jPanel3);
     }
 
     /**
@@ -26,31 +33,40 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(900, 700));
         getContentPane().setLayout(null);
 
+        jPanel3.setLayout(null);
+        getContentPane().add(jPanel3);
+        jPanel3.setBounds(180, 0, 720, 670);
+
         jPanel1.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel1.setOpaque(false);
         jPanel1.setLayout(null);
 
         jPanel2.setBackground(new java.awt.Color(30, 43, 75));
+        jPanel2.setLayout(null);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
-        );
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icon2.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        jPanel2.add(jLabel1);
+        jLabel1.setBounds(0, 0, 70, 60);
+
+        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(47, 237, 203));
+        jLabel2.setText("SoundUp ");
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(60, 10, 120, 40);
 
         jPanel1.add(jPanel2);
-        jPanel2.setBounds(0, 0, 180, 700);
+        jPanel2.setBounds(0, 0, 180, 670);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 900, 700);
@@ -88,13 +104,16 @@ public class principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new principal().setVisible(true);
+                new principal("vacio").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
 }

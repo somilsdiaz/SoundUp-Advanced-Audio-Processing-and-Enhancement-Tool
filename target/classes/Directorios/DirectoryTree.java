@@ -1,4 +1,4 @@
-package dir;
+package Directorios;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class DirectoryTree {
 
     private class Node {
+
         String name;
         boolean isDirectory;
         List<Node> children;
@@ -24,10 +25,12 @@ public class DirectoryTree {
     private Node root;
     private String rootPath;
     private int nextId;
+    private List<FileEntry> addedFiles; // List to keep track of added files
 
     public DirectoryTree(String rootPath) {
         this.rootPath = new File(rootPath).getAbsolutePath();
         this.nextId = 1; // Start IDs from 1
+        this.addedFiles = new ArrayList<>();
         root = new Node(new File(rootPath).getName(), true, nextId++);
         buildTree(new File(rootPath), root);
     }
@@ -35,9 +38,9 @@ public class DirectoryTree {
     private void buildTree(File dir, Node node) {
         if (dir.isDirectory()) {
             for (File file : dir.listFiles()) {
-                Node child = new Node(file.getName(), file.isDirectory(), nextId++);
-                node.children.add(child);
                 if (file.isDirectory()) {
+                    Node child = new Node(file.getName(), true, nextId++);
+                    node.children.add(child);
                     buildTree(file, child);
                 }
             }
@@ -72,7 +75,19 @@ public class DirectoryTree {
                 }
             }
             if (!found) {
-                Node newNode = new Node(part, part.equals(parts[parts.length - 1]) && file.isFile(), nextId++);
+                Node newNode;
+                if (part.equals(parts[parts.length - 1]) && file.isFile()) {
+                    // If it's a file, assign the same ID as the directory it's in
+                    newNode = new Node(part, false, current.id);
+
+                    // Ensure the file path has a parent directory before adding
+                    String directoryPath = relativePath.lastIndexOf(File.separator) != -1
+                            ? relativePath.substring(0, relativePath.lastIndexOf(File.separator))
+                            : "";
+                    addedFiles.add(new FileEntry(current.id, relativePath, directoryPath, absoluteFilePath));
+                } else {
+                    newNode = new Node(part, true, nextId++);
+                }
                 current.children.add(newNode);
                 current = newNode;
             }
@@ -81,20 +96,17 @@ public class DirectoryTree {
 
     public DirectoryFiles getAllDirectoriesAndFiles() {
         List<DirectoryEntry> directories = new ArrayList<>();
-        List<FileEntry> files = new ArrayList<>();
-        getAllDirectoriesAndFiles(root, "", directories, files);
-        return new DirectoryFiles(directories, files);
+        getAllDirectories(root, "", directories);
+        return new DirectoryFiles(directories, addedFiles); // Use addedFiles list for files
     }
 
-    private void getAllDirectoriesAndFiles(Node node, String path, List<DirectoryEntry> directories, List<FileEntry> files) {
+    private void getAllDirectories(Node node, String path, List<DirectoryEntry> directories) {
         String currentPath = path.isEmpty() ? node.name : path + File.separator + node.name;
         if (node.isDirectory) {
             directories.add(new DirectoryEntry(node.id, currentPath));
             for (Node child : node.children) {
-                getAllDirectoriesAndFiles(child, currentPath, directories, files);
+                getAllDirectories(child, currentPath, directories);
             }
-        } else {
-            files.add(new FileEntry(node.id, currentPath, path));
         }
     }
 
@@ -126,39 +138,7 @@ public class DirectoryTree {
 
         System.out.println("\nTodos los archivos:");
         for (FileEntry file : directoryFiles.files) {
-            System.out.println("ID: " + file.id + ", Path: " + file.path + ", Directory: " + file.directoryPath);
+            System.out.println("Directory ID: " + file.directoryId + ", File Path: " + file.filePath + ", Directory Path: " + file.directoryPath + ", Absolute File Path: " + file.absoluteFilePath);
         }
-    }
-}
-
-class DirectoryFiles {
-    List<DirectoryEntry> directories;
-    List<FileEntry> files;
-
-    DirectoryFiles(List<DirectoryEntry> directories, List<FileEntry> files) {
-        this.directories = directories;
-        this.files = files;
-    }
-}
-
-class DirectoryEntry {
-    int id;
-    String path;
-
-    DirectoryEntry(int id, String path) {
-        this.id = id;
-        this.path = path;
-    }
-}
-
-class FileEntry {
-    int id;
-    String path;
-    String directoryPath;
-
-    FileEntry(int id, String path, String directoryPath) {
-        this.id = id;
-        this.path = path;
-        this.directoryPath = directoryPath;
     }
 }

@@ -7,28 +7,27 @@ package dir;
 import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.StartMenu;
-import pruebas.AudioNormalizer;
 import java.awt.BorderLayout;
-
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.TagException;
+import pruebas.AudioNormalizer;
 
 /**
  *
  * @author Somils
  */
-public class FileSelection extends javax.swing.JFrame {
+public class FileSelectionDir extends javax.swing.JFrame {
 
     private Point point;
     private String route1;
     private String route2;
 
     /**
-     * Creates new form FileSelection
+     * Creates new form FileSelectionDir
      */
-    public FileSelection(String ruta1, String ruta2) {
+    public FileSelectionDir(String ruta1, String ruta2) {
         try {
             initComponents();
             route1 = ruta1;
@@ -49,7 +48,6 @@ public class FileSelection extends javax.swing.JFrame {
         } catch (TagException ex) {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     /**
@@ -70,21 +68,16 @@ public class FileSelection extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(900, 650));
-        setResizable(false);
+        setPreferredSize(new java.awt.Dimension(900, 540));
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
             }
         });
         addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
-            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
             }
@@ -147,18 +140,8 @@ public class FileSelection extends javax.swing.JFrame {
 
         jPanel7.setBackground(new java.awt.Color(30, 43, 75));
         jPanel7.setLayout(null);
-
-        jButton1.setText("APLICAR CAMBIOS");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel7.add(jButton1);
-        jButton1.setBounds(350, 80, 160, 50);
-
         getContentPane().add(jPanel7);
-        jPanel7.setBounds(0, 470, 900, 180);
+        jPanel7.setBounds(0, 470, 900, 70);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -171,12 +154,14 @@ public class FileSelection extends javax.swing.JFrame {
         AudioNormalizer.finalizarProcesoCancion(route2);
         AudioEnhanceFile.eliminarArchivo(route2);
         this.dispose();
-
-        StartMenu menu = new StartMenu();
-        menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
 
+    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel6MouseEntered
+
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+
         int CurrentX = this.getLocation().x;
         int CurrentY = this.getLocation().y;
 
@@ -189,30 +174,10 @@ public class FileSelection extends javax.swing.JFrame {
         this.setLocation(x, y);
     }//GEN-LAST:event_formMouseDragged
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-
-    }//GEN-LAST:event_formMouseClicked
-
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
         point = evt.getPoint();
         getComponentAt(point);
     }//GEN-LAST:event_formMousePressed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here
-        AudioNormalizer.detenerCancion();
-        AudioNormalizer.finalizarProcesoCancion(route1);
-        AudioNormalizer.finalizarProcesoCancion(route2);
-        AudioEnhanceFile.eliminarArchivo(route2);
-        AudioEnhanceFile.Mejorar(route1, 1);
-        MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
-        cambiosrealizados.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel6MouseEntered
 
     /**
      * @param args the command line arguments
@@ -231,26 +196,25 @@ public class FileSelection extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FileSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileSelectionDir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FileSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileSelectionDir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FileSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileSelectionDir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FileSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileSelectionDir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSelection("vacio", "vacio").setVisible(true);
+                new FileSelectionDir("vacio", "vacio").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;

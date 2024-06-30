@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AudioEnhance {
+public class AudioEnhanceFile {
 
     public static String Mejorar(String ruta, int reemplazar) {
         String directoryPath = ruta; // Reemplaza con la ruta de tu directorio
