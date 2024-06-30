@@ -10,10 +10,12 @@ import Directorios.FileEntry;
 import com.mycompany.soundup.AudioEnhanceDir;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
 import com.mycompany.soundup.AudioEnhanceFile;
+import com.mycompany.soundup.MsgLoadd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -40,8 +42,8 @@ public class panelDir extends javax.swing.JPanel {
 
         AudioEnhanceDir ae = new AudioEnhanceDir();
         ae.MejorarDir(ruta);
-        numerodecanciones =  ae.cantidad;
-        jLabel3.setText("¡Se han encontrado "+numerodecanciones+" canciones que necesitan ser mejoradas! ");
+        numerodecanciones = ae.cantidad;
+        jLabel3.setText("¡Se han encontrado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
@@ -157,16 +159,31 @@ public class panelDir extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.out.println("Item de la lista seleccionado: " + jList2.getSelectedValue());
-        for (FileEntry FileEntry : directoryFiles.files) {
-            if (FileEntry.filePath == jList2.getSelectedValue()) {
-                String ruta1 = FileEntry.absoluteFilePath;
-                String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0);
 
-                FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
-                fs.setVisible(true);
+        MsgLoadd cargando = new MsgLoadd();
+        cargando.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            for (FileEntry FileEntry : directoryFiles.files) {
+                if (FileEntry.filePath == jList2.getSelectedValue()) {
+                    String ruta1 = FileEntry.absoluteFilePath;
+                    String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0);
+
+                    FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
+                    fs.setVisible(true);
+                }
+
             }
 
-        }
+            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+            //termine el proceso haz que se quite la ventana de cargando.
+
+            // Actualizar el estado del JFrame
+            SwingUtilities.invokeLater(() -> {
+
+            });
+        });
+        backgroundProcessThread.start();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

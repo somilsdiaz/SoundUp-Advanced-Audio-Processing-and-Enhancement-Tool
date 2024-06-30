@@ -6,6 +6,7 @@ package dir;
 
 import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
+import com.mycompany.soundup.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
 import pruebas.AudioNormalizer;
 import java.awt.BorderLayout;
@@ -13,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.jaudiotagger.tag.TagException;
 
 /**
@@ -200,14 +202,28 @@ public class FileSelection extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here
-        AudioNormalizer.detenerCancion();
-        AudioNormalizer.finalizarProcesoCancion(route1);
-        AudioNormalizer.finalizarProcesoCancion(route2);
-        AudioEnhanceFile.eliminarArchivo(route2);
-        AudioEnhanceFile.Mejorar(route1, 1);
-        MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
-        cambiosrealizados.setVisible(true);
-        this.dispose();
+
+        MsgLoadd cargando = new MsgLoadd();
+        cargando.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            AudioNormalizer.detenerCancion();
+            AudioNormalizer.finalizarProcesoCancion(route1);
+            AudioNormalizer.finalizarProcesoCancion(route2);
+            AudioEnhanceFile.eliminarArchivo(route2);
+            AudioEnhanceFile.Mejorar(route1, 1);
+            MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+
+            cambiosrealizados.setVisible(true);
+            this.dispose();
+            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+            //termine el proceso haz que se quite la ventana de cargando.
+
+            // Actualizar el estado del JFrame
+            SwingUtilities.invokeLater(() -> {
+
+            });
+        });
+        backgroundProcessThread.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered

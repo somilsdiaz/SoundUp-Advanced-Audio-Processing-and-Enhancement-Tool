@@ -22,7 +22,7 @@ public class MsgEmerge extends javax.swing.JFrame {
         this.setLocationRelativeTo(this);
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setVerticalAlignment(SwingConstants.CENTER);
-        jLabel1.setText("<html><body style='width: 300px;'>" + mensaje + "</body></html>");
+        jLabel1.setText(mensaje);
      
     }
 

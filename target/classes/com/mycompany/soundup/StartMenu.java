@@ -231,14 +231,29 @@ public class StartMenu extends javax.swing.JFrame {
         JnaFileChooser ch = new JnaFileChooser();
         ch.setMode(JnaFileChooser.Mode.Directories);
         boolean action = ch.showOpenDialog(this);
-        if (action) {
-            File selectedFile = ch.getSelectedFile();
-            String filePath = selectedFile.getAbsolutePath();
 
-            principal pp = new principal(filePath);
-            pp.setVisible(true);
-            this.dispose();
-        }
+        MsgLoadd cargando = new MsgLoadd();
+        cargando.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            if (action) {
+                File selectedFile = ch.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+
+                principal pp = new principal(filePath);
+                pp.setVisible(true);
+                this.dispose();
+            }
+
+            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+            //termine el proceso haz que se quite la ventana de cargando.
+
+            // Actualizar el estado del JFrame
+            SwingUtilities.invokeLater(() -> {
+
+            });
+        });
+        backgroundProcessThread.start();
+
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
@@ -248,16 +263,31 @@ public class StartMenu extends javax.swing.JFrame {
             File selectedFile = ch.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
             //System.out.println(filePath);
-            if (AudioEnhanceFile.necesitaNormalizacion(filePath)) {
-                String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(filePath, 0);
-                this.dispose();
-                FileSelection fileselection = new FileSelection(filePath, rutaArchivoMejorado);
-                fileselection.setVisible(true);
+            MsgLoadd cargando = new MsgLoadd();
+            cargando.setVisible(true);
 
-            } else {
-                MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
-                cambiosrealizados.setVisible(true);
-            }
+            Thread backgroundProcessThread = new Thread(() -> {
+                // Simular un proceso que toma tiempo (por ejemplo, 10 segundos)
+                //    Thread.sleep(10000);
+                if (AudioEnhanceFile.necesitaNormalizacion(filePath)) {
+
+                    String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(filePath, 0);
+                    this.dispose();
+                    //     cargando.setVisible(false);
+                    FileSelection fileselection = new FileSelection(filePath, rutaArchivoMejorado);
+                    fileselection.setVisible(true);
+
+                } else {
+                    MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
+                    cambiosrealizados.setVisible(true);
+                }
+                cargando.setVisible(false);
+                // Actualizar el estado del JFrame
+                SwingUtilities.invokeLater(() -> {
+
+                });
+            });
+            backgroundProcessThread.start();
 
         }
 
