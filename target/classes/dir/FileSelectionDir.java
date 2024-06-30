@@ -5,8 +5,6 @@
 package dir;
 
 import com.mycompany.soundup.AudioEnhanceFile;
-import com.mycompany.soundup.MsgEmerge;
-import com.mycompany.soundup.StartMenu;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.util.logging.Level;

@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -32,6 +33,16 @@ public class AudioEnhanceDir {
 
     public static DirectoryTree tree;
     public int cantidad = 0;
+    private static List<File> convertedFiles = new ArrayList<>();
+
+    public static void EliminarDuplicadosCovertidos() {
+        // Eliminar los archivos convertidos
+        for (File convertedFile : convertedFiles) {
+            if (!convertedFile.delete()) {
+                System.err.println("Error deleting file: " + convertedFile.getAbsolutePath());
+            }
+        }
+    }
 
     public void MejorarDir(String directoryPath) {
         tree = new DirectoryTree(directoryPath);
@@ -54,10 +65,6 @@ public class AudioEnhanceDir {
                         File wavFile = convertToWav(audioFile.toFile());
                         if (wavFile != null) {
                             normalizeAudioVolume(wavFile);
-                            if (!wavFile.getName().equals(audioFile.toFile().getName())) {
-                                Files.delete(wavFile.toPath());
-                                System.out.println("Deleted converted WAV file: " + wavFile.getName());
-                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -67,6 +74,7 @@ public class AudioEnhanceDir {
 
             executor.shutdown();
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -89,15 +97,15 @@ public class AudioEnhanceDir {
 
         try {
             encoder.encode(audioFile, target, attrs);
+            if (target.exists()) {
+                convertedFiles.add(target);
+                return target;
+            } else {
+                System.err.println("Error converting " + audioFile.getName() + " to WAV format.");
+                return null;
+            }
         } catch (IllegalArgumentException | EncoderException e) {
             e.printStackTrace();
-            return null;
-        }
-
-        if (target.exists()) {
-            return target;
-        } else {
-            System.err.println("Error converting " + audioFile.getName() + " to WAV format.");
             return null;
         }
     }
@@ -178,7 +186,6 @@ public class AudioEnhanceDir {
         }
     }
 
-    // RMSProcessor to calculate the RMS value of the audio
     // RMSProcessor to calculate the RMS value of the audio
     private static class RMSProcessor implements AudioProcessor {
 

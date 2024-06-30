@@ -123,9 +123,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        /*     AudioNormalizer.finalizarProcesoCancion(route2);
-        AudioEnhanceFile.eliminarArchivo(route2);*/
-        //Falta implementar metodo para eliminar todas las canciones que tienen el "_normalized" al principio
+        AudioEnhanceDir.EliminarDuplicadosCovertidos();
         AudioEnhanceDir.eliminarArchivosNormalizados(route);
 
         this.dispose();
