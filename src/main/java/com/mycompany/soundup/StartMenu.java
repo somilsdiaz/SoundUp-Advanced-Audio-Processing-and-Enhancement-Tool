@@ -234,9 +234,10 @@ public class StartMenu extends javax.swing.JFrame {
         if (action) {
             File selectedFile = ch.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
-            this.dispose();
+
             principal pp = new principal(filePath);
             pp.setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_jLabel7MouseClicked
 

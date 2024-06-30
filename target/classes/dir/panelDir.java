@@ -26,6 +26,7 @@ public class panelDir extends javax.swing.JPanel {
      */
     DefaultListModel<String> listModel;
     DirectoryFiles directoryFiles;
+    int numerodecanciones;
 
     public panelDir(String ruta) {
         initComponents();
@@ -39,6 +40,8 @@ public class panelDir extends javax.swing.JPanel {
 
         AudioEnhanceDir ae = new AudioEnhanceDir();
         ae.MejorarDir(ruta);
+        numerodecanciones =  ae.cantidad;
+        jLabel3.setText("Se han encontrado "+numerodecanciones);
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
