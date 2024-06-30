@@ -1,5 +1,6 @@
 pruebas\AudioVisualizer.class
 com\mycompany\soundup\MsgEmerge$3.class
+dir\FileSelection$1.class
 dir\principal.class
 dir\principal$3.class
 pruebas\AudioNormalizer$1.class
@@ -14,7 +15,9 @@ com\mycompany\soundup\FolderSelector.class
 com\mycompany\soundup\AudioEnhanceFile$RMSProcessor.class
 com\mycompany\soundup\AudioEnhanceDir$RMSProcessor.class
 com\mycompany\soundup\SongVisualizer.class
+dir\FileSelection.class
 dir\FileSelectionDir$3.class
+com\mycompany\soundup\StartMenu$8.class
 com\mycompany\soundup\MsgEmerge$1.class
 dir\pp$2.class
 Directorios\DirectoryEntry.class
@@ -38,6 +41,7 @@ com\mycompany\soundup\MsgLoadd$1.class
 com\mycompany\soundup\AudioEnhanceDir.class
 com\mycompany\soundup\StartMenu$7.class
 dir\pp.class
+dir\panelMusic.class
 com\mycompany\soundup\StartMenu.class
 dir\FileSelectionDir$1.class
 dir\FileSelection$2.class
