@@ -1,7 +1,5 @@
 package com.mycompany.soundup;
 
-import Directorios.DirectoryEntry;
-import Directorios.DirectoryFiles;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
 import be.tarsos.dsp.AudioProcessor;
@@ -9,7 +7,10 @@ import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.WaveformWriter;
 import be.tarsos.dsp.GainProcessor;
 import Directorios.DirectoryTree;
-import Directorios.FileEntry;
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,30 +33,15 @@ public class AudioEnhanceDir {
     public static DirectoryTree tree;
     public int cantidad = 0;
 
-    public static DirectoryFiles DirectorioCompleto() {
-        AudioEnhanceDir ae = new AudioEnhanceDir();
-        ae.MejorarDir("C:/Users/Somils/Desktop/Muestra");
-        tree.printTree();
-        DirectoryFiles directoryFiles = tree.getAllDirectoriesAndFiles();
-        System.out.println("\nTodas las carpetas:");
-        for (DirectoryEntry dir : directoryFiles.directories) {
-            System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-        }
-
-        System.out.println("\nTodos los archivos:");
-        for (FileEntry FileEntry : directoryFiles.files) {
-            //   System.out.println("Directory ID: " + FileEntry.directoryId + ", File Path: " + FileEntry.filePath + ", Directory Path: " + FileEntry.directoryPath);
-        }
-        return directoryFiles;
-
-    }
-
     public void MejorarDir(String directoryPath) {
         tree = new DirectoryTree(directoryPath);
         try {
             List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
                     .filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".wav")) // Suponiendo archivos .wav
+                    .filter(path -> {
+                        String ext = getFileExtension(path.toString()).toLowerCase();
+                        return ext.equals("wav") || ext.equals("mp3") || ext.equals("flac") || ext.equals("ogg") || ext.equals("m4a");
+                    })
                     .collect(Collectors.toList());
 
             // Usa un ThreadPoolExecutor para procesar archivos en paralelo
@@ -65,7 +51,14 @@ public class AudioEnhanceDir {
             for (Path audioFile : audioFiles) {
                 executor.submit(() -> {
                     try {
-                        normalizeAudioVolume(audioFile.toFile());
+                        File wavFile = convertToWav(audioFile.toFile());
+                        if (wavFile != null) {
+                            normalizeAudioVolume(wavFile);
+                            if (!wavFile.getName().equals(audioFile.toFile().getName())) {
+                                Files.delete(wavFile.toPath());
+                                System.out.println("Deleted converted WAV file: " + wavFile.getName());
+                            }
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -76,6 +69,36 @@ public class AudioEnhanceDir {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private File convertToWav(File audioFile) {
+        String ext = getFileExtension(audioFile.getName()).toLowerCase();
+        if (ext.equals("wav")) {
+            return audioFile;
+        }
+        String wavFileName = audioFile.getParent() + "/" + removeFileExtension(audioFile.getName()) + ".wav";
+        File target = new File(wavFileName);
+
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("pcm_s16le");
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("wav");
+        attrs.setAudioAttributes(audio);
+        Encoder encoder = new Encoder();
+
+        try {
+            encoder.encode(audioFile, target, attrs);
+        } catch (IllegalArgumentException | EncoderException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        if (target.exists()) {
+            return target;
+        } else {
+            System.err.println("Error converting " + audioFile.getName() + " to WAV format.");
+            return null;
         }
     }
 
@@ -156,6 +179,7 @@ public class AudioEnhanceDir {
     }
 
     // RMSProcessor to calculate the RMS value of the audio
+    // RMSProcessor to calculate the RMS value of the audio
     private static class RMSProcessor implements AudioProcessor {
 
         private double rms = 0;
@@ -181,5 +205,21 @@ public class AudioEnhanceDir {
         public double getRMS() {
             return rms;
         }
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        String[] parts = fileName.split("\\.");
+        return parts.length > 1 ? parts[parts.length - 1] : "";
+    }
+
+    private String removeFileExtension(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        int lastDotIndex = fileName.lastIndexOf('.');
+        return (lastDotIndex == -1) ? fileName : fileName.substring(0, lastDotIndex);
     }
 }
