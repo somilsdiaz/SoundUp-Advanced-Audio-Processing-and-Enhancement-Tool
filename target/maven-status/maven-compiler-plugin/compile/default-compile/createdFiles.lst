@@ -1,6 +1,7 @@
 pruebas\AudioVisualizer.class
 com\mycompany\soundup\MsgEmerge$3.class
 dir\principal.class
+dir\principal$3.class
 pruebas\AudioNormalizer$1.class
 dir\panelDir$1.class
 dir\panelMusic$1.class
@@ -45,6 +46,8 @@ com\mycompany\soundup\StartMenu$1.class
 dir\FileSelection$5.class
 dir\panelMusic$2.class
 dir\panelDir$3.class
+dir\principal$2.class
+dir\principal$5.class
 Directorios\DirectoryTree.class
 dir\pp$5.class
 pruebas\AudioNormalizer.class
@@ -52,6 +55,7 @@ dir\FileSelectionDir.class
 dir\FileSelection$6.class
 com\mycompany\soundup\StartMenu$2.class
 com\mycompany\soundup\MsgEmerge$4.class
+dir\principal$4.class
 com\mycompany\soundup\StartMenu$9.class
 dir\FileSelectionDir$5.class
 com\mycompany\soundup\StartMenu$3.class

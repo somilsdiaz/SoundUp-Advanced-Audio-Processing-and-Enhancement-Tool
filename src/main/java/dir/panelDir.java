@@ -41,7 +41,7 @@ public class panelDir extends javax.swing.JPanel {
         AudioEnhanceDir ae = new AudioEnhanceDir();
         ae.MejorarDir(ruta);
         numerodecanciones =  ae.cantidad;
-        jLabel3.setText("Se han encontrado "+numerodecanciones);
+        jLabel3.setText("¡Se han encontrado "+numerodecanciones+" canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
