@@ -12,7 +12,6 @@ public class SoundUp {
 
     public static void main(String[] args) {
         StartMenu inicio = new StartMenu();
-        inicio.setVisible(true);
-        
+        inicio.setVisible(true);   
     }
 }

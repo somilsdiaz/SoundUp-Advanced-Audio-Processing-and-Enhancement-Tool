@@ -233,35 +233,4 @@ public class AudioNormalizer {
         return name.substring(lastIndexOf + 1);
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce la ruta del archivo de audio:");
-        String filePath = scanner.nextLine();
-        System.out.println("Introduce el segundo desde donde iniciar:");
-        int segundo = scanner.nextInt();
-        reproducirCancionDesde(filePath, segundo);
-
-        // Agregar opciones para detener y restablecer la canción
-        while (true) {
-            System.out.println("Opciones: 1. Detener 2. Restablecer 3. Finalizar 4. Salir");
-            int opcion = scanner.nextInt();
-            switch (opcion) {
-                case 1:
-                    detenerCancion();
-                    break;
-                case 2:
-                    restablecerCancion(filePath);
-                    break;
-                case 3:
-                    finalizarProcesoCancion(filePath);
-                    break;
-                case 4:
-                    finalizarProcesoCancion(filePath);
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Opción no válida.");
-            }
-        }
-    }
 }

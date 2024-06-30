@@ -121,24 +121,4 @@ public class DirectoryTree {
         }
     }
 
-    public static void main(String[] args) {
-        DirectoryTree tree = new DirectoryTree("C:/Users/Somils/Desktop/Muestra");
-        tree.addFile("C:/Users/Somils/Desktop/Muestra/Nueva carpeta/coco.wav");
-        tree.addFile("C:/Users/Somils/Desktop/Muestra/excusa.wav");
-        tree.addFile("C:/Users/Somils/Desktop/Muestra/Nueva carpeta/Nueva carpeta/CorazoncitoRoto.wav");
-
-        tree.printTree();
-
-        // Obtener y mostrar todas las carpetas y archivos
-        DirectoryFiles directoryFiles = tree.getAllDirectoriesAndFiles();
-        System.out.println("\nTodas las carpetas:");
-        for (DirectoryEntry dir : directoryFiles.directories) {
-            System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-        }
-
-        System.out.println("\nTodos los archivos:");
-        for (FileEntry file : directoryFiles.files) {
-            System.out.println("Directory ID: " + file.directoryId + ", File Path: " + file.filePath + ", Directory Path: " + file.directoryPath + ", Absolute File Path: " + file.absoluteFilePath);
-        }
-    }
 }

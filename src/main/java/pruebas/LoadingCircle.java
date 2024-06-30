@@ -55,14 +55,4 @@ public class LoadingCircle extends JPanel implements ActionListener {
         }
         repaint();
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Loading Circle");
-        LoadingCircle loadingCircle = new LoadingCircle();
-        frame.add(loadingCircle);
-        frame.setSize(310, 110); //330, 110
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
 }

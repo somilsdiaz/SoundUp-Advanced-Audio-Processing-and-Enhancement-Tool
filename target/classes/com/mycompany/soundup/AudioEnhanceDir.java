@@ -32,23 +32,6 @@ public class AudioEnhanceDir {
     public static DirectoryTree tree;
     public int cantidad = 0;
 
-    public static void main(String[] args) {
-        AudioEnhanceDir ae = new AudioEnhanceDir();
-        ae.MejorarDir("C:/Users/Somils/Desktop/Muestra");
-        tree.printTree();
-        DirectoryFiles directoryFiles = tree.getAllDirectoriesAndFiles();
-        System.out.println("\nTodas las carpetas:");
-        for (DirectoryEntry dir : directoryFiles.directories) {
-            System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-        }
-
-        System.out.println("\nTodos los archivos:");
-        for (FileEntry FileEntry : directoryFiles.files) {
-            System.out.println("Directory ID: " + FileEntry.directoryId + ", File Path: " + FileEntry.filePath + ", Directory Path: " + FileEntry.directoryPath);
-        }
-
-    }
-
     public static DirectoryFiles DirectorioCompleto() {
         AudioEnhanceDir ae = new AudioEnhanceDir();
         ae.MejorarDir("C:/Users/Somils/Desktop/Muestra");
