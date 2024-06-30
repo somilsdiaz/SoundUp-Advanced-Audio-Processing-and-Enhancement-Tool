@@ -59,7 +59,7 @@ public class MsgEmerge extends javax.swing.JFrame {
         jPanel1.add(jLabel6);
         jLabel6.setBounds(300, 0, 30, 30);
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/soundup/img/minimizar.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
         jLabel5.setText("jLabel5");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
