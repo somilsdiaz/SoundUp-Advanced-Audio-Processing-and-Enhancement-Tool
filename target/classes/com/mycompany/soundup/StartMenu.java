@@ -244,28 +244,33 @@ public class StartMenu extends javax.swing.JFrame {
         ch.setMode(JnaFileChooser.Mode.Directories);
         boolean action = ch.showOpenDialog(this);
 
-        MsgLoadd cargando = new MsgLoadd();
-        cargando.setVisible(true);
-        Thread backgroundProcessThread = new Thread(() -> {
-            if (action) {
-                File selectedFile = ch.getSelectedFile();
-                String filePath = selectedFile.getAbsolutePath();
 
-                principal pp = new principal(filePath);
-                pp.setVisible(true);
-                this.dispose();
-            }
+            MsgLoadd cargando = new MsgLoadd();
+            cargando.setVisible(true);
+            Thread backgroundProcessThread = new Thread(() -> {
+                if (action) {
+                    File selectedFile = ch.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+                    System.out.println("EL FILEPATCH ES : "+filePath);
 
-            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-            //termine el proceso haz que se quite la ventana de cargando.
+                    principal pp = new principal(filePath);
+                    pp.setVisible(true);
+                    this.dispose();
+                }
 
-            // Actualizar el estado del JFrame
-            SwingUtilities.invokeLater(() -> {
+                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                //termine el proceso haz que se quite la ventana de cargando.
 
+                // Actualizar el estado del JFrame
+                SwingUtilities.invokeLater(() -> {
+
+                });
             });
-        });
-        backgroundProcessThread.start();
-
+            backgroundProcessThread.start();
+  /*      } else {
+            MsgEmerge mg = new MsgEmerge("Selecione un archivo");
+            mg.setVisible(true);
+        }*/
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked

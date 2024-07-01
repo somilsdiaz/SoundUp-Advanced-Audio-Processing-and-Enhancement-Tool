@@ -12,6 +12,8 @@ import pruebas.AudioNormalizer2;
 import java.awt.BorderLayout;
 
 import java.awt.Point;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -48,6 +50,11 @@ public class FileSelection extends javax.swing.JFrame {
             jPanel3.add(panel_despues);
             this.add(jPanel3);
 
+            Path path = Paths.get(ruta1);
+            String nombreCancion = path.getFileName().toString();
+
+            jLabel3.setText(nombreCancion);
+
         } catch (TagException ex) {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,11 +75,14 @@ public class FileSelection extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -129,6 +139,12 @@ public class FileSelection extends javax.swing.JFrame {
         jPanel2.add(jLabel6);
         jLabel6.setBounds(860, 10, 30, 30);
 
+        jLabel3.setFont(new java.awt.Font("Microsoft YaHei", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("NOMBRE DE LA CANCION");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(30, 20, 480, 30);
+
         getContentPane().add(jPanel2);
         jPanel2.setBounds(0, 0, 900, 70);
 
@@ -158,6 +174,18 @@ public class FileSelection extends javax.swing.JFrame {
         });
         jPanel7.add(jButton1);
         jButton1.setBounds(350, 80, 160, 50);
+
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Despues");
+        jPanel7.add(jLabel1);
+        jLabel1.setBounds(610, 10, 90, 19);
+
+        jLabel2.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Antes ");
+        jPanel7.add(jLabel2);
+        jLabel2.setBounds(210, 10, 90, 19);
 
         getContentPane().add(jPanel7);
         jPanel7.setBounds(0, 470, 900, 180);
@@ -269,6 +297,9 @@ public class FileSelection extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;

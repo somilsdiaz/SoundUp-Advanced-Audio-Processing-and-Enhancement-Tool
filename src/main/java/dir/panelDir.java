@@ -10,6 +10,7 @@ import Directorios.FileEntry;
 import com.mycompany.soundup.AudioEnhanceDir;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
 import com.mycompany.soundup.AudioEnhanceFile;
+import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +44,7 @@ public class panelDir extends javax.swing.JPanel {
         AudioEnhanceDir ae = new AudioEnhanceDir();
         ae.MejorarDir(ruta);
         numerodecanciones = ae.cantidad;
-        jLabel3.setText("¡Se han encontrado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
+        jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
@@ -110,7 +111,7 @@ public class panelDir extends javax.swing.JPanel {
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("Microsoft YaHei", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Se han encontrado 1821 canciones que necesitan ser mejorados! ");
+        jLabel3.setText("Se han detectado 1821 canciones que necesitan ser mejorados! ");
         jPanel1.add(jLabel3);
         jLabel3.setBounds(30, 20, 660, 30);
 
@@ -159,30 +160,35 @@ public class panelDir extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.out.println("Item de la lista seleccionado: " + jList2.getSelectedValue());
+        if (jList2.getSelectedValue() != null) {
+            MsgLoadd cargando = new MsgLoadd();
+            cargando.setVisible(true);
+            Thread backgroundProcessThread = new Thread(() -> {
+                for (FileEntry FileEntry : directoryFiles.files) {
+                    if (FileEntry.filePath == jList2.getSelectedValue()) {
+                        String ruta1 = FileEntry.absoluteFilePath;
+                        String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0);
 
-        MsgLoadd cargando = new MsgLoadd();
-        cargando.setVisible(true);
-        Thread backgroundProcessThread = new Thread(() -> {
-            for (FileEntry FileEntry : directoryFiles.files) {
-                if (FileEntry.filePath == jList2.getSelectedValue()) {
-                    String ruta1 = FileEntry.absoluteFilePath;
-                    String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0);
+                        FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
+                        fs.setVisible(true);
+                    }
 
-                    FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
-                    fs.setVisible(true);
                 }
 
-            }
+                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                //termine el proceso haz que se quite la ventana de cargando.
 
-            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-            //termine el proceso haz que se quite la ventana de cargando.
+                // Actualizar el estado del JFrame
+                SwingUtilities.invokeLater(() -> {
 
-            // Actualizar el estado del JFrame
-            SwingUtilities.invokeLater(() -> {
-
+                });
             });
-        });
-        backgroundProcessThread.start();
+            backgroundProcessThread.start();
+        } else {
+            MsgEmerge mg = new MsgEmerge("Selecione una cancion de la lista");
+            mg.setVisible(true);
+        }
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
