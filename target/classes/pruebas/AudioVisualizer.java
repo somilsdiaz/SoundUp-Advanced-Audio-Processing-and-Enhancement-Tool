@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 
 public class AudioVisualizer extends JPanel implements ActionListener {
+
     private byte[] audioBytes;
     private Timer timer;
     private int currentIndex = 0;
@@ -26,7 +28,8 @@ public class AudioVisualizer extends JPanel implements ActionListener {
         timer = new Timer(50, this); // Actualiza cada 50 ms (aproximadamente 20 FPS)
         timer.start();
         try {
-            backgroundImage = ImageIO.read(new File("src/main/java/resources/groundVisual.png")); // Carga tu imagen
+            InputStream imageSrc = getClass().getResourceAsStream("/resources/groundVisual.png");
+            backgroundImage = ImageIO.read(imageSrc); // Carga tu imagen
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +81,7 @@ public class AudioVisualizer extends JPanel implements ActionListener {
         repaint();
     }
 
-   /* public static void main(String[] args) {
+    /* public static void main(String[] args) {
         JFrame frame = new JFrame("Audio Visualizer");
         AudioProcessor audioProcessor = new AudioProcessor("src/main/java/resources/excusa.wav");
         AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
@@ -88,5 +91,3 @@ public class AudioVisualizer extends JPanel implements ActionListener {
         frame.setVisible(true);
     }*/
 }
-
-

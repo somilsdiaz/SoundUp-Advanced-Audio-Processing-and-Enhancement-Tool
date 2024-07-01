@@ -1,5 +1,6 @@
 package pruebas;
 
+import java.io.BufferedInputStream;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,10 +32,11 @@ public class AudioNormalizer {
     private static Thread playbackThread;
     private static boolean isPlaying = false;
 
-    public AudioNormalizer(String filePath) {
+    public AudioNormalizer(URL filePath) {
         try {
-            File audioFile = new File(filePath);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+            InputStream audioSrc = getClass().getResourceAsStream("/resources/excusa.wav");
+            BufferedInputStream bufferedIn = new BufferedInputStream(audioSrc);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedIn);
             format = audioInputStream.getFormat();
             audioBytes = audioInputStream.readAllBytes();
         } catch (UnsupportedAudioFileException | IOException e) {

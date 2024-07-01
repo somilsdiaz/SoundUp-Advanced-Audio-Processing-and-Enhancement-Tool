@@ -4,6 +4,7 @@ dir\FileSelection$1.class
 dir\principal.class
 dir\principal$3.class
 pruebas\AudioNormalizer$1.class
+pruebas\AudioNormalizer2$2.class
 dir\panelDir$1.class
 dir\panelMusic$1.class
 dir\panelDir$4.class
@@ -33,6 +34,7 @@ dir\FileSelectionDir$4.class
 com\mycompany\soundup\MsgLoadd.class
 com\mycompany\soundup\MsgLoadd$1.class
 com\mycompany\soundup\AudioEnhanceDir.class
+pruebas\AudioNormalizer2.class
 com\mycompany\soundup\StartMenu$7.class
 dir\panelMusic.class
 com\mycompany\soundup\StartMenu.class
@@ -48,6 +50,7 @@ dir\panelDir$3.class
 dir\principal$2.class
 dir\principal$5.class
 Directorios\DirectoryTree.class
+pruebas\AudioNormalizer2$1.class
 pruebas\AudioNormalizer.class
 dir\FileSelectionDir.class
 dir\FileSelection$6.class

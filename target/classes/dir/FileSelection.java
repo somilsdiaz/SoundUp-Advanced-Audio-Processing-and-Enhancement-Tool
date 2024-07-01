@@ -8,7 +8,7 @@ import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
-import pruebas.AudioNormalizer;
+import pruebas.AudioNormalizer2;
 import java.awt.BorderLayout;
 
 import java.awt.Point;
@@ -36,7 +36,7 @@ public class FileSelection extends javax.swing.JFrame {
             route1 = ruta1;
             route2 = ruta2;
             this.setLocationRelativeTo(this);
-            int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
+            int duracion1 = AudioNormalizer2.DuracionCancion(ruta1);
 
             panelMusic panel_antes = new panelMusic(ruta1, duracion1);
             jPanel1.setLayout(new BorderLayout());
@@ -170,7 +170,7 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        AudioNormalizer.finalizarProcesoCancion(route2);
+        AudioNormalizer2.finalizarProcesoCancion(route2);
         AudioEnhanceFile.eliminarArchivo(route2);
         this.dispose();
 
@@ -206,9 +206,9 @@ public class FileSelection extends javax.swing.JFrame {
         MsgLoadd cargando = new MsgLoadd();
         cargando.setVisible(true);
         Thread backgroundProcessThread = new Thread(() -> {
-            AudioNormalizer.detenerCancion();
-            AudioNormalizer.finalizarProcesoCancion(route1);
-            AudioNormalizer.finalizarProcesoCancion(route2);
+            AudioNormalizer2.detenerCancion();
+            AudioNormalizer2.finalizarProcesoCancion(route1);
+            AudioNormalizer2.finalizarProcesoCancion(route2);
             AudioEnhanceFile.eliminarArchivo(route2);
             AudioEnhanceFile.Mejorar(route1, 1);
             MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
