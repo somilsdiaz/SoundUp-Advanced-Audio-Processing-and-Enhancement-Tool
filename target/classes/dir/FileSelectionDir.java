@@ -5,6 +5,7 @@
 package dir;
 
 import com.mycompany.soundup.AudioEnhanceFile;
+import com.mycompany.soundup.StartMenu;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.nio.file.Path;
@@ -23,15 +24,18 @@ public class FileSelectionDir extends javax.swing.JFrame {
     private Point point;
     private String route1;
     private String route2;
+    private String routeoriginal;
 
     /**
      * Creates new form FileSelectionDir
      */
-    public FileSelectionDir(String ruta1, String ruta2) {
+    public FileSelectionDir(String original, String ruta1, String ruta2) {
         try {
             initComponents();
             route1 = ruta1;
             route2 = ruta2;
+            routeoriginal = original;
+
             this.setLocationRelativeTo(this);
             int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
 
@@ -179,8 +183,14 @@ public class FileSelectionDir extends javax.swing.JFrame {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         AudioNormalizer.finalizarProcesoCancion(route2);
+        AudioNormalizer.finalizarProcesoCancion(route1);
+
         AudioEnhanceFile.eliminarArchivo(route2);
+        AudioEnhanceFile.eliminarArchivo(route1);
         this.dispose();
+
+        StartMenu menu = new StartMenu();
+        menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
@@ -236,7 +246,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSelectionDir("vacio", "vacio").setVisible(true);
+                new FileSelectionDir("vacio", "vacio", "vacio").setVisible(true);
             }
         });
     }

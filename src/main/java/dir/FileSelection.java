@@ -41,8 +41,6 @@ public class FileSelection extends javax.swing.JFrame {
     private String route1;
     private String route2;
     private String routeoriginal;
-    private double valueRMScurrent;
-    String outputFilePath;
 
     /**
      * Creates new form FileSelection
@@ -53,7 +51,7 @@ public class FileSelection extends javax.swing.JFrame {
             route1 = ruta1;
             route2 = ruta2;
             routeoriginal = original;
-            valueRMScurrent = value;
+
             this.setLocationRelativeTo(this);
             int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
 

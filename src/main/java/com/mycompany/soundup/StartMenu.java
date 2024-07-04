@@ -315,7 +315,7 @@ public class StartMenu extends javax.swing.JFrame {
                 }
             }
 
-            //  cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
             //termine el proceso haz que se quite la ventana de cargando.
             // Actualizar el estado del JFrame
             SwingUtilities.invokeLater(() -> {

@@ -8,12 +8,18 @@ import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
 import Directorios.FileEntry;
 import com.mycompany.soundup.AudioEnhanceDir;
+import com.mycompany.soundup.AudioEnhanceDir.Rutas;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
 import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -31,17 +37,17 @@ public class panelDir extends javax.swing.JPanel {
     DefaultListModel<String> listModel;
     DirectoryFiles directoryFiles;
     int numerodecanciones;
+    List<AudioEnhanceDir.Rutas> estanMejorados;
 
-    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorados) {
+    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado) {
         initComponents();
         setOpaque(true);
-
+        estanMejorados = estanMejorado;
         jComboBox1.removeAllItems();
 
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
 
-            
         numerodecanciones = estanMejorados.size();
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
@@ -83,6 +89,35 @@ public class panelDir extends javax.swing.JPanel {
             }
         });
         System.out.println("\nTodos los archivos:");
+    }
+
+    public static String convertToWav(String inputFilePath) {
+        File source = new File(inputFilePath);
+        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
+        File target = new File(outputFilePath);
+
+        // Atributos de audio mejorados para mantener la calidad
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("pcm_s16le");
+
+        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
+        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
+        audio.setBitRate(320000);
+        audio.setChannels(2); // Mantén el número de canales estéreo
+        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("wav");
+        attrs.setAudioAttributes(audio);
+
+        Encoder encoder = new Encoder();
+        try {
+            encoder.encode(source, target, attrs);
+            return target.getAbsolutePath();
+        } catch (EncoderException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -158,19 +193,24 @@ public class panelDir extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("Item de la lista seleccionado: " + jList2.getSelectedValue());
+        //   System.out.println("Item de la lista seleccionado: " + jList2.getSelectedValue());
         if (jList2.getSelectedValue() != null) {
             MsgLoadd cargando = new MsgLoadd();
             cargando.setVisible(true);
+
             Thread backgroundProcessThread = new Thread(() -> {
                 for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.filePath == jList2.getSelectedValue()) {
-                        String ruta1 = FileEntry.absoluteFilePath;
-                        AudioEnhanceFile.BooleanDoublePair necesitaNormalizar = AudioEnhanceFile.necesitaNormalizacion(ruta1);
-                        String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0, necesitaNormalizar.value);
-                        
-                        FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
-                        fs.setVisible(true);
+                        String rutaOriginal = FileEntry.absoluteFilePath;
+                        String rutaFileWav = convertToWav(rutaOriginal);
+                        for (Rutas rutas : estanMejorados) {
+                            if (rutas.rutaOriginal == rutaOriginal) {
+                                FileSelectionDir fs = new FileSelectionDir(rutaOriginal, rutaFileWav, rutas.rutaMejorada);
+                                fs.setVisible(true);
+                                break;
+                            }
+                        }
+                        break;
                     }
 
                 }

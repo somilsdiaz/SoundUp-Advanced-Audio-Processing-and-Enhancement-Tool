@@ -84,6 +84,9 @@ public static int returnNumeroActual () {
     }
 
     public static List<RutaRmsPar> EncontrarNecesitanNormalizar(String ruta) {
+        tree = new DirectoryTree(ruta);
+        
+        
         totalAudioFiles.set(contarArchivosDeAudio(ruta));
         List<RutaRmsPar> necesitaNormalizacion = Collections.synchronizedList(new ArrayList<>());
         String directoryPath = ruta;
@@ -102,6 +105,7 @@ public static int returnNumeroActual () {
                         if (need.flag) {
                             RutaRmsPar necesita = new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value);
                             necesitaNormalizacion.add(necesita);
+                            tree.addFile(audioFile.toAbsolutePath().toString());
                         }
                         totalAudioFiles.decrementAndGet();
                     })
