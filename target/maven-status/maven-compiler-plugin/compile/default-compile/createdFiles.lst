@@ -4,6 +4,7 @@ dir\FileSelection$1.class
 dir\principal.class
 dir\principal$3.class
 pruebas\AudioNormalizer$1.class
+com\mycompany\soundup\MsgLoadNumeric.class
 dir\panelDir$1.class
 dir\panelMusic$1.class
 dir\panelDir$4.class
@@ -59,6 +60,7 @@ com\mycompany\soundup\AudioEnhanceDir$1.class
 dir\principal$4.class
 com\mycompany\soundup\StartMenu$9.class
 pruebas\LoadingCircle.class
+com\mycompany\soundup\MsgLoadNumeric$1.class
 dir\FileSelectionDir$5.class
 com\mycompany\soundup\StartMenu$3.class
 pruebas\LineMusic.class

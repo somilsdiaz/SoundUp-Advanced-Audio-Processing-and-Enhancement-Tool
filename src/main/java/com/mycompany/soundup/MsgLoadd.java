@@ -12,7 +12,7 @@ import pruebas.LoadingCircle;
  * @author Somils
  */
 public class MsgLoadd extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form MsgLoadd
      */

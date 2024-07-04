@@ -5,25 +5,37 @@
 package com.mycompany.soundup;
 
 import java.awt.BorderLayout;
+import java.util.concurrent.atomic.AtomicInteger;
 import pruebas.LoadingCircle;
 
 /**
  *
  * @author Somils
  */
-public class MsgLoadd extends javax.swing.JFrame {
-    
-    /**
-     * Creates new form MsgLoadd
-     */
-    public MsgLoadd() {
-        initComponents();
-        this.setLocationRelativeTo(this);
+public class MsgLoadNumeric extends javax.swing.JFrame {
 
+   private static AtomicInteger totalAudioFiles = new AtomicInteger();
+
+    /**
+     * Creates new form MsgLoadNumeric
+     */
+    public MsgLoadNumeric() {
+        this.totalAudioFiles = totalAudioFiles;
+
+        initComponents();
+      //  jLabel1.setText("PROCESANDO... "+totalAudioFiles);
+        this.setLocationRelativeTo(this);
         LoadingCircle circle = new LoadingCircle();
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(circle);
         this.add(jPanel2);
+    }
+
+    public void updateTotalAudioFiles(int total) {
+        totalAudioFiles.set(total);
+        System.out.println(totalAudioFiles.get());
+        jLabel1.setText("PROCESANDO... "+totalAudioFiles);
+        // Aquí puedes actualizar cualquier componente de la UI con el nuevo valor
     }
 
     /**
@@ -40,10 +52,7 @@ public class MsgLoadd extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(330, 110));
-        setUndecorated(true);
-        setResizable(false);
         getContentPane().setLayout(null);
 
         jPanel2.setBackground(new java.awt.Color(0, 204, 0));
@@ -85,20 +94,20 @@ public class MsgLoadd extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MsgLoadd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MsgLoadNumeric.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MsgLoadd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MsgLoadNumeric.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MsgLoadd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MsgLoadNumeric.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MsgLoadd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MsgLoadNumeric.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MsgLoadd().setVisible(true);
+                new MsgLoadNumeric().setVisible(true);
             }
         });
     }

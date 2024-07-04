@@ -27,8 +27,11 @@ public class AudioEnhanceDir {
 
     public static DirectoryTree tree;
     public int cantidad = 0;
-    private static AtomicInteger totalAudioFiles = new AtomicInteger(0);
+    public static AtomicInteger totalAudioFiles = new AtomicInteger(0);
 
+public static int returnNumeroActual () {
+    return totalAudioFiles.get();
+}
     public static void main(String[] args) {
 
         String ruta = "C:/Users/Somils/Music/SALSAS  ROMANTICAS";
@@ -66,13 +69,8 @@ public class AudioEnhanceDir {
                     .filter(Files::isRegularFile)
                     .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(() -> {
-                System.out.println("Archivos restantes por procesar: " + totalAudioFiles.get());
-            }, 0, 1, TimeUnit.SECONDS);
 
             ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
-
             customThreadPool.submit(()
                     -> audioFiles.parallelStream().forEach(audioFile -> {
                         audioFileCount.incrementAndGet();
@@ -86,6 +84,7 @@ public class AudioEnhanceDir {
     }
 
     public static List<RutaRmsPar> EncontrarNecesitanNormalizar(String ruta) {
+        totalAudioFiles.set(contarArchivosDeAudio(ruta));
         List<RutaRmsPar> necesitaNormalizacion = Collections.synchronizedList(new ArrayList<>());
         String directoryPath = ruta;
 
