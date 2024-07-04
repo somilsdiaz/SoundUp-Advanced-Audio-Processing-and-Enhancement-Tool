@@ -8,9 +8,9 @@ dir\panelDir$1.class
 dir\panelMusic$1.class
 dir\panelDir$4.class
 pruebas\AudioVisualizer2.class
+com\mycompany\soundup\AudioEnhanceDir$RutaRmsPar.class
 dir\FileSelection$4.class
 com\mycompany\soundup\AudioEnhanceFile$RMSProcessor.class
-com\mycompany\soundup\AudioEnhanceDir$RMSProcessor.class
 dir\FileSelection.class
 dir\FileSelectionDir$3.class
 com\mycompany\soundup\StartMenu$8.class
@@ -27,6 +27,7 @@ com\mycompany\soundup\SoundUp.class
 com\mycompany\soundup\StartMenu$6.class
 dir\panelDir$2.class
 com\mycompany\soundup\MsgEmerge.class
+com\mycompany\soundup\AudioEnhanceDir$Rutas.class
 Directorios\DirectoryFiles.class
 dir\panelDir.class
 dir\FileSelectionDir$4.class

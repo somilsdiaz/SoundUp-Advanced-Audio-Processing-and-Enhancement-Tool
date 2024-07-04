@@ -1,16 +1,6 @@
 package com.mycompany.soundup;
 
-import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.AudioEvent;
-import be.tarsos.dsp.AudioProcessor;
-import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
-import be.tarsos.dsp.io.jvm.WaveformWriter;
-import be.tarsos.dsp.GainProcessor;
 import Directorios.DirectoryTree;
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncodingAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,136 +12,153 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class AudioEnhanceDir {
 
     public static DirectoryTree tree;
     public int cantidad = 0;
-    private static List<File> convertedFiles = new ArrayList<>();
+    private static AtomicInteger totalAudioFiles = new AtomicInteger(0);
 
-    public static void EliminarDuplicadosCovertidos() {
-        // Eliminar los archivos convertidos
-        for (File convertedFile : convertedFiles) {
-            if (!convertedFile.delete()) {
-                System.err.println("Error deleting file: " + convertedFile.getAbsolutePath());
+    public static void main(String[] args) {
+
+        String ruta = "C:/Users/Somils/Music/SALSAS  ROMANTICAS";
+        totalAudioFiles.set(contarArchivosDeAudio(ruta));
+
+        List<RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(ruta);
+        System.out.println("Cantidad de archivos que necesitan ser normalizados: " + NecesitaNormalizacion.size());
+        System.out.println("Cantidad de archivos restantes: " + totalAudioFiles.get());
+        if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
+            System.out.println("Archivos que necesitan normalización:");
+            for (RutaRmsPar archivo : NecesitaNormalizacion) {
+                System.out.println("Ruta: " + archivo.rutaOriginal + ", Valor RMS: " + archivo.RMS);
             }
+        } else {
+            System.out.println("No se encontraron archivos que necesiten normalización o hubo un error.");
         }
+        System.out.println("Vamos a mejorar los audios que necesitan normalizacion");
+        List<Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
+
+        if (estanMejorados != null && !estanMejorados.isEmpty()) {
+            for (Rutas rutas : estanMejorados) {
+                System.out.println("Ruta original: " + rutas.rutaOriginal + "Ruta mejorada: " + rutas.rutaMejorada);
+            }
+
+        }
+        eliminarArchivosNormalizados(ruta);
     }
 
-    public void MejorarDir(String directoryPath) {
-        tree = new DirectoryTree(directoryPath);
+    public static int contarArchivosDeAudio(String ruta) {
+        AtomicInteger audioFileCount = new AtomicInteger(0);
+        String directoryPath = ruta;
+
         try {
             List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
                     .filter(Files::isRegularFile)
-                    .filter(path -> {
-                        String ext = getFileExtension(path.toString()).toLowerCase();
-                        return ext.equals("wav") || ext.equals("mp3") || ext.equals("flac") || ext.equals("ogg") || ext.equals("m4a");
+                    .filter(path -> isAudioFile(path.toFile()))
+                    .collect(Collectors.toList());
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.scheduleAtFixedRate(() -> {
+                System.out.println("Archivos restantes por procesar: " + totalAudioFiles.get());
+            }, 0, 1, TimeUnit.SECONDS);
+
+            ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
+
+            customThreadPool.submit(()
+                    -> audioFiles.parallelStream().forEach(audioFile -> {
+                        audioFileCount.incrementAndGet();
                     })
+            ).get();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return audioFileCount.get();
+    }
+
+    public static List<RutaRmsPar> EncontrarNecesitanNormalizar(String ruta) {
+        List<RutaRmsPar> necesitaNormalizacion = Collections.synchronizedList(new ArrayList<>());
+        String directoryPath = ruta;
+
+        try {
+            List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
+                    .filter(Files::isRegularFile)
+                    .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
 
-            // Usa un ThreadPoolExecutor para procesar archivos en paralelo
-            int numCores = Runtime.getRuntime().availableProcessors();
-            ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numCores);
+            ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
 
-            for (Path audioFile : audioFiles) {
-                executor.submit(() -> {
-                    try {
-                        File wavFile = convertToWav(audioFile.toFile());
-                        if (wavFile != null) {
-                            normalizeAudioVolume(wavFile);
+            customThreadPool.submit(()
+                    -> audioFiles.parallelStream().forEach(audioFile -> {
+                        AudioEnhanceFile.BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(audioFile.toAbsolutePath().toString());
+                        if (need.flag) {
+                            RutaRmsPar necesita = new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value);
+                            necesitaNormalizacion.add(necesita);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+                        totalAudioFiles.decrementAndGet();
+                    })
+            ).get();
 
-            executor.shutdown();
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            return necesitaNormalizacion;
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        } catch (IOException | InterruptedException e) {
+    public static List<Rutas> vamosAmejorar(List<RutaRmsPar> necesitanNormalizar) {
+        List<Rutas> estanNormalizados = Collections.synchronizedList(new ArrayList<>());
+
+        ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(necesitanNormalizar.size(), Runtime.getRuntime().availableProcessors()));
+
+        try {
+            customThreadPool.submit(()
+                    -> necesitanNormalizar.parallelStream().forEach(archivo -> {
+                        String rutaOriginal = archivo.rutaOriginal;
+                        String rutaMejorada = AudioEnhanceFile.Mejorar(rutaOriginal, 0, archivo.RMS);
+                        Rutas ruta = new Rutas(rutaOriginal, rutaMejorada);
+                        estanNormalizados.add(ruta);
+                    })
+            ).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return estanNormalizados;
+    }
+
+    public static void RemplazarNormalizados(List<Rutas> rutas) {
+        ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(rutas.size(), Runtime.getRuntime().availableProcessors()));
+
+        try {
+            customThreadPool.submit(()
+                    -> rutas.parallelStream().forEach(ruta -> {
+                        AudioEnhanceFile.replaceFile(ruta.rutaOriginal, ruta.rutaMejorada);
+                    })
+            ).get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
-    private File convertToWav(File audioFile) {
-        String ext = getFileExtension(audioFile.getName()).toLowerCase();
-        if (ext.equals("wav")) {
-            return audioFile;
-        }
-        String wavFileName = audioFile.getParent() + "/" + removeFileExtension(audioFile.getName()) + ".wav";
-        File target = new File(wavFileName);
-
-        AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("pcm_s16le");
-        EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setFormat("wav");
-        attrs.setAudioAttributes(audio);
-        Encoder encoder = new Encoder();
-
-        try {
-            encoder.encode(audioFile, target, attrs);
-            if (target.exists()) {
-                convertedFiles.add(target);
-                return target;
-            } else {
-                System.err.println("Error converting " + audioFile.getName() + " to WAV format.");
-                return null;
+    private static boolean isAudioFile(File file) {
+        String[] audioExtensions = {".wav", ".mp3", ".flac", ".ogg", ".m4a"};
+        String fileName = file.getName().toLowerCase();
+        for (String ext : audioExtensions) {
+            if (fileName.endsWith(ext)) {
+                return true;
             }
-        } catch (IllegalArgumentException | EncoderException e) {
-            e.printStackTrace();
-            return null;
         }
-    }
-
-    private void normalizeAudioVolume(File audioFile) throws IOException {
-        try {
-            AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 2048, 0);
-
-            // Processor to calculate RMS
-            RMSProcessor rmsProcessor = new RMSProcessor();
-            dispatcher.addAudioProcessor(rmsProcessor);
-
-            dispatcher.run();
-
-            // Calculate target RMS value
-            double targetRMS = 0.1; // Target RMS value
-            double currentRMS = rmsProcessor.getRMS();
-
-            // Calculate current volume in dB
-            double currentVolume = 20 * Math.log10(currentRMS);
-            // Calculate target volume in dB
-            double targetVolume = 20 * Math.log10(targetRMS);
-            // Calculate adjustment factor in dB
-            double adjustmentFactor = targetVolume - currentVolume;
-
-            // Apply normalization
-            if (adjustmentFactor > 0) {
-                // If adjustmentFactor > 0, we need to increase volume
-                AudioDispatcher normalizationDispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 2048, 0);
-                normalizationDispatcher.addAudioProcessor(new GainProcessor(adjustmentFactor));
-
-                String outputFilePath = audioFile.getParent() + "/normalized_" + audioFile.getName();
-                WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), outputFilePath);
-                normalizationDispatcher.addAudioProcessor(writer);
-
-                normalizationDispatcher.run();
-                System.out.println("Normalized: " + audioFile.getName());
-                tree.addFile(audioFile.getAbsolutePath());
-                cantidad = cantidad + 1;
-            } else {
-                // If adjustmentFactor <= 0, no adjustment needed
-                System.out.println("Already normalized: " + audioFile.getName());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return false;
     }
 
     public static void eliminarArchivosNormalizados(String directoryPath) {
@@ -164,7 +171,7 @@ public class AudioEnhanceDir {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (file.getFileName().toString().startsWith("normalized_")) {
+                    if (file.getFileName().toString().startsWith("normalized_temp_")) {
                         Files.delete(file);
                         System.out.println("Deleted: " + file);
                     }
@@ -186,47 +193,28 @@ public class AudioEnhanceDir {
         }
     }
 
-    // RMSProcessor to calculate the RMS value of the audio
-    private static class RMSProcessor implements AudioProcessor {
+    public static class RutaRmsPar {
 
-        private double rms = 0;
-        private long sampleCount = 0;
+        public String rutaOriginal;
+        public double RMS;
 
-        @Override
-        public boolean process(AudioEvent audioEvent) {
-            float[] buffer = audioEvent.getFloatBuffer();
-            double sum = 0;
-            for (float sample : buffer) {
-                sum += sample * sample;
-            }
-            rms += sum;
-            sampleCount += buffer.length;
-            return true;
+        public RutaRmsPar(String rutaOriginal, double RMS) {
+            this.rutaOriginal = rutaOriginal;
+            this.RMS = RMS;
         }
 
-        @Override
-        public void processingFinished() {
-            rms = Math.sqrt(rms / sampleCount);
-        }
-
-        public double getRMS() {
-            return rms;
-        }
     }
 
-    private String getFileExtension(String fileName) {
-        if (fileName == null) {
-            return null;
-        }
-        String[] parts = fileName.split("\\.");
-        return parts.length > 1 ? parts[parts.length - 1] : "";
-    }
+    public static class Rutas {
 
-    private String removeFileExtension(String fileName) {
-        if (fileName == null) {
-            return null;
+        public String rutaOriginal;
+        public String rutaMejorada;
+
+        public Rutas(String rutaOriginal, String rutaMejorada) {
+            this.rutaOriginal = rutaOriginal;
+            this.rutaMejorada = rutaMejorada;
+
         }
-        int lastDotIndex = fileName.lastIndexOf('.');
-        return (lastDotIndex == -1) ? fileName : fileName.substring(0, lastDotIndex);
+
     }
 }

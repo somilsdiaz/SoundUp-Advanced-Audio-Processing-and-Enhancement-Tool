@@ -42,7 +42,7 @@ public class panelDir extends javax.swing.JPanel {
         jList2.setModel(listModel);
 
         AudioEnhanceDir ae = new AudioEnhanceDir();
-        ae.MejorarDir(ruta);
+     //ae.MejorarDir(ruta);                     HAY QUE MODIFICAR IMPORTANTE AQUI
         numerodecanciones = ae.cantidad;
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
