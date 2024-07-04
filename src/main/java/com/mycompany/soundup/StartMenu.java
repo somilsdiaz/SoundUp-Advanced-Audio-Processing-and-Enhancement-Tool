@@ -8,6 +8,7 @@ package com.mycompany.soundup;
  *
  * @author Somils
  */
+import com.mycompany.soundup.AudioEnhanceFile.BooleanDoublePair;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
@@ -21,7 +22,12 @@ import jnafilechooser.api.JnaFileChooser;
 import pruebas.AudioVisualizer;
 import pruebas.AudioNormalizer;
 import dir.FileSelection;
+import static dir.FileSelection.convertToWav;
 import dir.principal;
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
 import java.io.File;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioInputStream;
@@ -39,7 +45,7 @@ public class StartMenu extends javax.swing.JFrame {
         SetImageLabel(jLabel3, "/resources/icon2.png");
         SetImageLabel(jLabel4, "/resources/background.png");
         String rutacancion = "/resources/excusa.wav";
-        AudioNormalizer audioProcessor = new AudioNormalizer(getClass().getResource(rutacancion));
+        AudioNormalizer audioProcessor = new AudioNormalizer(rutacancion);
         AudioVisualizer visualizer = new AudioVisualizer(audioProcessor.getAudioBytes());
 
         visualizer.setOpaque(true);
@@ -49,6 +55,35 @@ public class StartMenu extends javax.swing.JFrame {
         this.add(jPanel2, BorderLayout.CENTER);
         this.getContentPane().setBackground(new Color(0, 0, 0, 0));
 
+    }
+
+    public static String convertToWav(String inputFilePath) {
+        File source = new File(inputFilePath);
+        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
+        File target = new File(outputFilePath);
+
+        // Atributos de audio mejorados para mantener la calidad
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("pcm_s16le");
+
+        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
+        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
+        audio.setBitRate(320000);
+        audio.setChannels(2); // Mantén el número de canales estéreo
+        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("wav");
+        attrs.setAudioAttributes(audio);
+
+        Encoder encoder = new Encoder();
+        try {
+            encoder.encode(source, target, attrs);
+            return target.getAbsolutePath();
+        } catch (EncoderException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -244,30 +279,29 @@ public class StartMenu extends javax.swing.JFrame {
         ch.setMode(JnaFileChooser.Mode.Directories);
         boolean action = ch.showOpenDialog(this);
 
+        MsgLoadd cargando = new MsgLoadd();
+        cargando.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            if (action) {
+                File selectedFile = ch.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+                System.out.println("EL FILEPATCH ES : " + filePath);
 
-            MsgLoadd cargando = new MsgLoadd();
-            cargando.setVisible(true);
-            Thread backgroundProcessThread = new Thread(() -> {
-                if (action) {
-                    File selectedFile = ch.getSelectedFile();
-                    String filePath = selectedFile.getAbsolutePath();
-                    System.out.println("EL FILEPATCH ES : "+filePath);
+                principal pp = new principal(filePath);
+                pp.setVisible(true);
+                this.dispose();
+            }
 
-                    principal pp = new principal(filePath);
-                    pp.setVisible(true);
-                    this.dispose();
-                }
+            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+            //termine el proceso haz que se quite la ventana de cargando.
 
-                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-                //termine el proceso haz que se quite la ventana de cargando.
+            // Actualizar el estado del JFrame
+            SwingUtilities.invokeLater(() -> {
 
-                // Actualizar el estado del JFrame
-                SwingUtilities.invokeLater(() -> {
-
-                });
             });
-            backgroundProcessThread.start();
-  /*      } else {
+        });
+        backgroundProcessThread.start();
+        /*      } else {
             MsgEmerge mg = new MsgEmerge("Selecione un archivo");
             mg.setVisible(true);
         }*/
@@ -279,19 +313,20 @@ public class StartMenu extends javax.swing.JFrame {
         if (action) {
             File selectedFile = ch.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
-            //System.out.println(filePath);
+
             MsgLoadd cargando = new MsgLoadd();
             cargando.setVisible(true);
 
             Thread backgroundProcessThread = new Thread(() -> {
                 // Simular un proceso que toma tiempo (por ejemplo, 10 segundos)
                 //    Thread.sleep(10000);
-                if (AudioEnhanceFile.necesitaNormalizacion(filePath)) {
-
-                    String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(filePath, 0);
+                BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(filePath);
+                if (need.flag) {
+                    String outputFilePath = convertToWav(filePath);
+                    String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(outputFilePath, 0, need.value);
                     this.dispose();
                     //     cargando.setVisible(false);
-                    FileSelection fileselection = new FileSelection(filePath, rutaArchivoMejorado);
+                    FileSelection fileselection = new FileSelection(filePath, outputFilePath, rutaArchivoMejorado, need.value);
                     fileselection.setVisible(true);
 
                 } else {

@@ -11,7 +11,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import pruebas.AudioNormalizer;
-import pruebas.AudioNormalizer2;
 import pruebas.AudioVisualizer2;
 import pruebas.LineMusic;
 
@@ -24,7 +23,7 @@ public class panelMusic extends javax.swing.JPanel {
     private int duracion;
     private String ruta;
     LineMusic line;
-    AudioNormalizer2 audioProcessor;
+    AudioNormalizer audioProcessor;
     AudioVisualizer2 visualizer;
     private int status = 0;
 
@@ -132,7 +131,7 @@ public class panelMusic extends javax.swing.JPanel {
         this.add(jPanel4, BorderLayout.CENTER);
 
         //BARRAS DE REPRODUCCION
-        audioProcessor = new AudioNormalizer2(ruta);
+        audioProcessor = new AudioNormalizer(ruta);
         visualizer = new AudioVisualizer2(audioProcessor.getAudioBytes());
         jPanel3.setLayout(new BorderLayout());
         visualizer.setOpaque(false);

@@ -8,16 +8,28 @@ import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
-import pruebas.AudioNormalizer2;
+import it.sauronsoftware.jave.AudioAttributes;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.EncodingAttributes;
 import java.awt.BorderLayout;
 
 import java.awt.Point;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.SwingUtilities;
 import org.jaudiotagger.tag.TagException;
+import pruebas.AudioNormalizer;
 
 /**
  *
@@ -28,17 +40,22 @@ public class FileSelection extends javax.swing.JFrame {
     private Point point;
     private String route1;
     private String route2;
+    private String routeoriginal;
+    private double valueRMScurrent;
+    String outputFilePath;
 
     /**
      * Creates new form FileSelection
      */
-    public FileSelection(String ruta1, String ruta2) {
+    public FileSelection(String original, String ruta1, String ruta2, double value) {
         try {
             initComponents();
             route1 = ruta1;
             route2 = ruta2;
+            routeoriginal = original;
+            valueRMScurrent = value;
             this.setLocationRelativeTo(this);
-            int duracion1 = AudioNormalizer2.DuracionCancion(ruta1);
+            int duracion1 = AudioNormalizer.DuracionCancion(ruta1);
 
             panelMusic panel_antes = new panelMusic(ruta1, duracion1);
             jPanel1.setLayout(new BorderLayout());
@@ -59,6 +76,35 @@ public class FileSelection extends javax.swing.JFrame {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public static String convertToWav(String inputFilePath) {
+        File source = new File(inputFilePath);
+        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
+        File target = new File(outputFilePath);
+
+        // Atributos de audio mejorados para mantener la calidad
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("pcm_s16le");
+
+        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
+        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
+        audio.setBitRate(320000);
+        audio.setChannels(2); // Mantén el número de canales estéreo
+        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("wav");
+        attrs.setAudioAttributes(audio);
+
+        Encoder encoder = new Encoder();
+        try {
+            encoder.encode(source, target, attrs);
+            return target.getAbsolutePath();
+        } catch (EncoderException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -198,8 +244,11 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        AudioNormalizer2.finalizarProcesoCancion(route2);
+        AudioNormalizer.finalizarProcesoCancion(route2);
+        AudioNormalizer.finalizarProcesoCancion(route1);
+
         AudioEnhanceFile.eliminarArchivo(route2);
+        AudioEnhanceFile.eliminarArchivo(route1);
         this.dispose();
 
         StartMenu menu = new StartMenu();
@@ -234,11 +283,14 @@ public class FileSelection extends javax.swing.JFrame {
         MsgLoadd cargando = new MsgLoadd();
         cargando.setVisible(true);
         Thread backgroundProcessThread = new Thread(() -> {
-            AudioNormalizer2.detenerCancion();
-            AudioNormalizer2.finalizarProcesoCancion(route1);
-            AudioNormalizer2.finalizarProcesoCancion(route2);
+            AudioNormalizer.detenerCancion();
+            AudioNormalizer.finalizarProcesoCancion(route1);
+            AudioNormalizer.finalizarProcesoCancion(route2);
+
+            AudioEnhanceFile.replaceFile(routeoriginal, route2);
+            AudioEnhanceFile.eliminarArchivo(route1);
             AudioEnhanceFile.eliminarArchivo(route2);
-            AudioEnhanceFile.Mejorar(route1, 1);
+
             MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
 
             cambiosrealizados.setVisible(true);
@@ -290,7 +342,7 @@ public class FileSelection extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSelection("vacio", "vacio").setVisible(true);
+                new FileSelection("vacio", "vacio", "vacio", 0.0).setVisible(true);
             }
         });
     }

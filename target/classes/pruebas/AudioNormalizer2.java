@@ -1,5 +1,6 @@
 package pruebas;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,8 +38,9 @@ public class AudioNormalizer2 {
 
     public AudioNormalizer2(String filePath) {
         try {
-            File audioFile = new File(filePath);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+            InputStream audioSrc = getClass().getResourceAsStream(filePath);
+            BufferedInputStream bufferedIn = new BufferedInputStream(audioSrc);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedIn);
             format = audioInputStream.getFormat();
             audioBytes = audioInputStream.readAllBytes();
         } catch (UnsupportedAudioFileException | IOException e) {

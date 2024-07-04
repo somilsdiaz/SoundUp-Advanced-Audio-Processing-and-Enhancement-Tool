@@ -167,8 +167,9 @@ public class panelDir extends javax.swing.JPanel {
                 for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.filePath == jList2.getSelectedValue()) {
                         String ruta1 = FileEntry.absoluteFilePath;
-                        String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0);
-
+                        AudioEnhanceFile.BooleanDoublePair necesitaNormalizar = AudioEnhanceFile.necesitaNormalizacion(ruta1);
+                        String ruta2 = AudioEnhanceFile.Mejorar(ruta1, 0, necesitaNormalizar.value);
+                        
                         FileSelectionDir fs = new FileSelectionDir(ruta1, ruta2);
                         fs.setVisible(true);
                     }

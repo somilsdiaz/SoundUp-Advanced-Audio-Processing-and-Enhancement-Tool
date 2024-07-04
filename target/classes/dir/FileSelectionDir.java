@@ -132,7 +132,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("NOMBRE CANCION...");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(20, 10, 350, 50);
+        jLabel3.setBounds(20, 10, 770, 50);
 
         getContentPane().add(jPanel2);
         jPanel2.setBounds(0, 0, 900, 70);

@@ -32,7 +32,7 @@ public class AudioNormalizer {
     private static Thread playbackThread;
     private static boolean isPlaying = false;
 
-    public AudioNormalizer(URL filePath) {
+    public AudioNormalizer(String filePath) {
         try {
             InputStream audioSrc = getClass().getResourceAsStream("/resources/excusa.wav");
             BufferedInputStream bufferedIn = new BufferedInputStream(audioSrc);
