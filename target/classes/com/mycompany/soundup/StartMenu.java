@@ -9,6 +9,7 @@ package com.mycompany.soundup;
  * @author Somils
  */
 import static com.mycompany.soundup.AudioEnhanceDir.EncontrarNecesitanNormalizar;
+import static com.mycompany.soundup.AudioEnhanceDir.vamosAmejorar;
 import com.mycompany.soundup.AudioEnhanceFile.BooleanDoublePair;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +23,7 @@ import jnafilechooser.api.JnaFileChooser;
 import pruebas.AudioVisualizer;
 import pruebas.AudioNormalizer;
 import dir.FileSelection;
+import dir.principal;
 import it.sauronsoftware.jave.AudioAttributes;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
@@ -32,6 +34,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StartMenu extends javax.swing.JFrame {
 
@@ -280,22 +284,35 @@ public class StartMenu extends javax.swing.JFrame {
 
         Thread backgroundProcessThread = new Thread(() -> {
             if (action) {
-                File selectedFile = ch.getSelectedFile();
-                String filePath = selectedFile.getAbsolutePath();
+                try {
+                    File selectedFile = ch.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
 
-                totalAudioFiles.set(AudioEnhanceDir.contarArchivosDeAudio(filePath));
-                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                scheduler.scheduleAtFixedRate(() -> {
+                    totalAudioFiles.set(AudioEnhanceDir.contarArchivosDeAudio(filePath));
+                    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                    scheduler.scheduleAtFixedRate(() -> {
+                        asignar(AudioEnhanceDir.returnNumeroActual());
+                    }, 0, 1, TimeUnit.SECONDS);
 
-                    asignar(AudioEnhanceDir.returnNumeroActual());
+                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(filePath);
+                    scheduler.shutdown();
+                    scheduler.awaitTermination(1, TimeUnit.MINUTES);
 
-                }, 0, 1, TimeUnit.SECONDS);
-                List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(filePath);
-
-                /*  List<RutaRmsPar> NecesitaNormalizacion = AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
-                principal pp = new principal(filePath);
-                pp.setVisible(true);
-                this.dispose();*/
+                    if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
+                        System.out.println("Archivos que necesitan normalización:");
+                        List<AudioEnhanceDir.Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
+                        principal pp = new principal(estanMejorados);
+                        pp.setVisible(true);
+                        this.dispose();
+                    } else {
+                        MsgEmerge me = new MsgEmerge("No hay archivos de audio por mejorar");
+                        me.setVisible(true);
+                    }
+                    /*    
+                     */
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             //  cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando

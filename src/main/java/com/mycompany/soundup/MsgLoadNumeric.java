@@ -6,6 +6,7 @@ package com.mycompany.soundup;
 
 import java.awt.BorderLayout;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.SwingConstants;
 import pruebas.LoadingCircle;
 
 /**
@@ -14,7 +15,7 @@ import pruebas.LoadingCircle;
  */
 public class MsgLoadNumeric extends javax.swing.JFrame {
 
-   private static AtomicInteger totalAudioFiles = new AtomicInteger();
+    private static AtomicInteger totalAudioFiles = new AtomicInteger();
 
     /**
      * Creates new form MsgLoadNumeric
@@ -23,8 +24,10 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         this.totalAudioFiles = totalAudioFiles;
 
         initComponents();
-      //  jLabel1.setText("PROCESANDO... "+totalAudioFiles);
+        //  jLabel1.setText("PROCESANDO... "+totalAudioFiles);
         this.setLocationRelativeTo(this);
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
+        jLabel1.setVerticalAlignment(SwingConstants.CENTER);
         LoadingCircle circle = new LoadingCircle();
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(circle);
@@ -34,7 +37,7 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
     public void updateTotalAudioFiles(int total) {
         totalAudioFiles.set(total);
         System.out.println(totalAudioFiles.get());
-        jLabel1.setText("PROCESANDO... "+totalAudioFiles);
+        jLabel1.setText("PROCESANDO " + totalAudioFiles+" ARCHIVOS DE MUSICA");
         // Aquí puedes actualizar cualquier componente de la UI con el nuevo valor
     }
 
@@ -53,6 +56,8 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(330, 110));
+        setUndecorated(true);
+        setResizable(false);
         getContentPane().setLayout(null);
 
         jPanel2.setBackground(new java.awt.Color(0, 204, 0));
@@ -65,11 +70,11 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         jPanel1.setOpaque(false);
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("PROCESANDO....");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(120, 20, 270, 60);
+        jLabel1.setBounds(0, 20, 330, 60);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 330, 110);

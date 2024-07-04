@@ -8,6 +8,7 @@ import com.mycompany.soundup.AudioEnhanceDir;
 import com.mycompany.soundup.StartMenu;
 import java.awt.BorderLayout;
 import java.awt.Point;
+import java.util.List;
 
 /**
  *
@@ -21,11 +22,10 @@ public class principal extends javax.swing.JFrame {
     String route;
     private Point point;
 
-    public principal(String ruta) {
+    public principal(List<AudioEnhanceDir.Rutas> estanMejorados) {
         initComponents();
-        route = ruta;
         this.setLocationRelativeTo(this);
-        panelDir pd = new panelDir(ruta);
+        panelDir pd = new panelDir(estanMejorados);
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
@@ -123,7 +123,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-      //  AudioEnhanceDir.EliminarDuplicadosCovertidos();     HAY QUE MODIFICAR IMPORTANTE AQUI
+        //  AudioEnhanceDir.EliminarDuplicadosCovertidos();     HAY QUE MODIFICAR IMPORTANTE AQUI
         AudioEnhanceDir.eliminarArchivosNormalizados(route);
 
         this.dispose();
@@ -184,7 +184,7 @@ public class principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new principal("vacio").setVisible(true);
+                new principal(null).setVisible(true);
             }
         });
     }

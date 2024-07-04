@@ -27,7 +27,7 @@ public class AudioEnhanceDir {
 
     public static DirectoryTree tree;
     public int cantidad = 0;
-    public static AtomicInteger totalAudioFiles = new AtomicInteger(0);
+    public static AtomicInteger totalAudioFiles = new AtomicInteger();
 
 public static int returnNumeroActual () {
     return totalAudioFiles.get();

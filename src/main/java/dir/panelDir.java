@@ -14,6 +14,7 @@ import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
@@ -31,19 +32,17 @@ public class panelDir extends javax.swing.JPanel {
     DirectoryFiles directoryFiles;
     int numerodecanciones;
 
-    public panelDir(String ruta) {
+    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorados) {
         initComponents();
         setOpaque(true);
 
         jComboBox1.removeAllItems();
-        //  ruta = "C:/Users/Somils/Desktop/Muestra";
 
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
 
-        AudioEnhanceDir ae = new AudioEnhanceDir();
-     //   ae.MejorarDir(ruta);                     HAY QUE MODIFICAR IMPORTANTE AQUI
-        numerodecanciones = ae.cantidad;
+            
+        numerodecanciones = estanMejorados.size();
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
