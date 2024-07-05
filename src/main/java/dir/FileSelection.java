@@ -93,6 +93,7 @@ public class FileSelection extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -196,6 +197,12 @@ public class FileSelection extends javax.swing.JFrame {
         jLabel2.setText("Antes ");
         jPanel7.add(jLabel2);
         jLabel2.setBounds(210, 10, 90, 19);
+
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 0, 8)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("SSD SOFTWARE COMPANY - DERECHOS RESERVADOS A SANDY HRNOS SANDOVAL");
+        jPanel7.add(jLabel4);
+        jLabel4.setBounds(10, 120, 690, 40);
 
         getContentPane().add(jPanel7);
         jPanel7.setBounds(0, 470, 900, 160);
@@ -316,6 +323,7 @@ public class FileSelection extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;

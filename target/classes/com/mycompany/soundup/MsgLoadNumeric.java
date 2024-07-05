@@ -42,7 +42,7 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         } else {
             if (opcion == 1) {
 
-                jLabel1.setText("Finalizacion ... ");
+                jLabel1.setText("Finalizando ... ");
 
             }
         }
@@ -60,6 +60,7 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(330, 110));
@@ -82,6 +83,13 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         jLabel1.setText("PROCESANDO....");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(0, 20, 330, 60);
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setFont(new java.awt.Font("Microsoft Tai Le", 1, 10)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("SANDY SOFTWARE");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(10, 10, 160, 12);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 330, 110);
@@ -126,6 +134,7 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

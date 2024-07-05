@@ -48,6 +48,11 @@ public class principal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -110,6 +115,47 @@ public class principal extends javax.swing.JFrame {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(60, 10, 120, 40);
 
+        jLabel3.setFont(new java.awt.Font("Microsoft YaHei", 0, 10)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("SANDY   HNS   SANDOVAL");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(20, 650, 170, 20);
+
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 0, 10)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("SOFTWARE  ESPECIALIZADO ");
+        jPanel2.add(jLabel4);
+        jLabel4.setBounds(20, 610, 170, 20);
+
+        jLabel7.setFont(new java.awt.Font("Microsoft YaHei", 0, 10)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("PARA ORGANIZACION");
+        jPanel2.add(jLabel7);
+        jLabel7.setBounds(30, 630, 140, 20);
+
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel4.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel4MouseMoved(evt);
+            }
+        });
+        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel4MouseExited(evt);
+            }
+        });
+        jPanel4.setLayout(null);
+
+        jLabel8.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Mejoramiento por RMS");
+        jPanel4.add(jLabel8);
+        jLabel8.setBounds(20, 20, 140, 20);
+
+        jPanel2.add(jPanel4);
+        jPanel4.setBounds(0, 100, 180, 60);
+
         jPanel1.add(jPanel2);
         jPanel2.setBounds(0, 0, 180, 670);
 
@@ -154,6 +200,14 @@ public class principal extends javax.swing.JFrame {
         getComponentAt(point);
     }//GEN-LAST:event_formMousePressed
 
+    private void jPanel4MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseMoved
+        jPanel4.setBackground(new java.awt.Color(102, 102, 102));
+    }//GEN-LAST:event_jPanel4MouseMoved
+
+    private void jPanel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseExited
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+    }//GEN-LAST:event_jPanel4MouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -192,10 +246,15 @@ public class principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     // End of variables declaration//GEN-END:variables
 }

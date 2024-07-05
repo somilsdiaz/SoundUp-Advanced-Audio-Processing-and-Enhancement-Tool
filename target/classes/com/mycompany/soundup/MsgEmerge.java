@@ -40,6 +40,7 @@ public class MsgEmerge extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(330, 110));
@@ -83,6 +84,13 @@ public class MsgEmerge extends javax.swing.JFrame {
         jLabel1.setText("SE HAN REALIZADO....");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(30, 20, 270, 60);
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setFont(new java.awt.Font("Microsoft Tai Le", 1, 10)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("SANDY SOFTWARE");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(10, 10, 160, 12);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 330, 110);
@@ -141,6 +149,7 @@ public class MsgEmerge extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
