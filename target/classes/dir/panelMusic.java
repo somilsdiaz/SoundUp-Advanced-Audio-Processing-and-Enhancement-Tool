@@ -32,6 +32,8 @@ public class panelMusic extends javax.swing.JPanel {
         ruta = route;
         //this.getContentPane().setBackground(new Color(0, 0, 0, 0));
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,7 +114,7 @@ public class panelMusic extends javax.swing.JPanel {
         statusInicialGlobal = 1;
 
         //LINEA DE REPRODUCCION
-        line = new LineMusic(duracion);
+        line = new LineMusic(duracion, ruta);
         jPanel4.setLayout(new BorderLayout());
         line.setOpaque(false);
         jPanel4.add(line, BorderLayout.CENTER);
@@ -142,6 +144,7 @@ public class panelMusic extends javax.swing.JPanel {
                 line.stop();
                 visualizer.stopBars();
                 status = 1;
+                line.status(0);
 
             } else if (status == 1) {
                 //  AudioNormalizer.reproducirCancion(ruta);
@@ -150,6 +153,7 @@ public class panelMusic extends javax.swing.JPanel {
                 status = 0;
                 AudioNormalizer.reproducirCancionDesde(ruta, tiempo);
                 statusInicialGlobal = 1;
+                line.status(1);
 
             }
         }
