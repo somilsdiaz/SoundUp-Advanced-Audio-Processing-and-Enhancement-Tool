@@ -21,6 +21,7 @@ public class panelMusic extends javax.swing.JPanel {
     AudioNormalizer audioProcessor;
     AudioVisualizer2 visualizer;
     private int status = 0;
+    int statusInicialGlobal = 0;
 
     /**
      * Creates new form panelMusic
@@ -108,6 +109,7 @@ public class panelMusic extends javax.swing.JPanel {
         //LIMPIAR JPANEL PARA PINTAR
         jPanel3.removeAll();
         jPanel4.removeAll();
+        statusInicialGlobal = 1;
 
         //LINEA DE REPRODUCCION
         line = new LineMusic(duracion);
@@ -133,18 +135,23 @@ public class panelMusic extends javax.swing.JPanel {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         int tiempo;
-        if (status == 0) {
-            AudioNormalizer.detenerCancion();
-            line.stop();
-            visualizer.stopBars();
-            status = 1;
-        } else if (status == 1) {
-            //  AudioNormalizer.reproducirCancion(ruta);
-            tiempo = line.start();
-            visualizer.startBars();
-            status = 0;
-            AudioNormalizer.reproducirCancionDesde(ruta, tiempo);
+        if (statusInicialGlobal == 1) {
+            if (status == 0) {
 
+                AudioNormalizer.detenerCancion();
+                line.stop();
+                visualizer.stopBars();
+                status = 1;
+
+            } else if (status == 1) {
+                //  AudioNormalizer.reproducirCancion(ruta);
+                tiempo = line.start();
+                visualizer.startBars();
+                status = 0;
+                AudioNormalizer.reproducirCancionDesde(ruta, tiempo);
+                statusInicialGlobal = 1;
+
+            }
         }
     }//GEN-LAST:event_jLabel3MouseClicked
 

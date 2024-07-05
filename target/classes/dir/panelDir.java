@@ -12,6 +12,7 @@ import com.mycompany.soundup.AudioEnhanceDir.Rutas;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
+import com.mycompany.soundup.StartMenu;
 import it.sauronsoftware.jave.AudioAttributes;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
@@ -39,10 +40,12 @@ public class panelDir extends javax.swing.JPanel {
     DirectoryFiles directoryFiles;
     int numerodecanciones;
     List<AudioEnhanceDir.Rutas> estanMejorados;
+    String route;
 
-    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado) {
+    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta) {
         initComponents();
         setOpaque(true);
+        route = ruta;
         estanMejorados = estanMejorado;
         jComboBox1.removeAllItems();
 
@@ -61,8 +64,8 @@ public class panelDir extends javax.swing.JPanel {
         }
         Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
         for (FileEntry FileEntry : directoryFiles.files) {
-            for (Rutas ruta : estanMejorados) {
-                if (FileEntry.absoluteFilePath.equals(ruta.rutaOriginal)) {
+            for (Rutas rutas : estanMejorados) {
+                if (FileEntry.absoluteFilePath.equals(rutas.rutaOriginal)) {
                     listModel.addElement(FileEntry.filePath);
                 }
             }
@@ -282,7 +285,14 @@ public class panelDir extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+            AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
+            StartMenu.CerrarPrincipal();
+            AudioEnhanceDir.eliminarArchivosNormalizados(route);
+            MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
+            me.setVisible(true);
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

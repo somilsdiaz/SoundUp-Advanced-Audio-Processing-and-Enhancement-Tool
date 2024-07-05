@@ -42,6 +42,7 @@ public class StartMenu extends javax.swing.JFrame {
     private Point point;
     private static AtomicInteger totalAudioFiles = new AtomicInteger(0);
     MsgLoadNumeric cargando = new MsgLoadNumeric();
+    private static principal pp;
 
     public StartMenu() {
         setUndecorated(true);
@@ -67,6 +68,13 @@ public class StartMenu extends javax.swing.JFrame {
         cargando.updateTotalAudioFiles(num);
     }
 
+    public static void CerrarPrincipal() {
+        pp.setVisible(false);
+        StartMenu st = new StartMenu();
+        st.setVisible(true);
+        
+        
+    }
     public static String convertToWav(String inputFilePath) {
         // Crear un objeto File a partir de la ruta del archivo de entrada
         File inputFile = new File(inputFilePath);
@@ -323,7 +331,7 @@ public class StartMenu extends javax.swing.JFrame {
                     if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
                         List<AudioEnhanceDir.Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
-                        principal pp = new principal(estanMejorados, filePath);
+                        pp = new principal(estanMejorados, filePath);
                         pp.setVisible(true);
                         this.dispose();
                     } else {

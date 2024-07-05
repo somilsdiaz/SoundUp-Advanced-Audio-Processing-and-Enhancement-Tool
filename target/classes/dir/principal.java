@@ -26,7 +26,7 @@ public class principal extends javax.swing.JFrame {
         initComponents();
         route = ruta;
         this.setLocationRelativeTo(this);
-        panelDir pd = new panelDir(estanMejorados);
+        panelDir pd = new panelDir(estanMejorados, ruta);
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
