@@ -130,8 +130,10 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -201,6 +203,12 @@ public class StartMenu extends javax.swing.JFrame {
         jPanel5.add(jLabel8);
         jLabel8.setBounds(0, 0, 250, 250);
 
+        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("SELECCIONAR MUSICA");
+        jPanel5.add(jLabel9);
+        jLabel9.setBounds(40, 230, 190, 19);
+
         jPanel1.add(jPanel5);
         jPanel5.setBounds(560, 260, 250, 250);
 
@@ -225,8 +233,15 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel7.setBounds(0, 0, 250, 240);
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(170, 260, 250, 250);
+        jPanel3.setBounds(170, 260, 250, 240);
 
+        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText(" SELECCIONAR CARPETA");
+        jPanel1.add(jLabel10);
+        jLabel10.setBounds(210, 490, 190, 30);
+
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 0, 14)); // NOI18N
         jLabel4.setText("jLabel4");
         jLabel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -433,6 +448,7 @@ public class StartMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -440,6 +456,7 @@ public class StartMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

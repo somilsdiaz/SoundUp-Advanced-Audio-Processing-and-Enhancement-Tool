@@ -51,7 +51,7 @@ public class panelMusic extends javax.swing.JPanel {
         setOpaque(false);
         setLayout(null);
 
-        jPanel2.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel2.setBackground(new java.awt.Color(17, 17, 17));
         jPanel2.setLayout(null);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/play.png"))); // NOI18N
@@ -64,12 +64,12 @@ public class panelMusic extends javax.swing.JPanel {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(100, 260, 40, 40);
 
-        jPanel3.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel3.setBackground(new java.awt.Color(17, 17, 17));
         jPanel3.setLayout(null);
         jPanel2.add(jPanel3);
         jPanel3.setBounds(40, 310, 200, 40);
 
-        jPanel4.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel4.setBackground(new java.awt.Color(17, 17, 17));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);

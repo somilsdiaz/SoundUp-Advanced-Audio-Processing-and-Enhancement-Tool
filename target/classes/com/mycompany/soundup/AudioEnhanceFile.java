@@ -169,7 +169,7 @@ public class AudioEnhanceFile {
         try {
 
             // Calculate target RMS value
-            double targetRMS = 0.111; // Target RMS value
+            double targetRMS = 0.1; // Target RMS value
 
             // Calculate current volume in dB
             double currentVolume = 20 * Math.log10(currentRMS);

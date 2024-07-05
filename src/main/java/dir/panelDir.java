@@ -66,13 +66,20 @@ public class panelDir extends javax.swing.JPanel {
                     listModel.addElement(FileEntry.filePath);
                 }
             }
+
         }
         /*   for (FileEntry FileEntry : directoryFiles.files) {
             if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
                 listModel.addElement(FileEntry.filePath);
             }
         }*/
+        if (listModel.getSize() == 1) {
+            jLabel1.setText(listModel.getSize() + " cancion");
 
+        } else {
+            jLabel1.setText(listModel.getSize() + " canciones");
+
+        }
         jComboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,8 +102,17 @@ public class panelDir extends javax.swing.JPanel {
                     }
                     System.out.println("Directory ID: " + FileEntry.directoryId + ", File Path: " + FileEntry.filePath + ", Directory Path: " + FileEntry.directoryPath);
                 }
+                if (listModel.getSize() == 1) {
+                    jLabel1.setText(listModel.getSize() + " cancion");
+
+                } else {
+                    jLabel1.setText(listModel.getSize() + " canciones");
+
+                }
             }
+
         });
+
         System.out.println("\nTodos los archivos:");
     }
 
@@ -151,6 +167,8 @@ public class panelDir extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setLayout(null);
 
@@ -189,7 +207,7 @@ public class panelDir extends javax.swing.JPanel {
         jScrollPane2.setViewportView(jList2);
 
         jPanel1.add(jScrollPane2);
-        jScrollPane2.setBounds(30, 100, 650, 540);
+        jScrollPane2.setBounds(30, 120, 650, 470);
 
         jButton1.setText("ESCUCHAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -199,6 +217,21 @@ public class panelDir extends javax.swing.JPanel {
         });
         jPanel1.add(jButton1);
         jButton1.setBounds(580, 60, 100, 23);
+
+        jButton2.setText("APLICAR CAMBIOS");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2);
+        jButton2.setBounds(230, 620, 190, 23);
+
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("10 canciones");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(30, 100, 170, 17);
 
         add(jPanel1);
         jPanel1.setBounds(0, 0, 720, 670);
@@ -248,10 +281,16 @@ public class panelDir extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
