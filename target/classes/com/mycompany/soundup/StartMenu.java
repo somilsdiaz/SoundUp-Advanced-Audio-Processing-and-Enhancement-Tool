@@ -64,17 +64,19 @@ public class StartMenu extends javax.swing.JFrame {
 
     }
 
-    public void asignar(int num) {
-        cargando.updateTotalAudioFiles(num);
+    public void asignar(int num, int opcion) {
+
+        cargando.updateTotalAudioFiles(num, opcion);
+
     }
 
     public static void CerrarPrincipal() {
         pp.setVisible(false);
         StartMenu st = new StartMenu();
         st.setVisible(true);
-        
-        
+
     }
+
     public static String convertToWav(String inputFilePath) {
         // Crear un objeto File a partir de la ruta del archivo de entrada
         File inputFile = new File(inputFilePath);
@@ -321,7 +323,7 @@ public class StartMenu extends javax.swing.JFrame {
                     totalAudioFiles.set(AudioEnhanceDir.contarArchivosDeAudio(filePath));
                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                     scheduler.scheduleAtFixedRate(() -> {
-                        asignar(AudioEnhanceDir.returnNumeroActual());
+                        asignar(AudioEnhanceDir.returnNumeroActual(), 0);
                     }, 0, 1, TimeUnit.SECONDS);
 
                     List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(filePath);
@@ -330,7 +332,13 @@ public class StartMenu extends javax.swing.JFrame {
 
                     if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
+                        ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
+                        scheduler2.scheduleAtFixedRate(() -> {
+                            asignar(AudioEnhanceDir.returnNumeroActual(), 1);
+                        }, 0, 1, TimeUnit.SECONDS);
                         List<AudioEnhanceDir.Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
+                        scheduler.shutdown();
+                        scheduler.awaitTermination(1, TimeUnit.MINUTES);
                         pp = new principal(estanMejorados, filePath);
                         pp.setVisible(true);
                         this.dispose();

@@ -22,7 +22,6 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
      */
     public MsgLoadNumeric() {
         this.totalAudioFiles = totalAudioFiles;
-
         initComponents();
         //  jLabel1.setText("PROCESANDO... "+totalAudioFiles);
         this.setLocationRelativeTo(this);
@@ -34,11 +33,19 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         this.add(jPanel2);
     }
 
-    public void updateTotalAudioFiles(int total) {
-        totalAudioFiles.set(total);
-        System.out.println(totalAudioFiles.get());
-        jLabel1.setText("PROCESANDO " + totalAudioFiles+" ARCHIVOS DE MUSICA");
-        // Aquí puedes actualizar cualquier componente de la UI con el nuevo valor
+    public void updateTotalAudioFiles(int total, int opcion) {
+        if (opcion == 0) {
+            totalAudioFiles.set(total);
+            System.out.println(totalAudioFiles.get());
+            jLabel1.setText("PROCESANDO " + totalAudioFiles + " ARCHIVOS DE MUSICA");
+            // Aquí puedes actualizar cualquier componente de la UI con el nuevo valor
+        } else {
+            if (opcion == 1) {
+
+                jLabel1.setText("Finalizacion ... ");
+
+            }
+        }
     }
 
     /**
