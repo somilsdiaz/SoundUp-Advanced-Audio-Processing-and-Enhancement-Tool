@@ -191,7 +191,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
         AudioNormalizer.finalizarProcesoCancion(route2);
         AudioNormalizer.finalizarProcesoCancion(route1);
 
-        AudioEnhanceFile.eliminarArchivo(route2);
+   //     AudioEnhanceFile.eliminarArchivo(route2);
         AudioEnhanceFile.eliminarArchivo(route1);
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked

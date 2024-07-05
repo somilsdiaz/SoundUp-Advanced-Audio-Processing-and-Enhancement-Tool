@@ -63,8 +63,9 @@ public class panelDir extends javax.swing.JPanel {
             jComboBox1.addItem(dir.path);
         }
         Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
-        for (FileEntry FileEntry : directoryFiles.files) {
-            for (Rutas rutas : estanMejorados) {
+        for (Rutas rutas : estanMejorados) {
+            for (FileEntry FileEntry : directoryFiles.files) {
+
                 if (FileEntry.absoluteFilePath.equals(rutas.rutaOriginal)) {
                     listModel.addElement(FileEntry.filePath);
                 }
@@ -99,12 +100,23 @@ public class panelDir extends javax.swing.JPanel {
                 }
                 System.out.println("Item seleccionado: " + selectedItem);
 
-                for (FileEntry FileEntry : directoryFiles.files) {
+                for (Rutas rutas : estanMejorados) {
+                    for (FileEntry FileEntry : directoryFiles.files) {
+                        if (FileEntry.absoluteFilePath.equals(rutas.rutaOriginal)) {
+                            if (FileEntry.directoryId == idSelected) {
+                                listModel.addElement(FileEntry.filePath);
+                            }
+                        }
+                    }
+
+                }
+
+                /*   for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.directoryId == idSelected) {
                         listModel.addElement(FileEntry.filePath);
                     }
                     System.out.println("Directory ID: " + FileEntry.directoryId + ", File Path: " + FileEntry.filePath + ", Directory Path: " + FileEntry.directoryPath);
-                }
+                }*/
                 if (listModel.getSize() == 1) {
                     jLabel1.setText(listModel.getSize() + " cancion");
 
@@ -286,11 +298,11 @@ public class panelDir extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-            AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
-            StartMenu.CerrarPrincipal();
-            AudioEnhanceDir.eliminarArchivosNormalizados(route);
-            MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
-            me.setVisible(true);
+        AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
+        StartMenu.CerrarPrincipal();
+        AudioEnhanceDir.eliminarArchivosNormalizados(route);
+        MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
+        me.setVisible(true);
 
 
     }//GEN-LAST:event_jButton2ActionPerformed

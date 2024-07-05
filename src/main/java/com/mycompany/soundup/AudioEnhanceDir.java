@@ -32,7 +32,7 @@ public class AudioEnhanceDir {
 
     public static void main(String[] args) {
 
-        String ruta = "C:/Users/Somils/Music/TRANS  DE JORGE";
+        String ruta = "C:/Users/Somils/Desktop/muestra";
         totalAudioFiles.set(contarArchivosDeAudio(ruta));
 
         List<RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(ruta);
