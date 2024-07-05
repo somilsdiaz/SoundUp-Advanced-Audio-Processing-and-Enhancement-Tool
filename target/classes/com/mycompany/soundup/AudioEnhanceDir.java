@@ -16,10 +16,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -29,12 +26,13 @@ public class AudioEnhanceDir {
     public int cantidad = 0;
     public static AtomicInteger totalAudioFiles = new AtomicInteger();
 
-public static int returnNumeroActual () {
-    return totalAudioFiles.get();
-}
+    public static int returnNumeroActual() {
+        return totalAudioFiles.get();
+    }
+
     public static void main(String[] args) {
 
-        String ruta = "C:/Users/Somils/Music/SALSAS  ROMANTICAS";
+        String ruta = "C:/Users/Somils/Music/TRANS  DE JORGE";
         totalAudioFiles.set(contarArchivosDeAudio(ruta));
 
         List<RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(ruta);
@@ -51,13 +49,13 @@ public static int returnNumeroActual () {
         System.out.println("Vamos a mejorar los audios que necesitan normalizacion");
         List<Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
 
-        if (estanMejorados != null && !estanMejorados.isEmpty()) {
+        /*   if (estanMejorados != null && !estanMejorados.isEmpty()) {
             for (Rutas rutas : estanMejorados) {
                 System.out.println("Ruta original: " + rutas.rutaOriginal + "Ruta mejorada: " + rutas.rutaMejorada);
             }
 
-        }
-        eliminarArchivosNormalizados(ruta);
+        }*/
+        //   eliminarArchivosNormalizados(ruta);
     }
 
     public static int contarArchivosDeAudio(String ruta) {
@@ -85,8 +83,7 @@ public static int returnNumeroActual () {
 
     public static List<RutaRmsPar> EncontrarNecesitanNormalizar(String ruta) {
         tree = new DirectoryTree(ruta);
-        
-        
+
         totalAudioFiles.set(contarArchivosDeAudio(ruta));
         List<RutaRmsPar> necesitaNormalizacion = Collections.synchronizedList(new ArrayList<>());
         String directoryPath = ruta;
@@ -128,7 +125,7 @@ public static int returnNumeroActual () {
                     -> necesitanNormalizar.parallelStream().forEach(archivo -> {
                         String rutaOriginal = archivo.rutaOriginal;
                         String rutaMejorada = AudioEnhanceFile.Mejorar(rutaOriginal, 0, archivo.RMS);
-                        Rutas ruta = new Rutas(rutaOriginal, rutaMejorada);
+                        Rutas ruta = new Rutas(rutaOriginal, rutaMejorada, archivo.RMS);
                         estanNormalizados.add(ruta);
                     })
             ).get();
@@ -212,10 +209,12 @@ public static int returnNumeroActual () {
 
         public String rutaOriginal;
         public String rutaMejorada;
+        public double RMS;
 
-        public Rutas(String rutaOriginal, String rutaMejorada) {
+        public Rutas(String rutaOriginal, String rutaMejorada, double RMS) {
             this.rutaOriginal = rutaOriginal;
             this.rutaMejorada = rutaMejorada;
+            this.RMS = RMS;
 
         }
 

@@ -22,8 +22,9 @@ public class principal extends javax.swing.JFrame {
     String route;
     private Point point;
 
-    public principal(List<AudioEnhanceDir.Rutas> estanMejorados) {
+    public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta) {
         initComponents();
+        route = ruta;
         this.setLocationRelativeTo(this);
         panelDir pd = new panelDir(estanMejorados);
         jPanel3.setLayout(new BorderLayout());
@@ -184,7 +185,7 @@ public class principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new principal(null).setVisible(true);
+                new principal(null, "vacio").setVisible(true);
             }
         });
     }

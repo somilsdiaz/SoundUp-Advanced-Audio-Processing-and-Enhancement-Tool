@@ -10,7 +10,6 @@ import Directorios.FileEntry;
 import com.mycompany.soundup.AudioEnhanceDir;
 import com.mycompany.soundup.AudioEnhanceDir.Rutas;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
-import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import it.sauronsoftware.jave.AudioAttributes;
@@ -20,6 +19,8 @@ import it.sauronsoftware.jave.EncodingAttributes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -58,11 +59,19 @@ public class panelDir extends javax.swing.JPanel {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
             jComboBox1.addItem(dir.path);
         }
+        Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
         for (FileEntry FileEntry : directoryFiles.files) {
+            for (Rutas ruta : estanMejorados) {
+                if (FileEntry.absoluteFilePath.equals(ruta.rutaOriginal)) {
+                    listModel.addElement(FileEntry.filePath);
+                }
+            }
+        }
+        /*   for (FileEntry FileEntry : directoryFiles.files) {
             if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
                 listModel.addElement(FileEntry.filePath);
             }
-        }
+        }*/
 
         jComboBox1.addActionListener(new ActionListener() {
             @Override
@@ -92,8 +101,15 @@ public class panelDir extends javax.swing.JPanel {
     }
 
     public static String convertToWav(String inputFilePath) {
-        File source = new File(inputFilePath);
-        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
+        // Crear un objeto File a partir de la ruta del archivo de entrada
+        File inputFile = new File(inputFilePath);
+
+        // Obtener la ruta del archivo de salida con la extensión .wav
+        String inputFileName = inputFile.getName();
+        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
+
+        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
+        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
         // Atributos de audio mejorados para mantener la calidad
@@ -112,7 +128,7 @@ public class panelDir extends javax.swing.JPanel {
 
         Encoder encoder = new Encoder();
         try {
-            encoder.encode(source, target, attrs);
+            encoder.encode(inputFile, target, attrs);
             return target.getAbsolutePath();
         } catch (EncoderException e) {
             e.printStackTrace();
@@ -205,7 +221,7 @@ public class panelDir extends javax.swing.JPanel {
                         String rutaFileWav = convertToWav(rutaOriginal);
                         for (Rutas rutas : estanMejorados) {
                             if (rutas.rutaOriginal == rutaOriginal) {
-                                FileSelectionDir fs = new FileSelectionDir(rutaOriginal, rutaFileWav, rutas.rutaMejorada);
+                                FileSelectionDir fs = new FileSelectionDir(rutaFileWav, rutas.rutaMejorada);
                                 fs.setVisible(true);
                                 break;
                             }

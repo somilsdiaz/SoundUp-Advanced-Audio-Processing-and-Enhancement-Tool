@@ -23,24 +23,28 @@ import java.util.stream.Collectors;
 public class AudioEnhanceFile {
 
     public static void main(String[] args) {
-        String rutaDirectorio = "C:/Users/Somils/Desktop/Muestra/Amores Como El Nuestro.mp3"; // Reemplaza con la ruta de tu directorio de archivos de audio
+        String rutaDirectorio = "C:/Users/Somils/Desktop/Muestra/U Roy   Dread In A Babylon   Fire In A Trenchtown[1].mp3"; // Reemplaza con la ruta de tu directorio de archivos de audio
         int reemplazar = 0; // 1 para reemplazar el archivo original, 0 para no reemplazar
         // Probar método necesitaNormalizacion
-        String rutaArchivo = "C:/Users/Somils/Desktop/Muestra/Amores Como El Nuestro.mp3"; // Reemplaza con la ruta de tu archivo de audio
+        String rutaArchivo = "C:/Users/Somils/Desktop/Muestra/U Roy   Dread In A Babylon   Fire In A Trenchtown[1].mp3"; // Reemplaza con la ruta de tu archivo de audio
         BooleanDoublePair necesitaNormalizar = AudioEnhanceFile.necesitaNormalizacion(rutaArchivo);
         System.out.println("¿Necesita normalización?: " + necesitaNormalizar.flag);
 
         // Llamar al método Mejorar
-        String resultado = AudioEnhanceFile.Mejorar(rutaDirectorio, reemplazar, necesitaNormalizar.value);
-        if (resultado != null) {
-            System.out.println("Archivo mejorado: " + resultado);
-        } else {
-            System.out.println("No se pudo mejorar el archivo.");
-        }
+        if (necesitaNormalizar.flag) {
+            String resultado = AudioEnhanceFile.Mejorar(rutaDirectorio, reemplazar, necesitaNormalizar.value);
+            if (resultado != null) {
+                System.out.println("Archivo mejorado: " + resultado);
+            } else {
+                System.out.println("No se pudo mejorar el archivo.");
+            }
 
-        /*   // Probar método eliminarArchivo
+            /*   // Probar método eliminarArchivo
         boolean eliminado = AudioEnhanceFile.eliminarArchivo(rutaArchivo);
         System.out.println("¿Archivo eliminado?: " + eliminado);*/
+        } else {
+            System.out.println("El archivo no necesita mejora");
+        }
     }
 
     public static String Mejorar(String ruta, int reemplazar, double currentRMS) {
@@ -77,7 +81,7 @@ public class AudioEnhanceFile {
                 throw new IllegalArgumentException("El archivo no existe o no es un archivo de audio válido.");
             }
 
-            AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
+            AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 2048, 2);
             RMSProcessor rmsProcessor = new RMSProcessor();
             dispatcher.addAudioProcessor(rmsProcessor);
 
@@ -86,7 +90,7 @@ public class AudioEnhanceFile {
             double targetRMS = 0.1; // Target RMS value
             double currentRMS = rmsProcessor.getRMS();
             boolean need;
-            if (currentRMS < targetRMS) {
+            if ((currentRMS < targetRMS) && ((targetRMS - currentRMS) > 0.01)) {
                 need = true;
             } else {
                 need = false;
@@ -129,29 +133,43 @@ public class AudioEnhanceFile {
     }
 
     public static File convertToWav(File inputFile) {
-        File outputWavFile = new File(inputFile.getParent(), "temp_" + inputFile.getName() + ".wav");
+        // Obtener la ruta del archivo de salida con la extensión .wav
+        String inputFileName = inputFile.getName();
+        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
+
+        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
+        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
+        File target = new File(outputFilePath);
+
+        // Atributos de audio mejorados para mantener la calidad
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("pcm_s16le");
-        audio.setBitRate(16000);
-        audio.setChannels(2);
-        audio.setSamplingRate(44100);
+
+        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
+        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
+        audio.setBitRate(320000);
+        audio.setChannels(2); // Mantén el número de canales estéreo
+        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setFormat("wav");
         attrs.setAudioAttributes(audio);
+
         Encoder encoder = new Encoder();
         try {
-            encoder.encode(inputFile, outputWavFile, attrs);
+            encoder.encode(inputFile, target, attrs);
+            return target;
         } catch (EncoderException e) {
             e.printStackTrace();
+            return null;
         }
-        return outputWavFile;
     }
 
     private static String normalizeAudioVolume(File audioFile, File originalFile, double currentRMS) {
         try {
 
             // Calculate target RMS value
-            double targetRMS = 0.11; // Target RMS value
+            double targetRMS = 0.111; // Target RMS value
 
             // Calculate current volume in dB
             double currentVolume = 20 * Math.log10(currentRMS);

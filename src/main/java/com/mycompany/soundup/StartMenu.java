@@ -68,8 +68,15 @@ public class StartMenu extends javax.swing.JFrame {
     }
 
     public static String convertToWav(String inputFilePath) {
-        File source = new File(inputFilePath);
-        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
+        // Crear un objeto File a partir de la ruta del archivo de entrada
+        File inputFile = new File(inputFilePath);
+
+        // Obtener la ruta del archivo de salida con la extensión .wav
+        String inputFileName = inputFile.getName();
+        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
+
+        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
+        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
         // Atributos de audio mejorados para mantener la calidad
@@ -88,7 +95,7 @@ public class StartMenu extends javax.swing.JFrame {
 
         Encoder encoder = new Encoder();
         try {
-            encoder.encode(source, target, attrs);
+            encoder.encode(inputFile, target, attrs);
             return target.getAbsolutePath();
         } catch (EncoderException e) {
             e.printStackTrace();
@@ -301,7 +308,7 @@ public class StartMenu extends javax.swing.JFrame {
                     if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
                         List<AudioEnhanceDir.Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
-                        principal pp = new principal(estanMejorados);
+                        principal pp = new principal(estanMejorados, filePath);
                         pp.setVisible(true);
                         this.dispose();
                     } else {

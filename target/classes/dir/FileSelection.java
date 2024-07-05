@@ -8,25 +8,12 @@ import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncodingAttributes;
 import java.awt.BorderLayout;
-
 import java.awt.Point;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.swing.SwingUtilities;
 import org.jaudiotagger.tag.TagException;
 import pruebas.AudioNormalizer;
@@ -76,34 +63,6 @@ public class FileSelection extends javax.swing.JFrame {
 
     }
 
-    public static String convertToWav(String inputFilePath) {
-        File source = new File(inputFilePath);
-        String outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf('.')) + ".wav";
-        File target = new File(outputFilePath);
-
-        // Atributos de audio mejorados para mantener la calidad
-        AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("pcm_s16le");
-
-        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
-        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
-        audio.setBitRate(320000);
-        audio.setChannels(2); // Mantén el número de canales estéreo
-        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
-
-        EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setFormat("wav");
-        attrs.setAudioAttributes(audio);
-
-        Encoder encoder = new Encoder();
-        try {
-            encoder.encode(source, target, attrs);
-            return target.getAbsolutePath();
-        } catch (EncoderException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.

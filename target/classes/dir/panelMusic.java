@@ -5,11 +5,6 @@
 package dir;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Image;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import pruebas.AudioNormalizer;
 import pruebas.AudioVisualizer2;
 import pruebas.LineMusic;
@@ -35,15 +30,6 @@ public class panelMusic extends javax.swing.JPanel {
         duracion = duration;
         ruta = route;
         //this.getContentPane().setBackground(new Color(0, 0, 0, 0));
-    }
-
-    private void SetImageLabel(JLabel labelName, String root) {
-        ImageIcon image = new ImageIcon(getClass().getResource(root));
-        Icon icon = new ImageIcon(
-                image.getImage().getScaledInstance(labelName.getWidth(), labelName.getHeight(), Image.SCALE_DEFAULT)
-        );
-        labelName.setIcon(icon);
-        this.repaint();
     }
 
     /**
