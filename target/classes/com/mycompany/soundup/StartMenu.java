@@ -77,41 +77,7 @@ public class StartMenu extends javax.swing.JFrame {
 
     }
 
-    public static String convertToWav(String inputFilePath) {
-        // Crear un objeto File a partir de la ruta del archivo de entrada
-        File inputFile = new File(inputFilePath);
 
-        // Obtener la ruta del archivo de salida con la extensión .wav
-        String inputFileName = inputFile.getName();
-        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
-
-        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
-        File target = new File(outputFilePath);
-
-        // Atributos de audio mejorados para mantener la calidad
-        AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("pcm_s16le");
-
-        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
-        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
-        audio.setBitRate(320000);
-        audio.setChannels(2); // Mantén el número de canales estéreo
-        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
-
-        EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setFormat("wav");
-        attrs.setAudioAttributes(audio);
-
-        Encoder encoder = new Encoder();
-        try {
-            encoder.encode(inputFile, target, attrs);
-            return target.getAbsolutePath();
-        } catch (EncoderException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -382,7 +348,7 @@ public class StartMenu extends javax.swing.JFrame {
                 //    Thread.sleep(10000);
                 BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(filePath);
                 if (need.flag) {
-                    String outputFilePath = convertToWav(filePath);
+                    String outputFilePath = AudioEnhanceFile.convertToWavString(filePath);
                     String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(outputFilePath, 0, need.value);
                     this.dispose();
                     //     cargando.setVisible(false);

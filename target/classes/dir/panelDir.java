@@ -10,6 +10,7 @@ import Directorios.FileEntry;
 import com.mycompany.soundup.AudioEnhanceDir;
 import com.mycompany.soundup.AudioEnhanceDir.Rutas;
 import static com.mycompany.soundup.AudioEnhanceDir.tree;
+import com.mycompany.soundup.AudioEnhanceFile;
 import com.mycompany.soundup.MsgEmerge;
 import com.mycompany.soundup.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
@@ -131,42 +132,6 @@ public class panelDir extends javax.swing.JPanel {
         System.out.println("\nTodos los archivos:");
     }
 
-    public static String convertToWav(String inputFilePath) {
-        // Crear un objeto File a partir de la ruta del archivo de entrada
-        File inputFile = new File(inputFilePath);
-
-        // Obtener la ruta del archivo de salida con la extensión .wav
-        String inputFileName = inputFile.getName();
-        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
-
-        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
-        File target = new File(outputFilePath);
-
-        // Atributos de audio mejorados para mantener la calidad
-        AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("pcm_s16le");
-
-        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
-        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
-        audio.setBitRate(320000);
-        audio.setChannels(2); // Mantén el número de canales estéreo
-        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
-
-        EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setFormat("wav");
-        attrs.setAudioAttributes(audio);
-
-        Encoder encoder = new Encoder();
-        try {
-            encoder.encode(inputFile, target, attrs);
-            return target.getAbsolutePath();
-        } catch (EncoderException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -266,7 +231,7 @@ public class panelDir extends javax.swing.JPanel {
                 for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.filePath == jList2.getSelectedValue()) {
                         String rutaOriginal = FileEntry.absoluteFilePath;
-                        String rutaFileWav = convertToWav(rutaOriginal);
+                        String rutaFileWav = AudioEnhanceFile.convertToWavString(rutaOriginal);
                         for (Rutas rutas : estanMejorados) {
                             if (rutas.rutaOriginal == rutaOriginal) {
                                 FileSelectionDir fs = new FileSelectionDir(rutaFileWav, rutas.rutaMejorada);

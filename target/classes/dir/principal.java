@@ -51,6 +51,9 @@ public class principal extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
 
@@ -133,6 +136,35 @@ public class principal extends javax.swing.JFrame {
         jPanel2.add(jLabel7);
         jLabel7.setBounds(30, 630, 140, 20);
 
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel5.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel5.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel5MouseMoved(evt);
+            }
+        });
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel5MouseExited(evt);
+            }
+        });
+        jPanel5.setLayout(null);
+
+        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("de Audio (PDA)");
+        jPanel5.add(jLabel9);
+        jLabel9.setBounds(40, 30, 140, 20);
+
+        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Potenciación Dinámica ");
+        jPanel5.add(jLabel10);
+        jLabel10.setBounds(20, 10, 140, 20);
+
+        jPanel2.add(jPanel5);
+        jPanel5.setBounds(0, 190, 180, 60);
+
         jPanel4.setBackground(new java.awt.Color(51, 51, 51));
         jPanel4.setForeground(new java.awt.Color(255, 255, 255));
         jPanel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -208,6 +240,14 @@ public class principal extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(51, 51, 51));
     }//GEN-LAST:event_jPanel4MouseExited
 
+    private void jPanel5MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel5MouseMoved
+
+    private void jPanel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel5MouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -245,6 +285,7 @@ public class principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -252,9 +293,11 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,6 +12,7 @@ pruebas\AudioVisualizer2.class
 dir\principal$6.class
 com\mycompany\soundup\AudioEnhanceDir$RutaRmsPar.class
 dir\FileSelection$4.class
+dir\principal$9.class
 com\mycompany\soundup\AudioEnhanceFile$RMSProcessor.class
 dir\FileSelection.class
 dir\FileSelectionDir$3.class
@@ -21,6 +22,7 @@ Directorios\DirectoryEntry.class
 dir\FileSelection$3.class
 dir\FileSelectionDir$2.class
 com\mycompany\soundup\StartMenu$5.class
+dir\principal$8.class
 com\mycompany\soundup\AudioEnhanceFile.class
 Directorios\FileEntry.class
 dir\principal$1.class
