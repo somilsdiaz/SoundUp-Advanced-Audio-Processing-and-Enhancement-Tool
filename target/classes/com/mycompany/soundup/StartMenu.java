@@ -8,9 +8,14 @@ package com.mycompany.soundup;
  *
  * @author Somils
  */
-import static com.mycompany.soundup.AudioEnhanceDir.EncontrarNecesitanNormalizar;
-import static com.mycompany.soundup.AudioEnhanceDir.vamosAmejorar;
-import com.mycompany.soundup.AudioEnhanceFile.BooleanDoublePair;
+import RMS.AudioEnhanceFile;
+import RMS.AudioEnhanceDir;
+import MsgEmergentes.MsgEmerge;
+import MsgEmergentes.MsgLoadd;
+import MsgEmergentes.MsgLoadNumeric;
+import static RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar;
+import static RMS.AudioEnhanceDir.vamosAmejorar;
+import RMS.AudioEnhanceFile.BooleanDoublePair;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
@@ -20,10 +25,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import jnafilechooser.api.JnaFileChooser;
-import pruebas.AudioVisualizer;
-import pruebas.AudioNormalizer;
-import dir.FileSelection;
-import dir.principal;
+import VisualComponent.AudioVisualizer;
+import VisualComponent.AudioNormalizer;
+import RMS.FileSelection;
 import it.sauronsoftware.jave.AudioAttributes;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
