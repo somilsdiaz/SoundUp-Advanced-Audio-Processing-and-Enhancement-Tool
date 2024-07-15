@@ -143,7 +143,6 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel3.setBounds(10, 10, 70, 70);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
-        jLabel5.setText("jLabel5");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -153,7 +152,6 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel5.setBounds(910, 10, 30, 30);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
-        jLabel6.setText("jLabel5");
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);

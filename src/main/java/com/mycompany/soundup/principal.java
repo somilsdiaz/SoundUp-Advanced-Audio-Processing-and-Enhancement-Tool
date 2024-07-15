@@ -52,6 +52,11 @@ public class principal extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -76,7 +81,6 @@ public class principal extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
-        jLabel6.setText("jLabel5");
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -89,7 +93,6 @@ public class principal extends javax.swing.JFrame {
         jLabel6.setBounds(860, 10, 30, 30);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
-        jLabel5.setText("jLabel5");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -137,6 +140,58 @@ public class principal extends javax.swing.JFrame {
         jLabel7.setText("PARA ORGANIZACION");
         jPanel2.add(jLabel7);
         jLabel7.setBounds(30, 630, 140, 20);
+
+        jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel7.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel7.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel7MouseMoved(evt);
+            }
+        });
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel7MouseExited(evt);
+            }
+        });
+        jPanel7.setLayout(null);
+
+        jLabel13.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("de volumen");
+        jPanel7.add(jLabel13);
+        jLabel13.setBounds(50, 30, 140, 20);
+
+        jLabel14.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Ajuste estandarizado");
+        jPanel7.add(jLabel14);
+        jLabel14.setBounds(20, 10, 140, 20);
+
+        jPanel2.add(jPanel7);
+        jPanel7.setBounds(0, 370, 180, 60);
+
+        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel6.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel6.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel6MouseMoved(evt);
+            }
+        });
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel6MouseExited(evt);
+            }
+        });
+        jPanel6.setLayout(null);
+
+        jLabel12.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Convertidor a Stereo");
+        jPanel6.add(jLabel12);
+        jLabel12.setBounds(30, 20, 130, 20);
+
+        jPanel2.add(jPanel6);
+        jPanel6.setBounds(0, 280, 180, 60);
 
         jPanel5.setBackground(new java.awt.Color(51, 51, 51));
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -243,12 +298,28 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseExited
 
     private void jPanel5MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseMoved
-        // TODO add your handling code here:
+        jPanel5.setBackground(new java.awt.Color(102, 102, 102));
     }//GEN-LAST:event_jPanel5MouseMoved
 
     private void jPanel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseExited
-        // TODO add your handling code here:
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
     }//GEN-LAST:event_jPanel5MouseExited
+
+    private void jPanel6MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseMoved
+        jPanel6.setBackground(new java.awt.Color(102, 102, 102));
+    }//GEN-LAST:event_jPanel6MouseMoved
+
+    private void jPanel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseExited
+        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+    }//GEN-LAST:event_jPanel6MouseExited
+
+    private void jPanel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseMoved
+        jPanel7.setBackground(new java.awt.Color(102, 102, 102));
+    }//GEN-LAST:event_jPanel7MouseMoved
+
+    private void jPanel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseExited
+        jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+    }//GEN-LAST:event_jPanel7MouseExited
 
     /**
      * @param args the command line arguments
@@ -288,6 +359,9 @@ public class principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -301,5 +375,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     // End of variables declaration//GEN-END:variables
 }
