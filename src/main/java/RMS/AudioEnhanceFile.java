@@ -281,7 +281,7 @@ public class AudioEnhanceFile {
     }
 
     // RMSProcessor to calculate the RMS value of the audio
-    private static class RMSProcessor implements AudioProcessor {
+    public static class RMSProcessor implements AudioProcessor {
 
         private double rms = 0;
         private long sampleCount = 0;
