@@ -208,7 +208,7 @@ normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
         return null;
     }
 
-    public static void main(String[] args) {
+   public static void main(String[] args) throws IOException {
         String inputFileWav = AudioEnhanceFile.convertToWavString("C:/Users/Somils/Music/SALSAS/excusa.mp3");
         File inputFile = new File(inputFileWav);
         File outputFile = new File("C:/Users/Somils/Music/SALSAS/Por ella_btt.wav");

@@ -23,6 +23,7 @@ public class panelStereos extends javax.swing.JPanel {
     String ruta;
     int nroCanciones;
     DefaultListModel<String> listModel;
+    DirectoryFiles directoryFiles;
 
     /**
      * Creates new form panelStereos
@@ -39,7 +40,7 @@ public class panelStereos extends javax.swing.JPanel {
         jList2.setModel(listModel);
         jLabel3.setText("¡Se han detectado " + numeroCanciones + " canciones con salida mono!");
         principal.tree_.printTree();
-        DirectoryFiles directoryFiles = tree.getAllDirectoriesAndFiles();
+        directoryFiles = tree.getAllDirectoriesAndFiles();
 
         for (DirectoryEntry dir : directoryFiles.directories) {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
@@ -175,6 +176,10 @@ public class panelStereos extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        for (FileEntry FileEntry : directoryFiles.files) {
+            System.out.println(FileEntry.absoluteFilePath);
+        }
 
 
     }//GEN-LAST:event_jButton2ActionPerformed

@@ -33,6 +33,7 @@ import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.EncodingAttributes;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -350,12 +351,16 @@ public class StartMenu extends javax.swing.JFrame {
                 //    Thread.sleep(10000);
                 BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(filePath);
                 if (need.flag) {
-                    String outputFilePath = AudioEnhanceFile.convertToWavString(filePath);
-                    String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(outputFilePath, 0, need.value);
-                    this.dispose();
-                    //     cargando.setVisible(false);
-                    FileSelection fileselection = new FileSelection(filePath, outputFilePath, rutaArchivoMejorado, need.value);
-                    fileselection.setVisible(true);
+                    try {
+                        String outputFilePath = AudioEnhanceFile.convertToWavString(filePath);
+                        String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(outputFilePath, 0, need.value);
+                        this.dispose();
+                        //     cargando.setVisible(false);
+                        FileSelection fileselection = new FileSelection(filePath, outputFilePath, rutaArchivoMejorado, need.value);
+                        fileselection.setVisible(true);
+                    } catch (IOException ex) {
+                        Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                 } else {
                     MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");

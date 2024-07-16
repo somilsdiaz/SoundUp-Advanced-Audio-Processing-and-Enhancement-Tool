@@ -15,9 +15,12 @@ import MsgEmergentes.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
@@ -224,16 +227,20 @@ public class panelDir extends javax.swing.JPanel {
             Thread backgroundProcessThread = new Thread(() -> {
                 for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.filePath == jList2.getSelectedValue()) {
-                        String rutaOriginal = FileEntry.absoluteFilePath;
-                        String rutaFileWav = AudioEnhanceFile.convertToWavString(rutaOriginal);
-                        for (Rutas rutas : estanMejorados) {
-                            if (rutas.rutaOriginal == rutaOriginal) {
-                                FileSelectionDir fs = new FileSelectionDir(rutaFileWav, rutas.rutaMejorada);
-                                fs.setVisible(true);
-                                break;
+                        try {
+                            String rutaOriginal = FileEntry.absoluteFilePath;
+                            String rutaFileWav = AudioEnhanceFile.convertToWavString(rutaOriginal);
+                            for (Rutas rutas : estanMejorados) {
+                                if (rutas.rutaOriginal == rutaOriginal) {
+                                    FileSelectionDir fs = new FileSelectionDir(rutaFileWav, rutas.rutaMejorada);
+                                    fs.setVisible(true);
+                                    break;
+                                }
                             }
+                            break;
+                        } catch (IOException ex) {
+                            Logger.getLogger(panelDir.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        break;
                     }
 
                 }
@@ -259,7 +266,7 @@ public class panelDir extends javax.swing.JPanel {
 
         AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
         StartMenu.CerrarPrincipal();
-        AudioEnhanceDir.eliminarArchivosNormalizados(route);
+        AudioEnhanceDir.eliminarArchivosNormalizados();
         MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
         me.setVisible(true);
 

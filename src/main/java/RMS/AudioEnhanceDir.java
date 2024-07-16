@@ -25,6 +25,7 @@ public class AudioEnhanceDir {
     public static DirectoryTree tree;
     public int cantidad = 0;
     public static AtomicInteger totalAudioFiles = new AtomicInteger();
+    static Path tempFilesDirectory = Paths.get("tempfiles");
 
     public static int returnNumeroActual() {
         return totalAudioFiles.get();
@@ -161,8 +162,9 @@ public class AudioEnhanceDir {
         return false;
     }
 
-    public static void eliminarArchivosNormalizados(String directoryPath) {
+    public static void eliminarArchivosNormalizados() {
         try {
+            String directoryPath = tempFilesDirectory.toString();
             Files.walkFileTree(Paths.get(directoryPath), EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE, new FileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {

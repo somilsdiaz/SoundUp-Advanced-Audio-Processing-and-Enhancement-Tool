@@ -132,13 +132,17 @@ public class AudioEnhanceFile {
         return false;
     }
 
-    public static File convertToWav(File inputFile) {
+    public static File convertToWav(File inputFile) throws IOException {
+        Path tempFilesDirectory = Paths.get("tempfiles");
+        if (!Files.exists(tempFilesDirectory)) {
+            Files.createDirectory(tempFilesDirectory);
+        }
         // Obtener la ruta del archivo de salida con la extensión .wav
         String inputFileName = inputFile.getName();
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
 
         // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
+        String outputFilePath = tempFilesDirectory.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
         // Atributos de audio mejorados para mantener la calidad
@@ -165,7 +169,11 @@ public class AudioEnhanceFile {
         }
     }
 
-    public static String convertToWavString(String inputFilePath) {
+    public static String convertToWavString(String inputFilePath) throws IOException {
+        Path tempFilesDirectory = Paths.get("tempfiles");
+        if (!Files.exists(tempFilesDirectory)) {
+            Files.createDirectory(tempFilesDirectory);
+        }
         // Crear un objeto File a partir de la ruta del archivo de entrada
         File inputFile = new File(inputFilePath);
 
@@ -174,7 +182,7 @@ public class AudioEnhanceFile {
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
 
         // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = inputFile.getParent() + "/temp_" + inputFileNameWithoutExtension + ".wav";
+        String outputFilePath = tempFilesDirectory.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
         // Atributos de audio mejorados para mantener la calidad
@@ -203,6 +211,11 @@ public class AudioEnhanceFile {
 
     private static String normalizeAudioVolume(File audioFile, File originalFile, double currentRMS) {
         try {
+            // Crear la carpeta "tempfiles" si no existe
+            Path tempFilesDirectory = Paths.get("tempfiles");
+            if (!Files.exists(tempFilesDirectory)) {
+                Files.createDirectory(tempFilesDirectory);
+            }
 
             // Calculate target RMS value
             double targetRMS = 0.1; // Target RMS value
@@ -221,7 +234,7 @@ public class AudioEnhanceFile {
                 normalizationDispatcher.addAudioProcessor(new GainProcessor(adjustmentFactor));
 
                 // Write the normalized audio to a temporary file
-                File normalizedTempFile = new File(audioFile.getParent() + "/normalized_" + audioFile.getName());
+                File normalizedTempFile = new File(tempFilesDirectory.toString() + "/normalized_" + audioFile.getName());
                 WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), normalizedTempFile.getAbsolutePath());
                 normalizationDispatcher.addAudioProcessor(writer);
 

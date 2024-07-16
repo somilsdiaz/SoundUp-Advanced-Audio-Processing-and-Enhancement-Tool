@@ -335,7 +335,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        AudioEnhanceDir.eliminarArchivosNormalizados(route);
+        AudioEnhanceDir.eliminarArchivosNormalizados();
 
         this.dispose();
 
