@@ -8,9 +8,13 @@ import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
 import Directorios.DirectoryTree;
 import Directorios.FileEntry;
+import MsgEmergentes.MsgEmerge;
 import com.mycompany.soundup.principal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 
@@ -44,8 +48,20 @@ public class panelStereos extends javax.swing.JPanel {
 
         for (DirectoryEntry dir : directoryFiles.directories) {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-            jComboBox1.addItem(dir.path);
+            for (FileEntry FileEntry : directoryFiles.files) {
+                System.out.println("Entramos a: " + FileEntry.directoryId);
+                if (FileEntry.directoryId == dir.id && FileEntry != null) {
+                    jComboBox1.addItem(dir.path);
+                    for (FileEntry FileEntry2 : directoryFiles.files) {
+                        if (dir.id == FileEntry2.directoryId) {
+                            listModel.addElement(FileEntry2.filePath);
+                        }
+                    }
+                    break;
+                }
+            }
         }
+
         for (FileEntry FileEntry : directoryFiles.files) {
             if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
                 listModel.addElement(FileEntry.filePath);
@@ -178,7 +194,17 @@ public class panelStereos extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         for (FileEntry FileEntry : directoryFiles.files) {
-            System.out.println(FileEntry.absoluteFilePath);
+            try {
+                System.out.println(FileEntry.absoluteFilePath);
+                String wavRouteFile = RMS.AudioEnhanceFile.convertToWavString(FileEntry.absoluteFilePath);
+                RMS.AudioEnhanceFile.replaceFile(FileEntry.absoluteFilePath, wavRouteFile);
+                RMS.AudioEnhanceFile.eliminarArchivo(wavRouteFile);
+                MsgEmerge msg = new MsgEmerge("Audios convertidos a stereo exitosamente");
+                msg.setVisible(true);
+            } catch (IOException ex) {
+                Logger.getLogger(panelStereos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
 
 

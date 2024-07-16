@@ -34,9 +34,11 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
+    int status = 0;
     String route;
     private Point point;
     public static DirectoryTree tree_;
+    panelStereos ps;
     int numeroCancionesStereo = 0;
     panelDir pd;
     int cop1 = 0;
@@ -53,6 +55,7 @@ public class principal extends javax.swing.JFrame {
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
+
     }
 
     private boolean isStereo(File audioFile) {
@@ -411,8 +414,12 @@ public class principal extends javax.swing.JFrame {
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         numeroCancionesStereo = 0;
-        RecorrerDirectorioFindStereos(route);
-        panelStereos ps = new panelStereos(route, numeroCancionesStereo, tree_);
+        if (status == 0) {
+            RecorrerDirectorioFindStereos(route);
+            ps = new panelStereos(route, numeroCancionesStereo, tree_);
+            status = 1;
+        }
+
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(ps);
         this.add(jPanel3);
@@ -422,8 +429,7 @@ public class principal extends javax.swing.JFrame {
         jLabel5.repaint();
         jLabel6.revalidate();
         jLabel6.repaint();
-        
-        
+
         jPanel3.repaint();
 
     }//GEN-LAST:event_jPanel6MouseClicked
@@ -446,7 +452,7 @@ public class principal extends javax.swing.JFrame {
         jLabel5.repaint();
         jLabel6.revalidate();
         jLabel6.repaint();
-        
+
         jPanel3.repaint();
 
     }//GEN-LAST:event_jPanel4MouseClicked

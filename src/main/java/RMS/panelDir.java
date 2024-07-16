@@ -51,14 +51,25 @@ public class panelDir extends javax.swing.JPanel {
         jList2.setModel(listModel);
 
         numerodecanciones = estanMejorados.size();
-        jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
+        jLabel3.setText("¡Se han detectado " + estanMejorado.size() + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
         System.out.println("\nTodas las carpetas:");
         for (DirectoryEntry dir : directoryFiles.directories) {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-            jComboBox1.addItem(dir.path);
+            for (FileEntry FileEntry : directoryFiles.files) {
+                System.out.println("Entramos a: " + FileEntry.directoryId);
+                if (FileEntry.directoryId == dir.id && FileEntry != null) {
+                    jComboBox1.addItem(dir.path);
+                    for (FileEntry FileEntry2 : directoryFiles.files) {
+                        if (dir.id == FileEntry2.directoryId) {
+                            listModel.addElement(FileEntry2.filePath);
+                        }
+                    }
+                    break;
+                }
+            }
         }
         Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
         for (Rutas rutas : estanMejorados) {
