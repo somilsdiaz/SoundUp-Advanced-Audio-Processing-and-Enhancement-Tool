@@ -4,12 +4,26 @@
  */
 package com.mycompany.soundup;
 
+import ConvertirStereo.panelStereos;
+import Directorios.DirectoryTree;
 import RMS.AudioEnhanceDir;
-import com.mycompany.soundup.StartMenu;
+import static RMS.AudioEnhanceDir.isAudioFile;
 import RMS.panelDir;
 import java.awt.BorderLayout;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -22,15 +36,71 @@ public class principal extends javax.swing.JFrame {
      */
     String route;
     private Point point;
+    public static DirectoryTree tree_;
+    int numeroCancionesStereo = 0;
+    panelDir pd;
+    int cop1 = 0;
+    int cop2 = 0;
+    int cop3 = 0;
+    int cop4 = 0;
 
     public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta) {
         initComponents();
         route = ruta;
         this.setLocationRelativeTo(this);
-        panelDir pd = new panelDir(estanMejorados, ruta);
+        jPanel4.setBackground(new java.awt.Color(102, 102, 102));
+        pd = new panelDir(estanMejorados, ruta);
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
+    }
+
+    private boolean isStereo(File audioFile) {
+        boolean is = false;
+        try {
+            AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(audioFile);
+            AudioFormat format = fileFormat.getFormat();
+            int channels = format.getChannels();
+
+            if (channels == 1) {
+                is = false;
+            } else if (channels == 2) {
+                is = true;
+            } else {
+                System.out.println("The audio file has " + channels + " channels.");
+            }
+        } catch (IOException | UnsupportedAudioFileException e) {
+            System.err.println("Error reading audio file: " + e.getMessage());
+        }
+
+        return is;
+    }
+
+    private void RecorrerDirectorioFindStereos(String ruta) {
+        tree_ = new DirectoryTree(ruta);
+        String directoryPath = ruta;
+
+        try {
+            List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
+                    .filter(Files::isRegularFile)
+                    .filter(path -> isAudioFile(path.toFile()))
+                    .collect(Collectors.toList());
+
+            ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
+
+            customThreadPool.submit(()
+                    -> audioFiles.parallelStream().forEach(audioFile -> {
+                        boolean is = isStereo(audioFile.toFile());
+                        if (!is) {
+                            tree_.addFile(audioFile.toAbsolutePath().toString());
+                            numeroCancionesStereo = numeroCancionesStereo + 1;
+                        }
+                    })
+            ).get();
+
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -178,6 +248,9 @@ public class principal extends javax.swing.JFrame {
             }
         });
         jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jPanel6MouseExited(evt);
             }
@@ -230,6 +303,9 @@ public class principal extends javax.swing.JFrame {
             }
         });
         jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel4MouseClicked(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jPanel4MouseExited(evt);
             }
@@ -294,7 +370,9 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseMoved
 
     private void jPanel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseExited
-        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        if (cop1 == 0) {
+            jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        }
     }//GEN-LAST:event_jPanel4MouseExited
 
     private void jPanel5MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseMoved
@@ -310,7 +388,9 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel6MouseMoved
 
     private void jPanel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseExited
-        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        if (cop3 == 0) {
+            jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        }
     }//GEN-LAST:event_jPanel6MouseExited
 
     private void jPanel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseMoved
@@ -320,6 +400,56 @@ public class principal extends javax.swing.JFrame {
     private void jPanel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseExited
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
     }//GEN-LAST:event_jPanel7MouseExited
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        jPanel3.removeAll();
+        cop1 = 0;
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        cop2 = 0;
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        cop3 = 1;
+        cop4 = 0;
+        jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        numeroCancionesStereo = 0;
+        RecorrerDirectorioFindStereos(route);
+        panelStereos ps = new panelStereos(route, numeroCancionesStereo, tree_);
+        jPanel3.setLayout(new BorderLayout());
+        jPanel3.add(ps);
+        this.add(jPanel3);
+        jPanel3.revalidate();
+
+        jLabel5.revalidate();
+        jLabel5.repaint();
+        jLabel6.revalidate();
+        jLabel6.repaint();
+        
+        
+        jPanel3.repaint();
+
+    }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
+        jPanel3.removeAll();
+        cop1 = 1;
+        cop2 = 0;
+        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        cop3 = 0;
+        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        cop4 = 0;
+        jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel3.setLayout(new BorderLayout());
+        jPanel3.add(pd);
+        this.add(jPanel3);
+        jPanel3.revalidate();
+
+        jLabel5.revalidate();
+        jLabel5.repaint();
+        jLabel6.revalidate();
+        jLabel6.repaint();
+        
+        jPanel3.repaint();
+
+    }//GEN-LAST:event_jPanel4MouseClicked
 
     /**
      * @param args the command line arguments

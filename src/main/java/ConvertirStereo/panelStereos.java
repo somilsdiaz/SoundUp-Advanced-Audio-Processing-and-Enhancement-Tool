@@ -2,76 +2,55 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package RMS;
+package ConvertirStereo;
 
-import com.mycompany.soundup.FileSelectionDir;
 import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
+import Directorios.DirectoryTree;
 import Directorios.FileEntry;
-import RMS.AudioEnhanceDir.Rutas;
-import static RMS.AudioEnhanceDir.tree;
-import MsgEmergentes.MsgEmerge;
-import MsgEmergentes.MsgLoadd;
-import com.mycompany.soundup.StartMenu;
+import com.mycompany.soundup.principal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
-import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Somils
  */
-public class panelDir extends javax.swing.JPanel {
+public class panelStereos extends javax.swing.JPanel {
+
+    String ruta;
+    int nroCanciones;
+    DefaultListModel<String> listModel;
 
     /**
-     * Creates new form panelDir
+     * Creates new form panelStereos
      */
-    DefaultListModel<String> listModel;
-    DirectoryFiles directoryFiles;
-    int numerodecanciones;
-    List<AudioEnhanceDir.Rutas> estanMejorados;
-    String route;
-
-    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta) {
+    public panelStereos(String route, int numeroCanciones, DirectoryTree tree) {
         initComponents();
-        setOpaque(true);
         route = ruta;
-        estanMejorados = estanMejorado;
+
+        nroCanciones = numeroCanciones;
+        setOpaque(true);
         jComboBox1.removeAllItems();
 
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
+        jLabel3.setText("¡Se han detectado " + numeroCanciones + " canciones con salida mono!");
+        principal.tree_.printTree();
+        DirectoryFiles directoryFiles = tree.getAllDirectoriesAndFiles();
 
-        numerodecanciones = estanMejorados.size();
-        jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
-        tree.printTree();
-        directoryFiles = tree.getAllDirectoriesAndFiles();
-
-        System.out.println("\nTodas las carpetas:");
         for (DirectoryEntry dir : directoryFiles.directories) {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
             jComboBox1.addItem(dir.path);
         }
-        Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
-        for (Rutas rutas : estanMejorados) {
-            for (FileEntry FileEntry : directoryFiles.files) {
-
-                if (FileEntry.absoluteFilePath.equals(rutas.rutaOriginal)) {
-                    listModel.addElement(FileEntry.filePath);
-                }
-            }
-
-        }
-        /*   for (FileEntry FileEntry : directoryFiles.files) {
+        for (FileEntry FileEntry : directoryFiles.files) {
             if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
                 listModel.addElement(FileEntry.filePath);
             }
-        }*/
+        }
+
         if (listModel.getSize() == 1) {
             jLabel1.setText(listModel.getSize() + " cancion");
 
@@ -79,6 +58,7 @@ public class panelDir extends javax.swing.JPanel {
             jLabel1.setText(listModel.getSize() + " canciones");
 
         }
+
         jComboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,23 +75,12 @@ public class panelDir extends javax.swing.JPanel {
                 }
                 System.out.println("Item seleccionado: " + selectedItem);
 
-                for (Rutas rutas : estanMejorados) {
-                    for (FileEntry FileEntry : directoryFiles.files) {
-                        if (FileEntry.absoluteFilePath.equals(rutas.rutaOriginal)) {
-                            if (FileEntry.directoryId == idSelected) {
-                                listModel.addElement(FileEntry.filePath);
-                            }
-                        }
-                    }
-
-                }
-
-                /*   for (FileEntry FileEntry : directoryFiles.files) {
+                for (FileEntry FileEntry : directoryFiles.files) {
                     if (FileEntry.directoryId == idSelected) {
                         listModel.addElement(FileEntry.filePath);
                     }
-                    System.out.println("Directory ID: " + FileEntry.directoryId + ", File Path: " + FileEntry.filePath + ", Directory Path: " + FileEntry.directoryPath);
-                }*/
+                }
+
                 if (listModel.getSize() == 1) {
                     jLabel1.setText(listModel.getSize() + " cancion");
 
@@ -122,8 +91,6 @@ public class panelDir extends javax.swing.JPanel {
             }
 
         });
-
-        System.out.println("\nTodos los archivos:");
     }
 
     /**
@@ -140,10 +107,11 @@ public class panelDir extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
+        setMinimumSize(new java.awt.Dimension(720, 670));
+        setOpaque(false);
         setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(8, 7, 44));
@@ -153,7 +121,7 @@ public class panelDir extends javax.swing.JPanel {
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("Microsoft YaHei", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Se han detectado 1821 canciones que necesitan ser mejorados! ");
+        jLabel3.setText("¡Se han detectado 1821 canciones con salida mono!");
         jPanel1.add(jLabel3);
         jLabel3.setBounds(30, 20, 660, 30);
 
@@ -167,7 +135,7 @@ public class panelDir extends javax.swing.JPanel {
             }
         });
         jPanel1.add(jComboBox1);
-        jComboBox1.setBounds(30, 60, 540, 23);
+        jComboBox1.setBounds(30, 60, 650, 23);
 
         jList2.setBackground(new java.awt.Color(195, 194, 190));
         jList2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
@@ -183,16 +151,7 @@ public class panelDir extends javax.swing.JPanel {
         jPanel1.add(jScrollPane2);
         jScrollPane2.setBounds(30, 120, 650, 470);
 
-        jButton1.setText("ESCUCHAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1);
-        jButton1.setBounds(580, 60, 100, 23);
-
-        jButton2.setText("APLICAR CAMBIOS");
+        jButton2.setText("REALIZAR CONVERSION");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -215,60 +174,13 @@ public class panelDir extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //   System.out.println("Item de la lista seleccionado: " + jList2.getSelectedValue());
-        if (jList2.getSelectedValue() != null) {
-            MsgLoadd cargando = new MsgLoadd();
-            cargando.setVisible(true);
-
-            Thread backgroundProcessThread = new Thread(() -> {
-                for (FileEntry FileEntry : directoryFiles.files) {
-                    if (FileEntry.filePath == jList2.getSelectedValue()) {
-                        String rutaOriginal = FileEntry.absoluteFilePath;
-                        String rutaFileWav = AudioEnhanceFile.convertToWavString(rutaOriginal);
-                        for (Rutas rutas : estanMejorados) {
-                            if (rutas.rutaOriginal == rutaOriginal) {
-                                FileSelectionDir fs = new FileSelectionDir(rutaFileWav, rutas.rutaMejorada);
-                                fs.setVisible(true);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-
-                }
-
-                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-                //termine el proceso haz que se quite la ventana de cargando.
-
-                // Actualizar el estado del JFrame
-                SwingUtilities.invokeLater(() -> {
-
-                });
-            });
-            backgroundProcessThread.start();
-        } else {
-            MsgEmerge mg = new MsgEmerge("Selecione una cancion de la lista");
-            mg.setVisible(true);
-        }
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
-        StartMenu.CerrarPrincipal();
-        AudioEnhanceDir.eliminarArchivosNormalizados(route);
-        MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
-        me.setVisible(true);
 
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;

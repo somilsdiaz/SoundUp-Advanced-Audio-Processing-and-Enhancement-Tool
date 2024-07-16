@@ -50,7 +50,6 @@ public class MsgEmerge extends javax.swing.JFrame {
         jPanel1.setLayout(null);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
-        jLabel6.setText("jLabel5");
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -60,7 +59,6 @@ public class MsgEmerge extends javax.swing.JFrame {
         jLabel6.setBounds(300, 0, 30, 30);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
-        jLabel5.setText("jLabel5");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);

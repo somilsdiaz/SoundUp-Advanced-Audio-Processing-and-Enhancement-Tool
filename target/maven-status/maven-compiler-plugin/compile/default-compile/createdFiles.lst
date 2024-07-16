@@ -5,11 +5,13 @@ RMS\FileSelection.class
 RMS\FileSelection$3.class
 com\mycompany\soundup\principal$7.class
 RMS\AudioEnhanceFile.class
+ConvertirStereo\panelStereos$3.class
 com\mycompany\soundup\FileSelectionDir$1.class
 com\mycompany\soundup\principal$11.class
 com\mycompany\soundup\panelMusic$1.class
 VisualComponent\AudioVisualizer2.class
 RMS\panelDir$1.class
+ConvertirStereo\AudioChannelChecker.class
 MsgEmergentes\MsgEmerge$1.class
 MsgEmergentes\MsgLoadd.class
 MsgEmergentes\MsgEmerge$4.class
@@ -22,6 +24,7 @@ com\mycompany\soundup\StartMenu$5.class
 VisualComponent\LineMusic.class
 com\mycompany\soundup\panelMusic.class
 RMS\panelDir$4.class
+ConvertirStereo\panelStereos$1.class
 Directorios\FileEntry.class
 VisualComponent\AudioNormalizer.class
 Directorios\DirectoryTree$Node.class
@@ -46,6 +49,7 @@ RMS\panelDir$2.class
 com\mycompany\soundup\StartMenu.class
 com\mycompany\soundup\StartMenu$4.class
 VisualComponent\AudioVisualizer.class
+ConvertirStereo\panelStereos$2.class
 com\mycompany\soundup\principal$6.class
 RMS\AudioEnhanceDir$RutaRmsPar.class
 com\mycompany\soundup\StartMenu$1.class
@@ -56,6 +60,7 @@ MsgEmergentes\MsgEmerge.class
 Directorios\DirectoryTree.class
 com\mycompany\soundup\FileSelectionDir$5.class
 com\mycompany\soundup\principal$9.class
+ConvertirStereo\panelStereos.class
 MsgEmergentes\MsgLoadd$1.class
 com\mycompany\soundup\principal$13.class
 MsgEmergentes\MsgEmerge$2.class
@@ -65,6 +70,7 @@ com\mycompany\soundup\StartMenu$2.class
 VisualComponent\AudioNormalizer$1.class
 RMS\FileSelection$5.class
 MsgEmergentes\MsgEmerge$3.class
+ConvertirStereo\panelStereos$4.class
 com\mycompany\soundup\StartMenu$9.class
 RMS\AudioEnhanceFile$RMSProcessor.class
 com\mycompany\soundup\principal$1.class

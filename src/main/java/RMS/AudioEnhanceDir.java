@@ -150,7 +150,7 @@ public class AudioEnhanceDir {
         }
     }
 
-    private static boolean isAudioFile(File file) {
+    public static boolean isAudioFile(File file) {
         String[] audioExtensions = {".wav", ".mp3", ".flac", ".ogg", ".m4a"};
         String fileName = file.getName().toLowerCase();
         for (String ext : audioExtensions) {
