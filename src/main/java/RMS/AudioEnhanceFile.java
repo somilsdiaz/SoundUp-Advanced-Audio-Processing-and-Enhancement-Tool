@@ -239,8 +239,9 @@ public class AudioEnhanceFile {
                 normalizationDispatcher.addAudioProcessor(writer);
 
                 normalizationDispatcher.run();
-
-                return normalizedTempFile.getAbsolutePath(); // Retornar la ruta del archivo normalizado
+                String stereoNormalizedPatch = convertToWavString(normalizedTempFile.getAbsolutePath());
+                deleteTemporaryFile(normalizedTempFile);
+                return stereoNormalizedPatch; // Retornar la ruta del archivo normalizado
             } else {
                 // If adjustmentFactor <= 0, no adjustment needed
                 System.out.println("Already normalized: " + originalFile.getName());

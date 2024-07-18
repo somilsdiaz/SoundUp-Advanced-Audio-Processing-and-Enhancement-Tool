@@ -16,9 +16,12 @@ import com.mycompany.soundup.StartMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -50,27 +53,34 @@ public class panelDir extends javax.swing.JPanel {
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
 
-        numerodecanciones = estanMejorados.size();
-        jLabel3.setText("¡Se han detectado " + estanMejorado.size() + " canciones que necesitan ser mejoradas! ");
+        numerodecanciones = RMS.AudioEnhanceDir.TotalCanciones;
+        jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
         tree.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
         System.out.println("\nTodas las carpetas:");
-        for (DirectoryEntry dir : directoryFiles.directories) {
-            // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-            for (FileEntry FileEntry : directoryFiles.files) {
-                System.out.println("Entramos a: " + FileEntry.directoryId);
-                if (FileEntry.directoryId == dir.id && FileEntry != null) {
-                    jComboBox1.addItem(dir.path);
-                    for (FileEntry FileEntry2 : directoryFiles.files) {
-                        if (dir.id == FileEntry2.directoryId) {
-                            listModel.addElement(FileEntry2.filePath);
-                        }
-                    }
-                    break;
-                }
+
+        Map<Integer, List<FileEntry>> filesByDirectoryId = new HashMap<>();
+
+// Agrupar archivos por directoryId
+        for (FileEntry fileEntry : directoryFiles.files) {
+            if (fileEntry != null) {
+                filesByDirectoryId.computeIfAbsent(fileEntry.directoryId, k -> new ArrayList<>()).add(fileEntry);
             }
         }
+
+// Iterar sobre los directorios y agregar elementos a los componentes del GUI
+        for (DirectoryEntry dir : directoryFiles.directories) {
+            // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
+            List<FileEntry> fileEntries = filesByDirectoryId.get(dir.id);
+            if (fileEntries != null && !fileEntries.isEmpty()) {
+                jComboBox1.addItem(dir.path);
+            /*    for (FileEntry fileEntry : fileEntries) {
+                    listModel.addElement(fileEntry.filePath);
+                }*/
+            }
+        }
+
         Collections.sort(estanMejorados, Comparator.comparingDouble(r -> r.RMS));
         for (Rutas rutas : estanMejorados) {
             for (FileEntry FileEntry : directoryFiles.files) {
@@ -93,6 +103,10 @@ public class panelDir extends javax.swing.JPanel {
             jLabel1.setText(listModel.getSize() + " canciones");
 
         }
+
+        numerodecanciones = RMS.AudioEnhanceDir.TotalCanciones;
+        jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
+
         jComboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

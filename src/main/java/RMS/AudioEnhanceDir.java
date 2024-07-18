@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class AudioEnhanceDir {
-
+    public static int TotalCanciones;
     public static DirectoryTree tree;
     public int cantidad = 0;
     public static AtomicInteger totalAudioFiles = new AtomicInteger();
@@ -104,11 +104,11 @@ public class AudioEnhanceDir {
                             RutaRmsPar necesita = new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value);
                             necesitaNormalizacion.add(necesita);
                             tree.addFile(audioFile.toAbsolutePath().toString());
+                            TotalCanciones = TotalCanciones + 1;
                         }
                         totalAudioFiles.decrementAndGet();
                     })
             ).get();
-
             return necesitaNormalizacion;
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -173,7 +173,7 @@ public class AudioEnhanceDir {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (file.getFileName().toString().startsWith("normalized_temp_")) {
+                    if (file.getFileName().toString().startsWith("temp_normalized_temp_")) {
                         Files.delete(file);
                         System.out.println("Deleted: " + file);
                     }
