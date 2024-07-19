@@ -277,6 +277,9 @@ public class principal extends javax.swing.JFrame {
             }
         });
         jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jPanel5MouseExited(evt);
             }
@@ -285,15 +288,15 @@ public class principal extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("de Audio (PDA)");
+        jLabel9.setText("de Audio por Superposicion ");
         jPanel5.add(jLabel9);
-        jLabel9.setBounds(40, 30, 140, 20);
+        jLabel9.setBounds(10, 30, 170, 20);
 
         jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Potenciación Dinámica ");
         jPanel5.add(jLabel10);
-        jLabel10.setBounds(20, 10, 140, 20);
+        jLabel10.setBounds(30, 10, 140, 20);
 
         jPanel2.add(jPanel5);
         jPanel5.setBounds(0, 190, 180, 60);
@@ -456,6 +459,19 @@ public class principal extends javax.swing.JFrame {
         jPanel3.repaint();
 
     }//GEN-LAST:event_jPanel4MouseClicked
+
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jPanel5MouseClicked
 
     /**
      * @param args the command line arguments

@@ -105,6 +105,8 @@ public class AudioEnhanceDir {
                             necesitaNormalizacion.add(necesita);
                             tree.addFile(audioFile.toAbsolutePath().toString());
                             TotalCanciones = TotalCanciones + 1;
+                        } else {
+                            
                         }
                         totalAudioFiles.decrementAndGet();
                     })

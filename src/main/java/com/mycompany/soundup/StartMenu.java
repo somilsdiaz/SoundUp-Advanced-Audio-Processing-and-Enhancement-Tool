@@ -13,8 +13,6 @@ import RMS.AudioEnhanceDir;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
 import MsgEmergentes.MsgLoadNumeric;
-import static RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar;
-import static RMS.AudioEnhanceDir.vamosAmejorar;
 import RMS.AudioEnhanceFile.BooleanDoublePair;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,10 +26,7 @@ import jnafilechooser.api.JnaFileChooser;
 import VisualComponent.AudioVisualizer;
 import VisualComponent.AudioNormalizer;
 import RMS.FileSelection;
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncodingAttributes;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -295,7 +290,7 @@ public class StartMenu extends javax.swing.JFrame {
                         asignar(AudioEnhanceDir.returnNumeroActual(), 0);
                     }, 0, 1, TimeUnit.SECONDS);
 
-                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = EncontrarNecesitanNormalizar(filePath);
+                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
                     scheduler.shutdown();
                     scheduler.awaitTermination(1, TimeUnit.MINUTES);
 
@@ -305,7 +300,7 @@ public class StartMenu extends javax.swing.JFrame {
                         scheduler2.scheduleAtFixedRate(() -> {
                             asignar(AudioEnhanceDir.returnNumeroActual(), 1);
                         }, 0, 1, TimeUnit.SECONDS);
-                        List<AudioEnhanceDir.Rutas> estanMejorados = vamosAmejorar(NecesitaNormalizacion);
+                        List<AudioEnhanceDir.Rutas> estanMejorados = RMS.AudioEnhanceDir.vamosAmejorar(NecesitaNormalizacion);
                         scheduler.shutdown();
                         scheduler.awaitTermination(1, TimeUnit.MINUTES);
                         pp = new principal(estanMejorados, filePath);

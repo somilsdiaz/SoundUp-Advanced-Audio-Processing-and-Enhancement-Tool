@@ -13,6 +13,9 @@ import be.tarsos.dsp.io.jvm.WaveformWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat;
@@ -197,7 +200,7 @@ public class AudioEnhancer {
             FlangerEffect flangerEffect = new FlangerEffect(maxFlangerLength, wet, sampleRate, lfoFrequency);
             normalizationDispatcher.addAudioProcessor(flangerEffect);
             normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
-            File normalizedTempFile = new File(audioFile.getParent() + "/normalized_0" + audioFile.getName());
+            File normalizedTempFile = new File(audioFile.getParent() + "/normalized_" + audioFile.getName());
             WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), normalizedTempFile.getAbsolutePath());
             normalizationDispatcher.addAudioProcessor(writer);
 
@@ -251,24 +254,30 @@ public class AudioEnhancer {
     }
 
     public static void main(String[] args) throws IOException {
-        String inputFileWav = AudioEnhanceFile.convertToWavString("C:/Users/Somils/Music/SALSAS/excusa.mp3");
-        File inputFile = new File(inputFileWav);
-        File outputFile = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/Por ella_btt.wav");
+        Path tempFilesDirectory = Paths.get("tempfiles");
+        if (!Files.exists(tempFilesDirectory)) {
+            Files.createDirectory(tempFilesDirectory);
+        }
+
+        String AudioOriginal = AudioEnhanceFile.convertToWavString("C:/Users/Somils/Music/SALSAS/excusa.mp3");
+        File AudioOriginalWav = new File(AudioOriginal);
+        String inputFileName = AudioOriginalWav.getName();
+        String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
+
+        String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav";
+        File mascaraAudioPDA = new File(mascaraAudioPDApatch);
 
         try {
-            enhanceAudio(inputFile, outputFile);
-            normalizeAudioVolume(outputFile, inputFile);
-            AudioEnhanceFile.convertToWavString(normalizeAudioVolume(outputFile, inputFile));
+            enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
+            normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
+            String normalized_temp = AudioEnhanceFile.convertToWavString(normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
+            File AudioMidlePDA = new File(normalized_temp);
+
+            String AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
+            File AudioPDA = new File(AudioPDApatch);
+            mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
-        }
-        File inputFile1 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/temp_normalized_0Por ella_btt.wav");
-        File inputFile2 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/temp_excusa.wav");
-        File outputFile2 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/mixed.wav");
-        try {
-            mixAudioFiles(inputFile1, inputFile2, outputFile2);
-        } catch (UnsupportedAudioFileException ex) {
-            Logger.getLogger(AudioEnhancer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
