@@ -13,6 +13,8 @@ import be.tarsos.dsp.io.jvm.WaveformWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -115,7 +117,7 @@ public class AudioEnhancer {
     private static void applyBandPassFilter(double[] audioData, float sampleRate, double lowCutoff, double highCutoff, double gain) {
         int n = audioData.length;
         double A = Math.pow(10, gain / 40);
-        
+
         // Parámetros para el filtro de paso bajo (lowCutoff)
         double w0Low = 2 * Math.PI * lowCutoff / sampleRate;
         double cosw0Low = Math.cos(w0Low);
@@ -147,7 +149,7 @@ public class AudioEnhancer {
         for (int i = 2; i < n; i++) {
             double lowPassOutput = (b0Low / a0Low) * audioData[i] + (b1Low / a0Low) * audioData[i - 1] + (b2Low / a0Low) * audioData[i - 2]
                     - (a1Low / a0Low) * filteredData[i - 1] - (a2Low / a0Low) * filteredData[i - 2];
-            
+
             double highPassOutput = (b0High / a0High) * lowPassOutput + (b1High / a0High) * filteredData[i - 1] + (b2High / a0High) * filteredData[i - 2]
                     - (a1High / a0High) * filteredData[i - 1] - (a2High / a0High) * filteredData[i - 2];
 
@@ -194,7 +196,7 @@ public class AudioEnhancer {
             double lfoFrequency = 0.25;
             FlangerEffect flangerEffect = new FlangerEffect(maxFlangerLength, wet, sampleRate, lfoFrequency);
             normalizationDispatcher.addAudioProcessor(flangerEffect);
-normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
+            normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
             File normalizedTempFile = new File(audioFile.getParent() + "/normalized_0" + audioFile.getName());
             WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), normalizedTempFile.getAbsolutePath());
             normalizationDispatcher.addAudioProcessor(writer);
@@ -208,10 +210,50 @@ normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
         return null;
     }
 
-   public static void main(String[] args) throws IOException {
+    public static void mixAudioFiles(File inputFile1, File inputFile2, File outputFile) throws UnsupportedAudioFileException, IOException {
+        AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(inputFile1);
+        AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(inputFile2);
+
+        AudioFormat format1 = audioInputStream1.getFormat();
+        AudioFormat format2 = audioInputStream2.getFormat();
+
+        if (!format1.matches(format2)) {
+            throw new UnsupportedAudioFileException("Los formatos de los archivos de audio no coinciden.");
+        }
+
+        byte[] audioBytes1 = audioInputStream1.readAllBytes();
+        byte[] audioBytes2 = audioInputStream2.readAllBytes();
+
+        audioInputStream1.close();
+        audioInputStream2.close();
+
+        int maxLength = Math.max(audioBytes1.length, audioBytes2.length);
+        byte[] mixedBytes = new byte[maxLength];
+
+        for (int i = 0; i < maxLength; i++) {
+            int sample1 = i < audioBytes1.length ? audioBytes1[i] : 0;
+            int sample2 = i < audioBytes2.length ? audioBytes2[i] : 0;
+
+            int mixedSample = sample1 + sample2;
+            mixedSample = Math.min(mixedSample, Byte.MAX_VALUE);
+            mixedSample = Math.max(mixedSample, Byte.MIN_VALUE);
+
+            mixedBytes[i] = (byte) mixedSample;
+        }
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(mixedBytes);
+        AudioInputStream mixedAudioInputStream = new AudioInputStream(bais, format1, mixedBytes.length / format1.getFrameSize());
+
+        AudioSystem.write(mixedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
+        mixedAudioInputStream.close();
+
+        System.out.println("Audio mix complete. Output saved to: " + outputFile.getAbsolutePath());
+    }
+
+    public static void main(String[] args) throws IOException {
         String inputFileWav = AudioEnhanceFile.convertToWavString("C:/Users/Somils/Music/SALSAS/excusa.mp3");
         File inputFile = new File(inputFileWav);
-        File outputFile = new File("C:/Users/Somils/Music/SALSAS/Por ella_btt.wav");
+        File outputFile = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/Por ella_btt.wav");
 
         try {
             enhanceAudio(inputFile, outputFile);
@@ -219,6 +261,14 @@ normalizationDispatcher.addAudioProcessor(new GainProcessor(1.5f));
             AudioEnhanceFile.convertToWavString(normalizeAudioVolume(outputFile, inputFile));
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
+        }
+        File inputFile1 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/temp_normalized_0Por ella_btt.wav");
+        File inputFile2 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/temp_excusa.wav");
+        File outputFile2 = new File("C:/Users/Somils/Documents/NetBeansProjects/SoundUp/tempfiles/mixed.wav");
+        try {
+            mixAudioFiles(inputFile1, inputFile2, outputFile2);
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(AudioEnhancer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
