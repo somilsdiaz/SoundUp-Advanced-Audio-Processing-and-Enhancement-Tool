@@ -6,6 +6,7 @@ package com.mycompany.soundup;
 
 import ConvertirStereo.panelStereos;
 import Directorios.DirectoryTree;
+import MsgEmergentes.MsgLoadd;
 import MsgEmergentes.NoFound;
 import PDA.AudioEnhancer;
 import RMS.AudioEnhanceDir;
@@ -27,6 +28,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -440,30 +442,38 @@ public class principal extends javax.swing.JFrame {
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         numeroCancionesStereo = 0;
-        if (statusStereo == 0) {
-            RecorrerDirectorioFindStereos(route);
-            statusStereo = 1;
-        }
-        if (!(numeroCancionesStereo == 0)) {
-            ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
-            jPanel3.setLayout(new BorderLayout());
-            jPanel3.add(ps);
-            this.add(jPanel3);
-            jPanel3.revalidate();
-            jPanel3.repaint();
-        } else {
-            NoFound nf = new NoFound("en mono");
-            jPanel3.setLayout(new BorderLayout());
-            jPanel3.add(nf);
-            this.add(jPanel3);
-            jPanel3.revalidate();
-            jPanel3.repaint();
-        }
-        //jPanel3.repaint();
-        jLabel5.revalidate();
-        jLabel6.revalidate();
-        jLabel5.repaint();
-        jLabel6.repaint();
+        MsgLoadd cargando = new MsgLoadd();
+        cargando.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            if (statusStereo == 0) {
+                RecorrerDirectorioFindStereos(route);
+                statusStereo = 1;
+            }
+            if (!(numeroCancionesStereo == 0)) {
+                ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
+                jPanel3.setLayout(new BorderLayout());
+                jPanel3.add(ps);
+                this.add(jPanel3);
+                jPanel3.revalidate();
+                jPanel3.repaint();
+            } else {
+                NoFound nf = new NoFound("en mono");
+                jPanel3.setLayout(new BorderLayout());
+                jPanel3.add(nf);
+                this.add(jPanel3);
+                jPanel3.revalidate();
+                jPanel3.repaint();
+            }
+            //jPanel3.repaint();
+            jLabel5.revalidate();
+            jLabel6.revalidate();
+            jLabel5.repaint();
+            jLabel6.repaint();
+            cargando.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+            });
+        });
+        backgroundProcessThread.start();
 
 
     }//GEN-LAST:event_jPanel6MouseClicked
