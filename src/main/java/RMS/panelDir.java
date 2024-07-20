@@ -7,9 +7,9 @@ package RMS;
 import com.mycompany.soundup.FileSelectionDir;
 import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
+import Directorios.DirectoryTree;
 import Directorios.FileEntry;
 import RMS.AudioEnhanceDir.Rutas;
-import static RMS.AudioEnhanceDir.tree;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
 import com.mycompany.soundup.StartMenu;
@@ -42,11 +42,13 @@ public class panelDir extends javax.swing.JPanel {
     int numerodecanciones;
     List<AudioEnhanceDir.Rutas> estanMejorados;
     String route;
+    DirectoryTree tree;
 
-    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta) {
+    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta, DirectoryTree tree) {
         initComponents();
         setOpaque(true);
         route = ruta;
+        this.tree = tree;
         estanMejorados = estanMejorado;
         jComboBox1.removeAllItems();
 
@@ -75,7 +77,7 @@ public class panelDir extends javax.swing.JPanel {
             List<FileEntry> fileEntries = filesByDirectoryId.get(dir.id);
             if (fileEntries != null && !fileEntries.isEmpty()) {
                 jComboBox1.addItem(dir.path);
-            /*    for (FileEntry fileEntry : fileEntries) {
+                /*    for (FileEntry fileEntry : fileEntries) {
                     listModel.addElement(fileEntry.filePath);
                 }*/
             }
@@ -104,7 +106,7 @@ public class panelDir extends javax.swing.JPanel {
 
         }
 
-        numerodecanciones = RMS.AudioEnhanceDir.TotalCanciones;
+        numerodecanciones = estanMejorado.size();
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
 
         jComboBox1.addActionListener(new ActionListener() {

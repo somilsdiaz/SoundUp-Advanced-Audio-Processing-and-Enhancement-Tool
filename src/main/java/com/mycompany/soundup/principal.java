@@ -7,6 +7,7 @@ package com.mycompany.soundup;
 import ConvertirStereo.panelStereos;
 import Directorios.DirectoryTree;
 import RMS.AudioEnhanceDir;
+import RMS.AudioEnhanceDir.ListasRMS_PDA;
 import static RMS.AudioEnhanceDir.isAudioFile;
 import RMS.panelDir;
 import java.awt.BorderLayout;
@@ -34,24 +35,29 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
-    int status = 0;
+    int statusStereo = 0;
+    int statusPDA = 0;
     String route;
     private Point point;
-    public static DirectoryTree tree_;
+    public static DirectoryTree treeStereo;
     panelStereos ps;
+    panelDir pdPDA;
     int numeroCancionesStereo = 0;
+    int numeroCancionePDA = 0;
     panelDir pd;
     int cop1 = 0;
     int cop2 = 0;
     int cop3 = 0;
     int cop4 = 0;
+    ListasRMS_PDA listas;
 
-    public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta) {
+    public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta, ListasRMS_PDA listas) {
         initComponents();
         route = ruta;
+        this.listas = listas;
         this.setLocationRelativeTo(this);
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
-        pd = new panelDir(estanMejorados, ruta);
+        pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree);
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
@@ -80,7 +86,7 @@ public class principal extends javax.swing.JFrame {
     }
 
     private void RecorrerDirectorioFindStereos(String ruta) {
-        tree_ = new DirectoryTree(ruta);
+        treeStereo = new DirectoryTree(ruta);
         String directoryPath = ruta;
 
         try {
@@ -95,7 +101,7 @@ public class principal extends javax.swing.JFrame {
                     -> audioFiles.parallelStream().forEach(audioFile -> {
                         boolean is = isStereo(audioFile.toFile());
                         if (!is) {
-                            tree_.addFile(audioFile.toAbsolutePath().toString());
+                            treeStereo.addFile(audioFile.toAbsolutePath().toString());
                             numeroCancionesStereo = numeroCancionesStereo + 1;
                         }
                     })
@@ -386,7 +392,9 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel5MouseMoved
 
     private void jPanel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseExited
-        jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        if (cop2 == 0) {
+            jPanel5.setBackground(new java.awt.Color(51, 51, 51));
+        }
     }//GEN-LAST:event_jPanel5MouseExited
 
     private void jPanel6MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseMoved
@@ -417,10 +425,10 @@ public class principal extends javax.swing.JFrame {
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         numeroCancionesStereo = 0;
-        if (status == 0) {
+        if (statusStereo == 0) {
             RecorrerDirectorioFindStereos(route);
-            ps = new panelStereos(route, numeroCancionesStereo, tree_);
-            status = 1;
+            ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
+            statusStereo = 1;
         }
 
         jPanel3.setLayout(new BorderLayout());
@@ -461,16 +469,33 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+        jPanel3.removeAll();
+        cop1 = 0;
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        cop2 = 1;
+        cop3 = 0;
+        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        cop4 = 0;
+        jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+
+        if (statusPDA == 0) {
+            numeroCancionePDA = listas.listaPDA.size();
+            pdPDA = new panelDir(listas.listaPDA, route, RMS.AudioEnhanceDir.treePDA);
+            statusPDA = 1;
+        }
+
+        jPanel3.setLayout(new BorderLayout());
+        jPanel3.add(pdPDA);
+        this.add(jPanel3);
+        jPanel3.revalidate();
+
+        jLabel5.revalidate();
+        jLabel5.repaint();
+        jLabel6.revalidate();
+        jLabel6.repaint();
+
+        jPanel3.repaint();
     }//GEN-LAST:event_jPanel5MouseClicked
 
     /**
@@ -503,7 +528,7 @@ public class principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new principal(null, "vacio").setVisible(true);
+                new principal(null, "vacio", null).setVisible(true);
             }
         });
     }

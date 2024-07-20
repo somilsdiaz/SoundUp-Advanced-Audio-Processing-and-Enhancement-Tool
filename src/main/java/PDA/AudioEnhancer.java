@@ -178,7 +178,7 @@ public class AudioEnhancer {
         }
     }
 
-    private static String normalizeAudioVolume(File audioFile, File originalFile) {
+    public static String normalizeAudioVolume(File audioFile, File originalFile) {
         try {
             AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 2048, 2);
             AudioEnhanceFile.RMSProcessor rmsProcessor = new AudioEnhanceFile.RMSProcessor();
@@ -264,20 +264,25 @@ public class AudioEnhancer {
         String inputFileName = AudioOriginalWav.getName();
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
 
-        String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav";
+        String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav"; //ESTE HAY QUE ELIMINARLO8
         File mascaraAudioPDA = new File(mascaraAudioPDApatch);
 
         try {
             enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
-            normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
+            String normalized_mask = normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
             String normalized_temp = AudioEnhanceFile.convertToWavString(normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
             File AudioMidlePDA = new File(normalized_temp);
 
             String AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
             File AudioPDA = new File(AudioPDApatch);
             mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
+            RMS.AudioEnhanceFile.eliminarArchivo(mascaraAudioPDApatch);
+            RMS.AudioEnhanceFile.eliminarArchivo(normalized_temp);
+            RMS.AudioEnhanceFile.eliminarArchivo(normalized_mask);
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
+
+
 }

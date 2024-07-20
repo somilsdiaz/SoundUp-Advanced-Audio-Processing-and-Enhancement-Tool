@@ -43,7 +43,7 @@ public class panelStereos extends javax.swing.JPanel {
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
         jLabel3.setText("¡Se han detectado " + numeroCanciones + " canciones con salida mono!");
-        principal.tree_.printTree();
+        principal.treeStereo.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
 
         for (DirectoryEntry dir : directoryFiles.directories) {

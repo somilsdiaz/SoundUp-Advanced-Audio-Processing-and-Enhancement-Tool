@@ -29,6 +29,7 @@ import RMS.FileSelection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -76,8 +77,6 @@ public class StartMenu extends javax.swing.JFrame {
         st.setVisible(true);
 
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -290,7 +289,10 @@ public class StartMenu extends javax.swing.JFrame {
                         asignar(AudioEnhanceDir.returnNumeroActual(), 0);
                     }, 0, 1, TimeUnit.SECONDS);
 
-                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
+                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion;
+
+                    AudioEnhanceDir.ListasRMS_PDA listas = RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
+                    NecesitaNormalizacion = listas.listaRMS;
                     scheduler.shutdown();
                     scheduler.awaitTermination(1, TimeUnit.MINUTES);
 
@@ -303,7 +305,7 @@ public class StartMenu extends javax.swing.JFrame {
                         List<AudioEnhanceDir.Rutas> estanMejorados = RMS.AudioEnhanceDir.vamosAmejorar(NecesitaNormalizacion);
                         scheduler.shutdown();
                         scheduler.awaitTermination(1, TimeUnit.MINUTES);
-                        pp = new principal(estanMejorados, filePath);
+                        pp = new principal(estanMejorados, filePath, listas);
                         pp.setVisible(true);
                         this.dispose();
                     } else {
