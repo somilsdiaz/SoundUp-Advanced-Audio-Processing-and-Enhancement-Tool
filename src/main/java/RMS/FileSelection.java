@@ -96,6 +96,7 @@ public class FileSelection extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("REPRODUCTOR");
         setMinimumSize(new java.awt.Dimension(900, 623));
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(900, 623));

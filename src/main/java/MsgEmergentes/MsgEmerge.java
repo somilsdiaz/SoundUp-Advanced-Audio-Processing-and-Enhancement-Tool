@@ -43,6 +43,7 @@ public class MsgEmerge extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("AVISO");
         setMinimumSize(new java.awt.Dimension(330, 110));
         setPreferredSize(new java.awt.Dimension(330, 110));
         setResizable(false);

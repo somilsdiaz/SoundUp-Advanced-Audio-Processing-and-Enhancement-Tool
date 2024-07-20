@@ -89,7 +89,6 @@ public class StartMenu extends javax.swing.JFrame {
                 image.getImage().getScaledInstance(labelName.getWidth(), labelName.getHeight(), Image.SCALE_DEFAULT)
         );
         labelName.setIcon(icon);
-      //  this.repaint();
     }
 
     @SuppressWarnings("unchecked")
@@ -112,6 +111,7 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("SoundUp");
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));
         jPanel1.setLayout(null);
