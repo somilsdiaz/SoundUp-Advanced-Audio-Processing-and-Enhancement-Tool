@@ -13,11 +13,14 @@ import be.tarsos.dsp.io.jvm.WaveformWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -25,6 +28,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AudioEnhancer {
+
+    static Path tempFilesDirectory = Paths.get("tempfiles");
 
     public static void enhanceAudio(File inputFile, File outputFile) throws UnsupportedAudioFileException, IOException {
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputFile);
@@ -253,6 +258,39 @@ public class AudioEnhancer {
         System.out.println("Audio mix complete. Output saved to: " + outputFile.getAbsolutePath());
     }
 
+    public static void eliminarArchivosPDA() {
+        try {
+            String directoryPath = tempFilesDirectory.toString();
+            Files.walkFileTree(Paths.get(directoryPath), EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE, new FileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (file.getFileName().toString().startsWith("PDA_temp_")) {
+                        Files.delete(file);
+                        System.out.println("Deleted: " + file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         Path tempFilesDirectory = Paths.get("tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
@@ -283,6 +321,5 @@ public class AudioEnhancer {
             e.printStackTrace();
         }
     }
-
 
 }

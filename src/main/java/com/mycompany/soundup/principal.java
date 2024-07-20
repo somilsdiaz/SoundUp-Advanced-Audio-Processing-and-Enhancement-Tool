@@ -6,6 +6,7 @@ package com.mycompany.soundup;
 
 import ConvertirStereo.panelStereos;
 import Directorios.DirectoryTree;
+import PDA.AudioEnhancer;
 import RMS.AudioEnhanceDir;
 import RMS.AudioEnhanceDir.ListasRMS_PDA;
 import static RMS.AudioEnhanceDir.isAudioFile;
@@ -57,7 +58,7 @@ public class principal extends javax.swing.JFrame {
         this.listas = listas;
         this.setLocationRelativeTo(this);
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
-        pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree);
+        pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree, 0);
         jPanel3.setLayout(new BorderLayout());
         jPanel3.add(pd);
         this.add(jPanel3);
@@ -348,6 +349,7 @@ public class principal extends javax.swing.JFrame {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         AudioEnhanceDir.eliminarArchivosNormalizados();
+        AudioEnhancer.eliminarArchivosPDA();
 
         this.dispose();
 
@@ -481,7 +483,7 @@ public class principal extends javax.swing.JFrame {
 
         if (statusPDA == 0) {
             numeroCancionePDA = listas.listaPDA.size();
-            pdPDA = new panelDir(listas.listaPDA, route, RMS.AudioEnhanceDir.treePDA);
+            pdPDA = new panelDir(listas.listaPDA, route, RMS.AudioEnhanceDir.treePDA, 1);
             statusPDA = 1;
         }
 

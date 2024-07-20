@@ -12,6 +12,7 @@ import Directorios.FileEntry;
 import RMS.AudioEnhanceDir.Rutas;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
+import PDA.AudioEnhancer;
 import com.mycompany.soundup.StartMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,12 +44,14 @@ public class panelDir extends javax.swing.JPanel {
     List<AudioEnhanceDir.Rutas> estanMejorados;
     String route;
     DirectoryTree tree;
+    int idOp;
 
-    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta, DirectoryTree tree) {
+    public panelDir(List<AudioEnhanceDir.Rutas> estanMejorado, String ruta, DirectoryTree tree, int idOp) {
         initComponents();
         setOpaque(true);
         route = ruta;
         this.tree = tree;
+        this.idOp = idOp;
         estanMejorados = estanMejorado;
         jComboBox1.removeAllItems();
 
@@ -290,13 +293,16 @@ public class panelDir extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        AudioEnhanceDir.RemplazarMuchosArchivos(estanMejorados);
 
-        AudioEnhanceDir.RemplazarNormalizados(estanMejorados);
+        if (idOp == 0) {
+            AudioEnhanceDir.eliminarArchivosNormalizados();
+        } else if (idOp == 1) {
+            AudioEnhancer.eliminarArchivosPDA();
+        }
         StartMenu.CerrarPrincipal();
-        AudioEnhanceDir.eliminarArchivosNormalizados();
         MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
         me.setVisible(true);
-
 
     }//GEN-LAST:event_jButton2ActionPerformed
 

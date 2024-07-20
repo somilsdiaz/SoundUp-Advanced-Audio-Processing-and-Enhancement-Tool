@@ -88,67 +88,36 @@ public class AudioEnhanceDir {
     public static ListasRMS_PDA EncontrarNecesitanNormalizar(String ruta) {
         tree = new DirectoryTree(ruta);
         treePDA = new DirectoryTree(ruta);
+        totalAudioFiles = new AtomicInteger(contarArchivosDeAudio(ruta));
 
-        totalAudioFiles.set(contarArchivosDeAudio(ruta));
         List<RutaRmsPar> necesitaNormalizacion = Collections.synchronizedList(new ArrayList<>());
         List<Rutas> goPDA = Collections.synchronizedList(new ArrayList<>());
 
         ListasRMS_PDA listas = new ListasRMS_PDA(necesitaNormalizacion, goPDA);
-        String directoryPath = ruta;
 
         try {
-            List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
+            List<Path> audioFiles = Files.walk(Paths.get(ruta))
                     .filter(Files::isRegularFile)
                     .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
 
-            ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
+            int numCores = Runtime.getRuntime().availableProcessors();
+            ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), numCores));
 
-            customThreadPool.submit(()
-                    -> audioFiles.parallelStream().forEach(audioFile -> {
-                        AudioEnhanceFile.BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(audioFile.toAbsolutePath().toString());
-                        if (need.flag) {
-                            RutaRmsPar necesita = new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value);
-                            necesitaNormalizacion.add(necesita);
-                            tree.addFile(audioFile.toAbsolutePath().toString());
-                            TotalCanciones = TotalCanciones + 1;
+            customThreadPool.submit(() -> audioFiles.parallelStream().forEach(audioFile -> {
+                AudioEnhanceFile.BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(audioFile.toAbsolutePath().toString());
+                if (need.flag) {
+                    necesitaNormalizacion.add(new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value));
+                    tree.addFile(audioFile.toAbsolutePath().toString());
+                    synchronized (AudioEnhanceDir.class) {
+                        TotalCanciones++;
+                    }
+                } else {
+                    processAudioFile(audioFile, goPDA, treePDA);
+                }
+                totalAudioFiles.decrementAndGet();
+            })).get();
 
-                        } else {
-                            try {
-                                String AudioOriginal = AudioEnhanceFile.convertToWavString(audioFile.toAbsolutePath().toString());
-                                File AudioOriginalWav = new File(AudioOriginal);
-                                String inputFileName = AudioOriginalWav.getName();
-                                String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
-
-                                String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav"; //ESTE HAY QUE ELIMINARLO8
-                                File mascaraAudioPDA = new File(mascaraAudioPDApatch);
-
-                                try {
-                                    PDA.AudioEnhancer.enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
-                                    String normalized_mask = PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
-                                    String normalized_temp = AudioEnhanceFile.convertToWavString(PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
-                                    File AudioMidlePDA = new File(normalized_temp);
-
-                                    String AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
-                                    File AudioPDA = new File(AudioPDApatch);
-                                    PDA.AudioEnhancer.mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
-                                    RMS.AudioEnhanceFile.eliminarArchivo(mascaraAudioPDApatch);
-                                    RMS.AudioEnhanceFile.eliminarArchivo(normalized_temp);
-                                    RMS.AudioEnhanceFile.eliminarArchivo(normalized_mask);
-                                    Rutas routes = new Rutas(audioFile.toAbsolutePath().toString(), AudioPDApatch, 0.0);
-                                    goPDA.add(routes);
-                                    treePDA.addFile(audioFile.toAbsolutePath().toString());
-                                } catch (UnsupportedAudioFileException ex) {
-                                    Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-
-                            } catch (IOException ex) {
-                                Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                        totalAudioFiles.decrementAndGet();
-                    })
-            ).get();
             listas.listaRMS = necesitaNormalizacion;
             listas.listaPDA = goPDA;
             return listas;
@@ -156,6 +125,40 @@ public class AudioEnhanceDir {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void processAudioFile(Path audioFile, List<Rutas> goPDA, DirectoryTree treePDA) {
+        try {
+            String AudioOriginal = AudioEnhanceFile.convertToWavString(audioFile.toAbsolutePath().toString());
+            File AudioOriginalWav = new File(AudioOriginal);
+            String inputFileNameWithoutExtension = AudioOriginalWav.getName().replaceFirst("[.][^.]+$", "");
+
+            String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav";
+            File mascaraAudioPDA = new File(mascaraAudioPDApatch);
+
+            try {
+                PDA.AudioEnhancer.enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
+                String normalized_mask = PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
+                String normalized_temp = AudioEnhanceFile.convertToWavString(PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
+                File AudioMidlePDA = new File(normalized_temp);
+
+                String AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
+                File AudioPDA = new File(AudioPDApatch);
+                PDA.AudioEnhancer.mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
+
+                RMS.AudioEnhanceFile.eliminarArchivo(mascaraAudioPDApatch);
+                RMS.AudioEnhanceFile.eliminarArchivo(normalized_temp);
+                RMS.AudioEnhanceFile.eliminarArchivo(normalized_mask);
+                RMS.AudioEnhanceFile.eliminarArchivo(AudioOriginal);
+
+                goPDA.add(new Rutas(audioFile.toAbsolutePath().toString(), AudioPDApatch, 0.0));
+                treePDA.addFile(audioFile.toAbsolutePath().toString());
+            } catch (UnsupportedAudioFileException ex) {
+                Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static List<Rutas> vamosAmejorar(List<RutaRmsPar> necesitanNormalizar) {
@@ -179,7 +182,7 @@ public class AudioEnhanceDir {
         return estanNormalizados;
     }
 
-    public static void RemplazarNormalizados(List<Rutas> rutas) {
+    public static void RemplazarMuchosArchivos(List<Rutas> rutas) {
         ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(rutas.size(), Runtime.getRuntime().availableProcessors()));
 
         try {
