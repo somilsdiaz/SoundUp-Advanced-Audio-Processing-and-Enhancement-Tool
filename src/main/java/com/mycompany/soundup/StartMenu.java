@@ -295,6 +295,7 @@ public class StartMenu extends javax.swing.JFrame {
                     NecesitaNormalizacion = listas.listaRMS;
                     scheduler.shutdown();
                     scheduler.awaitTermination(1, TimeUnit.MINUTES);
+                    //List<AudioEnhanceDir.Rutas> estanMejorados = null;
 
                     if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
@@ -306,12 +307,14 @@ public class StartMenu extends javax.swing.JFrame {
                         scheduler.shutdown();
                         scheduler.awaitTermination(1, TimeUnit.MINUTES);
                         pp = new principal(estanMejorados, filePath, listas);
-                        pp.setVisible(true);
-                        this.dispose();
+
                     } else {
-                        MsgEmerge me = new MsgEmerge("No hay archivos de audio por mejorar");
-                        me.setVisible(true);
+                        List<AudioEnhanceDir.Rutas> estanMejorados = null;
+                        pp = new principal(estanMejorados, filePath, listas);
+
                     }
+                    pp.setVisible(true);
+                    this.dispose();
                     /*    
                      */
                 } catch (InterruptedException ex) {

@@ -6,6 +6,7 @@ package com.mycompany.soundup;
 
 import ConvertirStereo.panelStereos;
 import Directorios.DirectoryTree;
+import MsgEmergentes.NoFound;
 import PDA.AudioEnhancer;
 import RMS.AudioEnhanceDir;
 import RMS.AudioEnhanceDir.ListasRMS_PDA;
@@ -37,12 +38,14 @@ public class principal extends javax.swing.JFrame {
      * Creates new form principal
      */
     int statusStereo = 0;
+    List<AudioEnhanceDir.Rutas> estanMejorados;
     int statusPDA = 0;
     String route;
     private Point point;
     public static DirectoryTree treeStereo;
     panelStereos ps;
     panelDir pdPDA;
+
     int numeroCancionesStereo = 0;
     int numeroCancionePDA = 0;
     panelDir pd;
@@ -55,14 +58,23 @@ public class principal extends javax.swing.JFrame {
     public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta, ListasRMS_PDA listas) {
         initComponents();
         route = ruta;
+        this.estanMejorados = estanMejorados;
         this.listas = listas;
         this.setLocationRelativeTo(this);
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
-        pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree, 0);
-        jPanel3.setLayout(new BorderLayout());
-        jPanel3.add(pd);
-        this.add(jPanel3);
+        NoFound nf = new NoFound("por mejorar");
 
+        if (!(estanMejorados == null)) {
+            pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree, 0);
+
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(pd);
+            this.add(jPanel3);
+        } else {
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(nf);
+            this.add(jPanel3);
+        }
     }
 
     private boolean isStereo(File audioFile) {
@@ -122,7 +134,6 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel8 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -147,7 +158,6 @@ public class principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(900, 670));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(900, 670));
         setResizable(false);
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -161,8 +171,6 @@ public class principal extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
-        jPanel8.setLayout(null);
-
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -172,8 +180,8 @@ public class principal extends javax.swing.JFrame {
                 jLabel6MouseEntered(evt);
             }
         });
-        jPanel8.add(jLabel6);
-        jLabel6.setBounds(680, 0, 30, 30);
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(860, 10, 30, 30);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -181,12 +189,11 @@ public class principal extends javax.swing.JFrame {
                 jLabel5MouseClicked(evt);
             }
         });
-        jPanel8.add(jLabel5);
-        jLabel5.setBounds(640, 0, 30, 30);
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(820, 10, 30, 30);
 
-        getContentPane().add(jPanel8);
-        jPanel8.setBounds(180, 0, 720, 30);
-
+        jPanel3.setBackground(new java.awt.Color(8, 7, 44));
+        jPanel3.setOpaque(false);
         jPanel3.setLayout(null);
         getContentPane().add(jPanel3);
         jPanel3.setBounds(180, 0, 720, 670);
@@ -435,21 +442,29 @@ public class principal extends javax.swing.JFrame {
         numeroCancionesStereo = 0;
         if (statusStereo == 0) {
             RecorrerDirectorioFindStereos(route);
-            ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
             statusStereo = 1;
         }
-
-        jPanel3.setLayout(new BorderLayout());
-        jPanel3.add(ps);
-        this.add(jPanel3);
-        jPanel3.revalidate();
-
+        if (!(numeroCancionesStereo == 0)) {
+            ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(ps);
+            this.add(jPanel3);
+            jPanel3.revalidate();
+            jPanel3.repaint();
+        } else {
+            NoFound nf = new NoFound("en mono");
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(nf);
+            this.add(jPanel3);
+            jPanel3.revalidate();
+            jPanel3.repaint();
+        }
+        //jPanel3.repaint();
         jLabel5.revalidate();
-        jLabel5.repaint();
         jLabel6.revalidate();
+        jLabel5.repaint();
         jLabel6.repaint();
 
-        jPanel3.repaint();
 
     }//GEN-LAST:event_jPanel6MouseClicked
 
@@ -462,10 +477,19 @@ public class principal extends javax.swing.JFrame {
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel3.setLayout(new BorderLayout());
-        jPanel3.add(pd);
-        this.add(jPanel3);
-        jPanel3.revalidate();
+
+        if (!(estanMejorados == null)) {
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(pd);
+            this.add(jPanel3);
+            jPanel3.revalidate();
+        } else {
+            NoFound nf = new NoFound("por mejorar");
+            jPanel3.setLayout(new BorderLayout());
+            jPanel3.add(nf);
+            this.add(jPanel3);
+            jPanel3.revalidate();
+        }
 
         jLabel5.revalidate();
         jLabel5.repaint();
@@ -562,6 +586,5 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
 }

@@ -128,12 +128,13 @@ public class panelStereos extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(8, 7, 44));
         setMinimumSize(new java.awt.Dimension(720, 670));
-        setOpaque(false);
         setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(8, 7, 44));
         jPanel1.setMinimumSize(new java.awt.Dimension(720, 670));
+        jPanel1.setOpaque(false);
         jPanel1.setLayout(null);
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
