@@ -26,6 +26,7 @@ import jnafilechooser.api.JnaFileChooser;
 import VisualComponent.AudioVisualizer;
 import VisualComponent.AudioNormalizer;
 import RMS.FileSelection;
+import java.awt.Toolkit;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class StartMenu extends javax.swing.JFrame {
     public StartMenu() {
         setUndecorated(true);
         initComponents();
-
+        setIconImage(getIconImage());
         this.setLocationRelativeTo(this);
         SetImageLabel(jLabel3, "/resources/icon2.png");
         SetImageLabel(jLabel4, "/resources/background.png");
@@ -63,6 +64,17 @@ public class StartMenu extends javax.swing.JFrame {
         this.add(jPanel2, BorderLayout.CENTER);
         this.getContentPane().setBackground(new Color(0, 0, 0, 0));
 
+    }
+    
+    @Override 
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/iconMain.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
     }
 
     public void asignar(int num, int opcion) {
@@ -110,7 +122,7 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("SoundUp");
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));

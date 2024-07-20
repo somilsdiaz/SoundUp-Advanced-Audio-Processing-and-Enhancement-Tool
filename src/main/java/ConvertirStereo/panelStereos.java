@@ -75,11 +75,6 @@ public class panelStereos extends javax.swing.JPanel {
             }
         }
 
-       /* for (FileEntry FileEntry : directoryFiles.files) {
-            if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
-                listModel.addElement(FileEntry.filePath);
-            }
-        }*/
         if (listModel.getSize() == 1) {
             jLabel1.setText(listModel.getSize() + " cancion");
 

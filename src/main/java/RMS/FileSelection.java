@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jaudiotagger.tag.TagException;
 import VisualComponent.AudioNormalizer;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 /**
  *
@@ -35,6 +37,7 @@ public class FileSelection extends javax.swing.JFrame {
     public FileSelection(String original, String ruta1, String ruta2, double value) {
         try {
             initComponents();
+            setIconImage(getIconImage());
             route1 = ruta1;
             route2 = ruta2;
             routeoriginal = original;
@@ -61,6 +64,17 @@ public class FileSelection extends javax.swing.JFrame {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/iconReproductor.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
     }
 
     public static String procesarNombreArchivo(String nombreArchivo) {

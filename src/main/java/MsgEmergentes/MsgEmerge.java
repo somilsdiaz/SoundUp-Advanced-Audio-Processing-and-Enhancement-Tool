@@ -1,5 +1,7 @@
 package MsgEmergentes;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 
 /*
@@ -19,11 +21,24 @@ public class MsgEmerge extends javax.swing.JFrame {
         setUndecorated(true);
 
         initComponents();
+        setIconImage(getIconImage());
+
         this.setLocationRelativeTo(this);
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setVerticalAlignment(SwingConstants.CENTER);
         jLabel1.setText(mensaje);
-     
+
+    }
+
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/advertencia.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
     }
 
     /**

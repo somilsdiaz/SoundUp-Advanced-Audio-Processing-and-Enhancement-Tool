@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.TagException;
 import VisualComponent.AudioNormalizer;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 /**
  *
@@ -32,6 +34,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
     public FileSelectionDir(String ruta1, String ruta2) {
         try {
             initComponents();
+            setIconImage(getIconImage());
             route1 = ruta1;
             route2 = ruta2;
 
@@ -55,6 +58,17 @@ public class FileSelectionDir extends javax.swing.JFrame {
 
         } catch (TagException ex) {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/iconReproductor.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
         }
     }
 
@@ -201,7 +215,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
         AudioNormalizer.finalizarProcesoCancion(route2);
         AudioNormalizer.finalizarProcesoCancion(route1);
 
-   //     AudioEnhanceFile.eliminarArchivo(route2);
+        //     AudioEnhanceFile.eliminarArchivo(route2);
         AudioEnhanceFile.eliminarArchivo(route1);
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked

@@ -6,24 +6,38 @@ package MsgEmergentes;
 
 import java.awt.BorderLayout;
 import VisualComponent.LoadingCircle;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 /**
  *
  * @author Somils
  */
 public class MsgLoadd extends javax.swing.JFrame {
-    
+
     /**
      * Creates new form MsgLoadd
      */
     public MsgLoadd() {
         initComponents();
         this.setLocationRelativeTo(this);
+        setIconImage(getIconImage());
 
         LoadingCircle circle = new LoadingCircle();
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(circle);
         this.add(jPanel2);
+    }
+
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/advertencia.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
     }
 
     /**

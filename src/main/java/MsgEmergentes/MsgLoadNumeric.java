@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.SwingConstants;
 import VisualComponent.LoadingCircle;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 /**
  *
@@ -23,6 +25,8 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
     public MsgLoadNumeric() {
         this.totalAudioFiles = totalAudioFiles;
         initComponents();
+        setIconImage(getIconImage());
+
         //  jLabel1.setText("PROCESANDO... "+totalAudioFiles);
         this.setLocationRelativeTo(this);
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -31,6 +35,17 @@ public class MsgLoadNumeric extends javax.swing.JFrame {
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(circle);
         this.add(jPanel2);
+    }
+
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/advertencia.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
     }
 
     public void updateTotalAudioFiles(int total, int opcion) {

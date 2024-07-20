@@ -14,7 +14,9 @@ import RMS.AudioEnhanceDir.ListasRMS_PDA;
 import static RMS.AudioEnhanceDir.isAudioFile;
 import RMS.panelDir;
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,6 +62,7 @@ public class principal extends javax.swing.JFrame {
 
     public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta, ListasRMS_PDA listas) {
         initComponents();
+        setIconImage(getIconImage());
         route = ruta;
         this.estanMejorados = estanMejorados;
         this.listas = listas;
@@ -76,6 +79,17 @@ public class principal extends javax.swing.JFrame {
             jPanel3.setLayout(new BorderLayout());
             jPanel3.add(nf);
             this.add(jPanel3);
+        }
+    }
+    
+    @Override 
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/iconMain.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
         }
     }
 
@@ -444,28 +458,36 @@ public class principal extends javax.swing.JFrame {
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         numeroCancionesStereo = 0;
-
-        if (statusStereo == 0) {
-            RecorrerDirectorioFindStereos(route);
-            statusStereo = 1;
-            if (numeroCancionesStereo != 0) {
-                ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
-                jPanel3.setLayout(new BorderLayout());
-                jPanel3.add(ps);
-                this.add(jPanel3);
-                jPanel3.revalidate();
-                jPanel3.repaint();
-                yaBuscoStereos = true;
-            } else {
-                nf = new NoFound("en mono");
-                jPanel3.setLayout(new BorderLayout());
-                jPanel3.add(nf);
-                this.add(jPanel3);
-                jPanel3.revalidate();
-                jPanel3.repaint();
-                yaBuscoStereos = false;
+        MsgLoadd ml = new MsgLoadd();
+        ml.setVisible(true);
+        Thread backgroundProcessThread = new Thread(() -> {
+            if (statusStereo == 0) {
+                RecorrerDirectorioFindStereos(route);
+                statusStereo = 1;
+                if (numeroCancionesStereo != 0) {
+                    ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
+                    jPanel3.setLayout(new BorderLayout());
+                    jPanel3.add(ps);
+                    this.add(jPanel3);
+                    jPanel3.revalidate();
+                    jPanel3.repaint();
+                    yaBuscoStereos = true;
+                } else {
+                    nf = new NoFound("en mono");
+                    jPanel3.setLayout(new BorderLayout());
+                    jPanel3.add(nf);
+                    this.add(jPanel3);
+                    jPanel3.revalidate();
+                    jPanel3.repaint();
+                    yaBuscoStereos = false;
+                }
             }
-        }
+            ml.setVisible(false);
+            SwingUtilities.invokeLater(() -> {
+
+            });
+        });
+        backgroundProcessThread.start();
         jPanel3.setLayout(new BorderLayout());
         if (yaBuscoStereos) {
             jPanel3.add(ps);
