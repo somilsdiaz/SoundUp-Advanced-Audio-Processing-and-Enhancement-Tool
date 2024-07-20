@@ -9,10 +9,17 @@ import Directorios.DirectoryFiles;
 import Directorios.DirectoryTree;
 import Directorios.FileEntry;
 import MsgEmergentes.MsgEmerge;
+import RMS.AudioEnhanceDir;
 import com.mycompany.soundup.principal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -45,29 +52,34 @@ public class panelStereos extends javax.swing.JPanel {
         jLabel3.setText("¡Se han detectado " + numeroCanciones + " canciones con salida mono!");
         principal.treeStereo.printTree();
         directoryFiles = tree.getAllDirectoriesAndFiles();
+        System.out.println("\nTodas las carpetas:");
 
+        Map<Integer, List<FileEntry>> filesByDirectoryId = new HashMap<>();
+
+// Agrupar archivos por directoryId
+        for (FileEntry fileEntry : directoryFiles.files) {
+            if (fileEntry != null) {
+                filesByDirectoryId.computeIfAbsent(fileEntry.directoryId, k -> new ArrayList<>()).add(fileEntry);
+            }
+        }
+
+// Iterar sobre los directorios y agregar elementos a los componentes del GUI
         for (DirectoryEntry dir : directoryFiles.directories) {
             // System.out.println("ID: " + dir.id + ", Path: " + dir.path);
-            for (FileEntry FileEntry : directoryFiles.files) {
-                System.out.println("Entramos a: " + FileEntry.directoryId);
-                if (FileEntry.directoryId == dir.id && FileEntry != null) {
-                    jComboBox1.addItem(dir.path);
-                    for (FileEntry FileEntry2 : directoryFiles.files) {
-                        if (dir.id == FileEntry2.directoryId) {
-                            listModel.addElement(FileEntry2.filePath);
-                        }
-                    }
-                    break;
+            List<FileEntry> fileEntries = filesByDirectoryId.get(dir.id);
+            if (fileEntries != null && !fileEntries.isEmpty()) {
+                jComboBox1.addItem(dir.path);
+                for (FileEntry fileEntry : fileEntries) {
+                    listModel.addElement(fileEntry.filePath);
                 }
             }
         }
 
-        for (FileEntry FileEntry : directoryFiles.files) {
+       /* for (FileEntry FileEntry : directoryFiles.files) {
             if (directoryFiles.directories.getFirst().id == FileEntry.directoryId) {
                 listModel.addElement(FileEntry.filePath);
             }
-        }
-
+        }*/
         if (listModel.getSize() == 1) {
             jLabel1.setText(listModel.getSize() + " cancion");
 

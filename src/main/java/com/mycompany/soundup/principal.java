@@ -46,8 +46,9 @@ public class principal extends javax.swing.JFrame {
     private Point point;
     public static DirectoryTree treeStereo;
     panelStereos ps;
+    NoFound nf;
     panelDir pdPDA;
-
+    boolean yaBuscoStereos = false;
     int numeroCancionesStereo = 0;
     int numeroCancionePDA = 0;
     panelDir pd;
@@ -68,7 +69,6 @@ public class principal extends javax.swing.JFrame {
 
         if (!(estanMejorados == null)) {
             pd = new panelDir(estanMejorados, ruta, RMS.AudioEnhanceDir.tree, 0);
-
             jPanel3.setLayout(new BorderLayout());
             jPanel3.add(pd);
             this.add(jPanel3);
@@ -101,6 +101,7 @@ public class principal extends javax.swing.JFrame {
     }
 
     private void RecorrerDirectorioFindStereos(String ruta) {
+        yaBuscoStereos = true;
         treeStereo = new DirectoryTree(ruta);
         String directoryPath = ruta;
 
@@ -443,39 +444,42 @@ public class principal extends javax.swing.JFrame {
         cop4 = 0;
         jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         numeroCancionesStereo = 0;
-        MsgLoadd cargando = new MsgLoadd();
-        cargando.setVisible(true);
-        Thread backgroundProcessThread = new Thread(() -> {
-            if (statusStereo == 0) {
-                RecorrerDirectorioFindStereos(route);
-                statusStereo = 1;
-            }
-            if (!(numeroCancionesStereo == 0)) {
+
+        if (statusStereo == 0) {
+            RecorrerDirectorioFindStereos(route);
+            statusStereo = 1;
+            if (numeroCancionesStereo != 0) {
                 ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
                 jPanel3.setLayout(new BorderLayout());
                 jPanel3.add(ps);
                 this.add(jPanel3);
                 jPanel3.revalidate();
                 jPanel3.repaint();
+                yaBuscoStereos = true;
             } else {
-                NoFound nf = new NoFound("en mono");
+                nf = new NoFound("en mono");
                 jPanel3.setLayout(new BorderLayout());
                 jPanel3.add(nf);
                 this.add(jPanel3);
                 jPanel3.revalidate();
                 jPanel3.repaint();
+                yaBuscoStereos = false;
             }
-            //jPanel3.repaint();
-            jLabel5.revalidate();
-            jLabel6.revalidate();
-            jLabel5.repaint();
-            jLabel6.repaint();
-            cargando.setVisible(false);
-            SwingUtilities.invokeLater(() -> {
-            });
-        });
-        backgroundProcessThread.start();
+        }
+        jPanel3.setLayout(new BorderLayout());
+        if (yaBuscoStereos) {
+            jPanel3.add(ps);
+        } else {
+            jPanel3.add(nf);
+        }
+        this.add(jPanel3);
+        jPanel3.revalidate();
+        jPanel3.repaint();
 
+        jLabel5.revalidate();
+        jLabel6.revalidate();
+        jLabel5.repaint();
+        jLabel6.repaint();
 
     }//GEN-LAST:event_jPanel6MouseClicked
 
