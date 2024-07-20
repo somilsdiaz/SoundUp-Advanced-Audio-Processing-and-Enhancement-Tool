@@ -120,6 +120,7 @@ public class panelStereos extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -135,12 +136,19 @@ public class panelStereos extends javax.swing.JPanel {
         jPanel1.setMinimumSize(new java.awt.Dimension(720, 670));
         jPanel1.setLayout(null);
 
+        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 1, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Convertir de Mono a Stereo");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(30, 20, 660, 30);
+
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("Microsoft YaHei", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("¡Se han detectado 1821 canciones con salida mono!");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(30, 20, 660, 30);
+        jLabel3.setBounds(30, 50, 660, 30);
 
         jComboBox1.setBackground(new java.awt.Color(195, 194, 190));
         jComboBox1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
@@ -152,7 +160,7 @@ public class panelStereos extends javax.swing.JPanel {
             }
         });
         jPanel1.add(jComboBox1);
-        jComboBox1.setBounds(30, 60, 650, 23);
+        jComboBox1.setBounds(30, 90, 650, 23);
 
         jList2.setBackground(new java.awt.Color(195, 194, 190));
         jList2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
@@ -166,7 +174,7 @@ public class panelStereos extends javax.swing.JPanel {
         jScrollPane2.setViewportView(jList2);
 
         jPanel1.add(jScrollPane2);
-        jScrollPane2.setBounds(30, 120, 650, 470);
+        jScrollPane2.setBounds(30, 140, 650, 470);
 
         jButton2.setText("REALIZAR CONVERSION");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -175,13 +183,13 @@ public class panelStereos extends javax.swing.JPanel {
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(230, 620, 190, 23);
+        jButton2.setBounds(230, 630, 190, 23);
 
         jLabel1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("10 canciones");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(30, 100, 170, 17);
+        jLabel1.setBounds(30, 120, 170, 17);
 
         add(jPanel1);
         jPanel1.setBounds(0, 0, 720, 670);
@@ -216,6 +224,7 @@ public class panelStereos extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;

@@ -122,6 +122,7 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel8 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -160,6 +161,8 @@ public class principal extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
+        jPanel8.setLayout(null);
+
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -169,8 +172,8 @@ public class principal extends javax.swing.JFrame {
                 jLabel6MouseEntered(evt);
             }
         });
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(860, 10, 30, 30);
+        jPanel8.add(jLabel6);
+        jLabel6.setBounds(680, 0, 30, 30);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,8 +181,11 @@ public class principal extends javax.swing.JFrame {
                 jLabel5MouseClicked(evt);
             }
         });
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(820, 10, 30, 30);
+        jPanel8.add(jLabel5);
+        jLabel5.setBounds(640, 0, 30, 30);
+
+        getContentPane().add(jPanel8);
+        jPanel8.setBounds(180, 0, 720, 30);
 
         jPanel3.setLayout(null);
         getContentPane().add(jPanel3);
@@ -556,5 +562,6 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
 }
