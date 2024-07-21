@@ -105,9 +105,9 @@ public class FileSelectionDir extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("REPRODUCTOR");
-        setMinimumSize(new java.awt.Dimension(900, 540));
+        setMinimumSize(new java.awt.Dimension(900, 557));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(900, 540));
+        setPreferredSize(new java.awt.Dimension(900, 557));
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
@@ -123,18 +123,17 @@ public class FileSelectionDir extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(17, 17, 17));
         jPanel1.setLayout(null);
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(80, 70, 300, 400);
+        jPanel1.setBounds(80, 80, 300, 400);
 
         jPanel3.setBackground(new java.awt.Color(17, 17, 17));
         jPanel3.setLayout(null);
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(490, 70, 300, 400);
+        jPanel3.setBounds(490, 80, 300, 400);
 
         jPanel2.setBackground(new java.awt.Color(26, 26, 26));
         jPanel2.setLayout(null);
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/minimizar.png"))); // NOI18N
-        jLabel5.setText("jLabel5");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -144,7 +143,6 @@ public class FileSelectionDir extends javax.swing.JFrame {
         jLabel5.setBounds(820, 10, 30, 30);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cerrar.png"))); // NOI18N
-        jLabel6.setText("jLabel5");
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -163,22 +161,22 @@ public class FileSelectionDir extends javax.swing.JFrame {
         jLabel3.setBounds(20, 10, 770, 50);
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 0, 900, 70);
+        jPanel2.setBounds(0, 0, 900, 80);
 
         jPanel4.setBackground(new java.awt.Color(26, 26, 26));
         jPanel4.setLayout(null);
         getContentPane().add(jPanel4);
-        jPanel4.setBounds(380, 70, 110, 400);
+        jPanel4.setBounds(380, 80, 110, 400);
 
         jPanel5.setBackground(new java.awt.Color(26, 26, 26));
         jPanel5.setLayout(null);
         getContentPane().add(jPanel5);
-        jPanel5.setBounds(790, 70, 110, 400);
+        jPanel5.setBounds(790, 80, 110, 400);
 
         jPanel6.setBackground(new java.awt.Color(26, 26, 26));
         jPanel6.setLayout(null);
         getContentPane().add(jPanel6);
-        jPanel6.setBounds(0, 70, 80, 400);
+        jPanel6.setBounds(0, 80, 80, 400);
 
         jPanel7.setBackground(new java.awt.Color(26, 26, 26));
         jPanel7.setLayout(null);
@@ -202,7 +200,7 @@ public class FileSelectionDir extends javax.swing.JFrame {
         jLabel4.setBounds(10, 40, 690, 40);
 
         getContentPane().add(jPanel7);
-        jPanel7.setBounds(0, 470, 900, 70);
+        jPanel7.setBounds(0, 480, 900, 80);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

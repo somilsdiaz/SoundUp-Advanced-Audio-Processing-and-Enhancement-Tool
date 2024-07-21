@@ -118,7 +118,6 @@ public class FileSelection extends javax.swing.JFrame {
         setTitle("REPRODUCTOR");
         setMinimumSize(new java.awt.Dimension(900, 623));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(900, 623));
         setResizable(false);
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
