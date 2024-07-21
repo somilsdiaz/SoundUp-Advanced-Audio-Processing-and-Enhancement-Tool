@@ -81,8 +81,8 @@ public class principal extends javax.swing.JFrame {
             this.add(jPanel3);
         }
     }
-    
-    @Override 
+
+    @Override
     public Image getIconImage() {
         java.net.URL url = ClassLoader.getSystemResource("resources/iconMain.png");
         if (url != null) {
@@ -492,7 +492,9 @@ public class principal extends javax.swing.JFrame {
         if (yaBuscoStereos) {
             jPanel3.add(ps);
         } else {
-            jPanel3.add(nf);
+            if (nf != null)  {
+                jPanel3.add(nf);
+            }
         }
         this.add(jPanel3);
         jPanel3.revalidate();

@@ -85,6 +85,7 @@ public class MsgEmerge extends javax.swing.JFrame {
         jPanel1.add(jLabel5);
         jLabel5.setBounds(260, 0, 30, 30);
 
+        jButton1.setFont(new java.awt.Font("Microsoft YaHei", 1, 12)); // NOI18N
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +93,7 @@ public class MsgEmerge extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(120, 80, 72, 23);
+        jButton1.setBounds(120, 80, 72, 24);
 
         jLabel1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));

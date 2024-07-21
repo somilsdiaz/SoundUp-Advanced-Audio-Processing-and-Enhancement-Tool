@@ -8,7 +8,9 @@ import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
 import Directorios.DirectoryTree;
 import Directorios.FileEntry;
+import MsgEmergentes.MsgConfirmar;
 import MsgEmergentes.MsgEmerge;
+import MsgEmergentes.MsgLoadd;
 import RMS.AudioEnhanceDir;
 import com.mycompany.soundup.principal;
 import java.awt.event.ActionEvent;
@@ -24,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -213,20 +217,52 @@ public class panelStereos extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        SwingUtilities.invokeLater(() -> {
+            MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
+            msgConfirmar.setVisible(true);
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() {
+                    // Esperar hasta que el usuario tome una decisión
+                    while (msgConfirmar.isConfirmed() == -1) {
+                        try {
+                            Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return null;
+                }
 
-        for (FileEntry FileEntry : directoryFiles.files) {
-            try {
-                System.out.println(FileEntry.absoluteFilePath);
-                String wavRouteFile = RMS.AudioEnhanceFile.convertToWavString(FileEntry.absoluteFilePath);
-                RMS.AudioEnhanceFile.replaceFile(FileEntry.absoluteFilePath, wavRouteFile);
-                RMS.AudioEnhanceFile.eliminarArchivo(wavRouteFile);
-                MsgEmerge msg = new MsgEmerge("Audios convertidos a stereo exitosamente");
-                msg.setVisible(true);
-            } catch (IOException ex) {
-                Logger.getLogger(panelStereos.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
+                @Override
+                protected void done() {
+                    int resultado = msgConfirmar.isConfirmed();
+                    if (resultado == 1) {
+                        MsgLoadd cargando = new MsgLoadd();
+                        cargando.setVisible(true);
+                        Thread backgroundProcessThread = new Thread(() -> {
+                            for (FileEntry FileEntry : directoryFiles.files) {
+                                try {
+                                    System.out.println(FileEntry.absoluteFilePath);
+                                    String wavRouteFile = RMS.AudioEnhanceFile.convertToWavString(FileEntry.absoluteFilePath);
+                                    RMS.AudioEnhanceFile.replaceFile(FileEntry.absoluteFilePath, wavRouteFile);
+                                    RMS.AudioEnhanceFile.eliminarArchivo(wavRouteFile);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(panelStereos.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            cargando.setVisible(false);
+                            MsgEmerge msg = new MsgEmerge("Audios convertidos a stereo exitosamente");
+                            msg.setVisible(true);
+                            SwingUtilities.invokeLater(() -> {
+                            });
+                        });
+                        backgroundProcessThread.start();
+                    }
+                    msgConfirmar.setVisible(false);
+                }
+            }.execute();
+        });
 
 
     }//GEN-LAST:event_jButton2ActionPerformed

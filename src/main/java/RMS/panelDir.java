@@ -9,6 +9,7 @@ import Directorios.DirectoryEntry;
 import Directorios.DirectoryFiles;
 import Directorios.DirectoryTree;
 import Directorios.FileEntry;
+import MsgEmergentes.MsgConfirmar;
 import RMS.AudioEnhanceDir.Rutas;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -53,13 +55,13 @@ public class panelDir extends javax.swing.JPanel {
         this.tree = tree;
         this.idOp = idOp;
         estanMejorados = estanMejorado;
-        
+
         if (idOp == 0) {
             jLabel4.setText("Mejoramiento de audio por RMS");
-        } else if(idOp == 1) {
+        } else if (idOp == 1) {
             jLabel4.setText("Mejoramiento de audio por Superposicion Dinamica");
         }
-        
+
         jLabel4.revalidate();
         jLabel4.repaint();
         jComboBox1.removeAllItems();
@@ -324,17 +326,55 @@ public class panelDir extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AudioEnhanceDir.RemplazarMuchosArchivos(estanMejorados);
+        SwingUtilities.invokeLater(() -> {
+            MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
+            msgConfirmar.setVisible(true);
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() {
+                    // Esperar hasta que el usuario tome una decisión
+                    while (msgConfirmar.isConfirmed() == -1) {
+                        try {
+                            Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return null;
+                }
 
-        if (idOp == 0) {
-            AudioEnhanceDir.eliminarArchivosNormalizados();
-        } else if (idOp == 1) {
-            AudioEnhancer.eliminarArchivosPDA();
-        }
-        StartMenu.CerrarPrincipal();
-        MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
-        me.setVisible(true);
+                @Override
+                protected void done() {
+                    // Obtener el resultado y continuar con la lógica
+                    int resultado = msgConfirmar.isConfirmed();
+                    if (resultado == 1) {
+                        MsgLoadd cargando = new MsgLoadd();
+                        cargando.setVisible(true);
+                        Thread backgroundProcessThread = new Thread(() -> {
 
+                            System.out.println("Los cambios seran realizados");
+                            AudioEnhanceDir.RemplazarMuchosArchivos(estanMejorados);
+
+                            if (idOp == 0) {
+                                AudioEnhanceDir.eliminarArchivosNormalizados();
+                            } else if (idOp == 1) {
+                                AudioEnhancer.eliminarArchivosPDA();
+                            }
+                           // StartMenu.CerrarPrincipal();
+                            cargando.setVisible(false);
+                            MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
+                            me.setVisible(true);
+
+                            SwingUtilities.invokeLater(() -> {
+
+                            });
+                        });
+                        backgroundProcessThread.start();
+                    }
+                    msgConfirmar.setVisible(false);
+                }
+            }.execute();
+        });
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
