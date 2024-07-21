@@ -146,7 +146,7 @@ public class panelStereos extends javax.swing.JPanel {
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setForeground(new java.awt.Color(243, 235, 207));
         jLabel4.setText("Convertir de Mono a Stereo");
         jPanel1.add(jLabel4);
         jLabel4.setBounds(30, 20, 660, 30);
@@ -170,8 +170,8 @@ public class panelStereos extends javax.swing.JPanel {
         jPanel1.add(jComboBox1);
         jComboBox1.setBounds(30, 90, 650, 23);
 
-        jList2.setBackground(new java.awt.Color(195, 194, 190));
-        jList2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jList2.setBackground(new java.awt.Color(224, 232, 244));
+        jList2.setFont(new java.awt.Font("Microsoft YaHei", 1, 12)); // NOI18N
         jList2.setForeground(new java.awt.Color(0, 0, 0));
         jList2.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -179,11 +179,16 @@ public class panelStereos extends javax.swing.JPanel {
             public String getElementAt(int i) { return strings[i]; }
         });
         jList2.setOpaque(false);
+        jList2.setSelectionBackground(new java.awt.Color(115, 199, 251));
+        jList2.setSelectionForeground(new java.awt.Color(51, 51, 255));
         jScrollPane2.setViewportView(jList2);
 
         jPanel1.add(jScrollPane2);
         jScrollPane2.setBounds(30, 140, 650, 470);
 
+        jButton2.setBackground(new java.awt.Color(7, 44, 77));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("REALIZAR CONVERSION");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
