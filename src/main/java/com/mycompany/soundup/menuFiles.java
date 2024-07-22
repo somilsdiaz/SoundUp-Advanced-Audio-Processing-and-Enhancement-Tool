@@ -4,8 +4,15 @@
  */
 package com.mycompany.soundup;
 
+import MsgEmergentes.MsgConfirmar;
+import MsgEmergentes.MsgEmerge;
+import MsgEmergentes.MsgLoadd;
+import RMS.AudioEnhanceFile;
+import RMS.FileSelection;
 import java.awt.Color;
 import java.awt.Point;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -16,17 +23,24 @@ public class menuFiles extends javax.swing.JFrame {
     /**
      * Creates new form menuFiles
      */
-    public String rutaOrigianal;
+    public String rutaOriginal;
     public String rutaArchivoWav;
     public String rutaRMS;
     public String rutaPDA;
+    public boolean stereo;
+    public boolean RMS;
+    public boolean PDA;
 
     public menuFiles(boolean stereo, boolean RMS, boolean PDA) {
         initComponents();
         this.setLocationRelativeTo(this);
+        this.stereo = stereo;
+        this.RMS = RMS;
+        this.PDA = PDA;
+
         //RMS
         if (RMS) {
-            jPanel2.setBackground(new Color(153,255,153));
+            jPanel2.setBackground(new Color(153, 255, 153));
             jPanel2.revalidate();
             jPanel2.repaint();
 
@@ -41,7 +55,7 @@ public class menuFiles extends javax.swing.JFrame {
         }
         //PDA
         if (PDA) {
-            jPanel5.setBackground(new Color(153,255,153));
+            jPanel5.setBackground(new Color(153, 255, 153));
             jPanel5.revalidate();
             jPanel5.repaint();
 
@@ -55,7 +69,7 @@ public class menuFiles extends javax.swing.JFrame {
         }
         //STEREO
         if (stereo) {
-            jPanel6.setBackground(new Color(153,255,153));
+            jPanel6.setBackground(new Color(153, 255, 153));
             jPanel6.revalidate();
             jPanel7.repaint();
 
@@ -71,7 +85,7 @@ public class menuFiles extends javax.swing.JFrame {
     }
 
     public void Asignar(String rutaOriginal, String rutaArchivoWav, String rutaRMS, String rutaPDA) {
-        this.rutaOrigianal = rutaOriginal;
+        this.rutaOriginal = rutaOriginal;
         this.rutaArchivoWav = rutaArchivoWav;
         this.rutaRMS = rutaRMS;
         this.rutaPDA = rutaPDA;
@@ -121,6 +135,11 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel1.setLayout(null);
 
         jPanel2.setBackground(new java.awt.Color(153, 255, 153));
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
         jPanel2.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Microsoft PhagsPa", 1, 36)); // NOI18N
@@ -139,6 +158,11 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel2.setBounds(20, 20, 250, 90);
 
         jPanel5.setBackground(new java.awt.Color(238, 100, 100));
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
+        });
         jPanel5.setLayout(null);
 
         jLabel4.setFont(new java.awt.Font("Microsoft PhagsPa", 1, 36)); // NOI18N
@@ -157,6 +181,11 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel5.setBounds(280, 20, 250, 90);
 
         jPanel6.setBackground(new java.awt.Color(238, 100, 100));
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
+        });
         jPanel6.setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Microsoft PhagsPa", 1, 36)); // NOI18N
@@ -221,6 +250,101 @@ public class menuFiles extends javax.swing.JFrame {
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
         this.dispose();
     }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+
+        if (RMS) {
+            FileSelection fileselection = new FileSelection(rutaOriginal, rutaArchivoWav, rutaRMS);
+            fileselection.isMenu(true, stereo, RMS, PDA, rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA, true, false);
+            fileselection.setVisible(true);
+            this.dispose();
+        } else {
+            MsgEmerge cambiosrealizados = new MsgEmerge("Esta cancion no necesita mejoramiento RMS");
+            cambiosrealizados.setVisible(true);
+        }
+
+
+    }//GEN-LAST:event_jPanel2MouseClicked
+
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+
+        if (RMS) {
+            FileSelection fileselection = new FileSelection(rutaOriginal, rutaArchivoWav, rutaPDA);
+            fileselection.isMenu(true, stereo, RMS, PDA, rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA, false, true);
+            fileselection.setVisible(true);
+            this.dispose();
+        } else {
+            MsgEmerge cambiosrealizados = new MsgEmerge("Esta cancion no necesita mejoramiento RMS");
+            cambiosrealizados.setVisible(true);
+        }
+    }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        if (stereo) {
+            SwingUtilities.invokeLater(() -> {
+                MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
+                msgConfirmar.setVisible(true);
+                // Crear un SwingWorker para esperar hasta que el usuario tome una decisión
+                new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() {
+                        // Esperar hasta que el usuario tome una decisión
+                        while (msgConfirmar.isConfirmed() == -1) {
+                            try {
+                                Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        // Obtener el resultado y continuar con la lógica
+                        int resultado = msgConfirmar.isConfirmed();
+                        if (resultado == 1) {
+                            MsgLoadd cargando = new MsgLoadd();
+                            cargando.setVisible(true);
+                            Thread backgroundProcessThread = new Thread(() -> {
+
+                                AudioEnhanceFile.replaceFile(rutaOriginal, rutaArchivoWav);
+                                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                                //termine el proceso haz que se quite la ventana de cargando.
+
+                                // Actualizar el estado del JFrame
+                                SwingUtilities.invokeLater(() -> {
+
+                                });
+                            });
+                            backgroundProcessThread.start();
+                            jPanel6.setBackground(new Color(153, 255, 153));
+                            jPanel6.revalidate();
+                            jPanel7.repaint();
+
+                            jLabel2.setForeground(new Color(0, 0, 0));
+                            jLabel2.revalidate();
+                            jLabel2.repaint();
+
+                            jLabel5.setForeground(new Color(0, 0, 0));
+                            jLabel5.revalidate();
+                            jLabel5.repaint();
+                            MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+                            cambiosrealizados.setVisible(true);
+                            System.out.println("El usuario confirmó.");
+                        } else if (resultado == 0) {
+                            // Código a ejecutar si el usuario cancela
+                            System.out.println("El usuario canceló.");
+                        }
+                        msgConfirmar.setVisible(false);
+                    }
+                }.execute();
+            });
+        } else {
+            MsgEmerge cambiosrealizados = new MsgEmerge("Esta cancion ya esta en Stereo");
+            cambiosrealizados.setVisible(true);
+        }
+    }//GEN-LAST:event_jPanel6MouseClicked
 
     /**
      * @param args the command line arguments

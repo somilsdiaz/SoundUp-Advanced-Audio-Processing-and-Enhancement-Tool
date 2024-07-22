@@ -418,7 +418,7 @@ public class StartMenu extends javax.swing.JFrame {
                     }
 
                     //---------------------------STEREO---------------------------------------------------------
-                    principal.isStereo(selectedFile);
+                    principal.isStereo(selectedFile);  //true es stereo   false no es stereo
 
                     menuFiles mf = new menuFiles(!principal.isStereo(selectedFile), need.flag, true);
                     mf.Asignar(rutaOriginal, AudioOriginalWavPath, AudioRMS, AudioPDApatch);

@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.TagException;
 import VisualComponent.AudioNormalizer;
+import com.mycompany.soundup.menuFiles;
+import com.mycompany.soundup.principal;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.SwingUtilities;
@@ -32,10 +34,21 @@ public class FileSelection extends javax.swing.JFrame {
     private String route1;
     private String route2;
     private String routeOriginal;
+    private boolean isMenu = false;
+    boolean stereo;
+    boolean RMS;
+    boolean PDA;
+    String rutaOriginal;
+    String rutaArchivoWav;
+    String rutaRMS;
+    String rutaPDA;
+    boolean isRMS;
+    boolean isPDA;
+
     /**
      * Creates new form FileSelection
      */
-    public FileSelection(String original, String ruta1, String ruta2, double value) {
+    public FileSelection(String original, String ruta1, String ruta2) {
         try {
             initComponents();
             setIconImage(getIconImage());
@@ -65,6 +78,27 @@ public class FileSelection extends javax.swing.JFrame {
             Logger.getLogger(FileSelection.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public void isMenu(boolean isMenu, boolean stereo, boolean RMS, boolean PDA, String rutaOriginal,
+            String rutaArchivoWav, String rutaRMS, String rutaPDA, boolean isRMS, boolean isPDA) {
+        this.isMenu = isMenu;
+        this.stereo = stereo;
+        this.RMS = RMS;
+        this.PDA = PDA;
+        this.rutaOriginal = rutaOriginal;
+        this.rutaArchivoWav = rutaArchivoWav;
+        this.rutaRMS = rutaRMS;
+        this.rutaPDA = rutaPDA;
+        this.isRMS = isRMS;
+        this.isPDA = isPDA;
+
+    }
+
+    public void AppyMenu() {
+        menuFiles mf = new menuFiles(stereo, RMS, PDA);
+        mf.Asignar(rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA);
+        mf.setVisible(true);
     }
 
     public void cerrar() {
@@ -233,15 +267,21 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        AudioNormalizer.finalizarProcesoCancion(route2);
-        AudioNormalizer.finalizarProcesoCancion(route1);
 
-        AudioEnhanceFile.eliminarArchivo(route2);
-        AudioEnhanceFile.eliminarArchivo(route1);
+        if (isMenu) {
+            AppyMenu();
+        } else {
+            AudioNormalizer.finalizarProcesoCancion(route2);
+            AudioNormalizer.finalizarProcesoCancion(route1);
+
+            AudioEnhanceFile.eliminarArchivo(route2);
+            AudioEnhanceFile.eliminarArchivo(route1);
+            this.dispose();
+            StartMenu menu = new StartMenu();
+            menu.setVisible(true);
+        }
         this.dispose();
 
-        StartMenu menu = new StartMenu();
-        menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
@@ -267,64 +307,73 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_formMousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SwingUtilities.invokeLater(() -> {
-            MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
-            msgConfirmar.setVisible(true);
+        if (isMenu) {
+            if (isRMS) {
+                RMS = false;
+            } else if (isPDA == true) {
+                PDA = false;
+            }
+            AppyMenu();
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
+                msgConfirmar.setVisible(true);
 
-            // Crear un SwingWorker para esperar hasta que el usuario tome una decisión
-            new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() {
-                    // Esperar hasta que el usuario tome una decisión
-                    while (msgConfirmar.isConfirmed() == -1) {
-                        try {
-                            Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                // Crear un SwingWorker para esperar hasta que el usuario tome una decisión
+                new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() {
+                        // Esperar hasta que el usuario tome una decisión
+                        while (msgConfirmar.isConfirmed() == -1) {
+                            try {
+                                Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        return null;
                     }
-                    return null;
-                }
 
-                @Override
-                protected void done() {
-                    // Obtener el resultado y continuar con la lógica
-                    int resultado = msgConfirmar.isConfirmed();
-                    if (resultado == 1) {
-                        MsgLoadd cargando = new MsgLoadd();
-                        cargando.setVisible(true);
-                        Thread backgroundProcessThread = new Thread(() -> {
-                            AudioNormalizer.detenerCancion();
-                            AudioNormalizer.finalizarProcesoCancion(route1);
-                            AudioNormalizer.finalizarProcesoCancion(route2);
+                    @Override
+                    protected void done() {
+                        // Obtener el resultado y continuar con la lógica
+                        int resultado = msgConfirmar.isConfirmed();
+                        if (resultado == 1) {
+                            MsgLoadd cargando = new MsgLoadd();
+                            cargando.setVisible(true);
+                            Thread backgroundProcessThread = new Thread(() -> {
+                                AudioNormalizer.detenerCancion();
+                                AudioNormalizer.finalizarProcesoCancion(route1);
+                                AudioNormalizer.finalizarProcesoCancion(route2);
 
-                            AudioEnhanceFile.replaceFile(routeOriginal, route2);
-                            AudioEnhanceFile.eliminarArchivo(route1);
-                            AudioEnhanceFile.eliminarArchivo(route2);
+                                AudioEnhanceFile.replaceFile(routeOriginal, route2);
+                                AudioEnhanceFile.eliminarArchivo(route1);
+                                AudioEnhanceFile.eliminarArchivo(route2);
 
-                            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-                            //termine el proceso haz que se quite la ventana de cargando.
+                                cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                                //termine el proceso haz que se quite la ventana de cargando.
 
-                            // Actualizar el estado del JFrame
-                            SwingUtilities.invokeLater(() -> {
+                                // Actualizar el estado del JFrame
+                                SwingUtilities.invokeLater(() -> {
 
+                                });
                             });
-                        });
-                        backgroundProcessThread.start();
-                        StartMenu st = new StartMenu();
-                        st.setVisible(true);
-                        MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
-                        cambiosrealizados.setVisible(true);
-                        System.out.println("El usuario confirmó.");
-                        cerrar();
-                    } else if (resultado == 0) {
-                        // Código a ejecutar si el usuario cancela
-                        System.out.println("El usuario canceló.");
+                            backgroundProcessThread.start();
+                            StartMenu st = new StartMenu();
+                            st.setVisible(true);
+                            MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+                            cambiosrealizados.setVisible(true);
+                            System.out.println("El usuario confirmó.");
+                            cerrar();
+                        } else if (resultado == 0) {
+                            // Código a ejecutar si el usuario cancela
+                            System.out.println("El usuario canceló.");
+                        }
+                        msgConfirmar.setVisible(false);
                     }
-                    msgConfirmar.setVisible(false);
-                }
-            }.execute();
-        });
+                }.execute();
+            });
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
@@ -361,7 +410,7 @@ public class FileSelection extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSelection("vacio", "vacio", "vacio", 0.0).setVisible(true);
+                new FileSelection("vacio", "vacio", "vacio").setVisible(true);
             }
         });
     }

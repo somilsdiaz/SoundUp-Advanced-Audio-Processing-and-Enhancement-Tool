@@ -13,6 +13,7 @@ com\mycompany\soundup\principal$11.class
 com\mycompany\soundup\panelMusic$1.class
 MsgEmergentes\cambiosHechos.class
 VisualComponent\AudioVisualizer2.class
+com\mycompany\soundup\menuFiles$8.class
 MsgEmergentes\NoFound.class
 RMS\panelDir$1.class
 MsgEmergentes\MsgConfirmar$6.class
@@ -30,6 +31,7 @@ VisualComponent\LineMusic.class
 MsgEmergentes\MsgConfirmar$4.class
 com\mycompany\soundup\panelMusic.class
 RMS\panelDir$4.class
+com\mycompany\soundup\menuFiles$5.class
 ConvertirStereo\panelStereos$1.class
 Directorios\FileEntry.class
 VisualComponent\AudioNormalizer.class
@@ -44,6 +46,7 @@ MsgEmergentes\MsgConfirmar$5.class
 RMS\panelDir$3.class
 RMS\panelDir.class
 RMS\AudioEnhanceDir$ListasRMS_PDA.class
+com\mycompany\soundup\menuFiles$6.class
 com\mycompany\soundup\principal$4.class
 com\mycompany\soundup\menuFiles$4.class
 com\mycompany\soundup\principal.class
@@ -53,6 +56,7 @@ RMS\AudioEnhanceDir$1.class
 com\mycompany\soundup\principal$3.class
 RMS\panelDir$5.class
 VisualComponent\LoadingCircle.class
+com\mycompany\soundup\menuFiles$7.class
 com\mycompany\soundup\StartMenu$7.class
 RMS\panelDir$2.class
 MsgEmergentes\MsgConfirmar$7.class
