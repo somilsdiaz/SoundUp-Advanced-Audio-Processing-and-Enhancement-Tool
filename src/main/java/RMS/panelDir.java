@@ -13,8 +13,11 @@ import MsgEmergentes.MsgConfirmar;
 import RMS.AudioEnhanceDir.Rutas;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
+import MsgEmergentes.cambiosHechos;
 import PDA.AudioEnhancer;
 import com.mycompany.soundup.StartMenu;
+import com.mycompany.soundup.principal;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -360,10 +363,21 @@ public class panelDir extends javax.swing.JPanel {
                             } else if (idOp == 1) {
                                 AudioEnhancer.eliminarArchivosPDA();
                             }
-                           // StartMenu.CerrarPrincipal();
+                            // StartMenu.CerrarPrincipal();
+                            principal.jPanel3.removeAll();
+                            cambiosHechos ch = new cambiosHechos();
+                            principal.jPanel3.setLayout(new BorderLayout());
+                            principal.jPanel3.add(ch);
+                            principal.jPanel3.revalidate();
+                            principal.jPanel3.repaint();
                             cargando.setVisible(false);
                             MsgEmerge me = new MsgEmerge("Los cambios se han aplicado");
                             me.setVisible(true);
+                            if (idOp == 0) {
+                                principal.cambiosAplicadosRMS();
+                            } else if (idOp == 1) {
+                                principal.cambiosAplicadosPDA();
+                            }
 
                             SwingUtilities.invokeLater(() -> {
 

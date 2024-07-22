@@ -11,6 +11,7 @@ PDA\AudioEnhancer$1.class
 com\mycompany\soundup\FileSelectionDir$1.class
 com\mycompany\soundup\principal$11.class
 com\mycompany\soundup\panelMusic$1.class
+MsgEmergentes\cambiosHechos.class
 VisualComponent\AudioVisualizer2.class
 MsgEmergentes\NoFound.class
 RMS\panelDir$1.class
@@ -32,7 +33,6 @@ RMS\panelDir$4.class
 ConvertirStereo\panelStereos$1.class
 Directorios\FileEntry.class
 VisualComponent\AudioNormalizer.class
-MsgEmergentes\panelConfirmar.class
 Directorios\DirectoryTree$Node.class
 RMS\FileSelection$2.class
 com\mycompany\soundup\SoundUp.class
@@ -83,6 +83,7 @@ VisualComponent\AudioNormalizer$1.class
 RMS\AudioEnhanceDir$RutasPDA.class
 RMS\FileSelection$5.class
 MsgEmergentes\MsgConfirmar$2.class
+PDA\AudioEnhancer.class
 MsgEmergentes\MsgEmerge$3.class
 RMS\panelDir$6.class
 ConvertirStereo\panelStereos$4.class

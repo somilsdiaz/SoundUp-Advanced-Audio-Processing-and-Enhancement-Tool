@@ -11,8 +11,10 @@ import Directorios.FileEntry;
 import MsgEmergentes.MsgConfirmar;
 import MsgEmergentes.MsgEmerge;
 import MsgEmergentes.MsgLoadd;
+import MsgEmergentes.cambiosHechos;
 import RMS.AudioEnhanceDir;
 import com.mycompany.soundup.principal;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -39,6 +41,7 @@ public class panelStereos extends javax.swing.JPanel {
     int nroCanciones;
     DefaultListModel<String> listModel;
     DirectoryFiles directoryFiles;
+    public int cambiosHechos = 0;
 
     /**
      * Creates new form panelStereos
@@ -251,9 +254,17 @@ public class panelStereos extends javax.swing.JPanel {
                                     Logger.getLogger(panelStereos.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
+                            principal.jPanel3.removeAll();
+                            cambiosHechos ch = new cambiosHechos();
+                            principal.jPanel3.setLayout(new BorderLayout());
+                            principal.jPanel3.add(ch);
+                            principal.jPanel3.revalidate();
+                            principal.jPanel3.repaint();
+                            principal.cambiosAplicadosStereo();
                             cargando.setVisible(false);
                             MsgEmerge msg = new MsgEmerge("Audios convertidos a stereo exitosamente");
                             msg.setVisible(true);
+
                             SwingUtilities.invokeLater(() -> {
                             });
                         });
