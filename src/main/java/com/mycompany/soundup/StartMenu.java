@@ -30,6 +30,9 @@ import java.awt.Toolkit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -38,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class StartMenu extends javax.swing.JFrame {
 
@@ -65,8 +69,8 @@ public class StartMenu extends javax.swing.JFrame {
         this.getContentPane().setBackground(new Color(0, 0, 0, 0));
 
     }
-    
-    @Override 
+
+    @Override
     public Image getIconImage() {
         java.net.URL url = ClassLoader.getSystemResource("resources/iconMain.png");
         if (url != null) {
@@ -349,40 +353,85 @@ public class StartMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+
+        boolean rms = false;
+        boolean pda = false;
+        Path tempFilesDirectory = Paths.get("tempfiles");
+        if (!Files.exists(tempFilesDirectory)) {
+            try {
+                Files.createDirectory(tempFilesDirectory);
+            } catch (IOException ex) {
+                Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         JnaFileChooser ch = new JnaFileChooser();
         boolean action = ch.showOpenDialog(this);
         if (action) {
             File selectedFile = ch.getSelectedFile();
-            String filePath = selectedFile.getAbsolutePath();
+            String rutaOriginal = selectedFile.getAbsolutePath();
 
             MsgLoadd cargando = new MsgLoadd();
             cargando.setVisible(true);
 
             Thread backgroundProcessThread = new Thread(() -> {
-                // Simular un proceso que toma tiempo (por ejemplo, 10 segundos)
-                //    Thread.sleep(10000);
-                BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(filePath);
-                if (need.flag) {
+                try {
+                    // Simular un proceso que toma tiempo (por ejemplo, 10 segundos)
+                    //    Thread.sleep(10000);
+                    String AudioOriginalWavPath = AudioEnhanceFile.convertToWavString(rutaOriginal);
+
+                    //---------------------------RMS-----------------------------------------------
+                    BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(rutaOriginal);
+                    String AudioRMS = null;
+                    if (need.flag) {
+
+                        AudioRMS = AudioEnhanceFile.Mejorar(AudioOriginalWavPath, 0, need.value);
+
+
+                        /*    FileSelection fileselection = new FileSelection(rutaOriginal, AudioOriginalWavPath, AudioRMS, need.value);
+                        fileselection.setVisible(true);*/
+                    } else {
+                        MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
+                        cambiosrealizados.setVisible(true);
+                    }
+                    //---------------------------PDA---------------------------------------------------
+                    File AudioOriginalWav = new File(AudioOriginalWavPath);
+                    String inputFileName = AudioOriginalWav.getName();
+                    String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
+                    String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav"; //ESTE HAY QUE ELIMINARLO8
+                    File mascaraAudioPDA = new File(mascaraAudioPDApatch);
+                    String AudioPDApatch = null;
                     try {
-                        String outputFilePath = AudioEnhanceFile.convertToWavString(filePath);
-                        String rutaArchivoMejorado = AudioEnhanceFile.Mejorar(outputFilePath, 0, need.value);
-                        this.dispose();
-                        //     cargando.setVisible(false);
-                        FileSelection fileselection = new FileSelection(filePath, outputFilePath, rutaArchivoMejorado, need.value);
-                        fileselection.setVisible(true);
-                    } catch (IOException ex) {
-                        Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        PDA.AudioEnhancer.enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
+                        String normalized_mask = PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
+                        String normalized_temp = AudioEnhanceFile.convertToWavString(PDA.AudioEnhancer.normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
+                        File AudioMidlePDA = new File(normalized_temp);
+
+                        AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
+                        File AudioPDA = new File(AudioPDApatch);
+                        PDA.AudioEnhancer.mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
+                        RMS.AudioEnhanceFile.eliminarArchivo(mascaraAudioPDApatch);
+                        RMS.AudioEnhanceFile.eliminarArchivo(normalized_temp);
+                        RMS.AudioEnhanceFile.eliminarArchivo(normalized_mask);
+                    } catch (UnsupportedAudioFileException | IOException e) {
+                        e.printStackTrace();
                     }
 
-                } else {
-                    MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
-                    cambiosrealizados.setVisible(true);
-                }
-                cargando.setVisible(false);
-                // Actualizar el estado del JFrame
-                SwingUtilities.invokeLater(() -> {
+                    //---------------------------STEREO---------------------------------------------------------
+                    principal.isStereo(selectedFile);
 
-                });
+                    menuFiles mf = new menuFiles(!principal.isStereo(selectedFile), need.flag, true);
+                    mf.Asignar(rutaOriginal, AudioOriginalWavPath, AudioRMS, AudioPDApatch);
+                    mf.setVisible(true);
+
+                    cargando.setVisible(false);
+                    // Actualizar el estado del JFrame
+                    SwingUtilities.invokeLater(() -> {
+
+                    });
+                } catch (IOException ex) {
+                    Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
             backgroundProcessThread.start();
 

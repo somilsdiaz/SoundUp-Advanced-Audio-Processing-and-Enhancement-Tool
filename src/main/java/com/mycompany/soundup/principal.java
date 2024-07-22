@@ -121,7 +121,7 @@ public class principal extends javax.swing.JFrame {
         }
     }
 
-    private boolean isStereo(File audioFile) {
+    public static boolean isStereo(File audioFile) {
         boolean is = false;
         try {
             AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(audioFile);
