@@ -248,6 +248,9 @@ public class menuFiles extends javax.swing.JFrame {
     }//GEN-LAST:event_formMousePressed
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+        AudioEnhanceFile.eliminarArchivo(rutaRMS);
+        AudioEnhanceFile.eliminarArchivo(rutaPDA);
+        AudioEnhanceFile.eliminarArchivo(rutaArchivoWav);
         this.dispose();
     }//GEN-LAST:event_jPanel7MouseClicked
 
