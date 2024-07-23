@@ -81,7 +81,6 @@ com\mycompany\soundup\principal$9.class
 ConvertirStereo\panelStereos.class
 com\mycompany\soundup\menuFiles.class
 MsgEmergentes\MsgLoadd$1.class
-com\mycompany\soundup\principal$13.class
 MsgEmergentes\MsgConfirmar$1.class
 MsgEmergentes\MsgEmerge$2.class
 com\mycompany\soundup\principal$2.class
@@ -100,7 +99,6 @@ com\mycompany\soundup\StartMenu$9.class
 RMS\AudioEnhanceFile$RMSProcessor.class
 com\mycompany\soundup\menuFiles$3.class
 com\mycompany\soundup\principal$1.class
-com\mycompany\soundup\principal$12.class
 RMS\FileSelection$6.class
 com\mycompany\soundup\StartMenu$3.class
 VisualComponent\AudioNormalizer$2.class

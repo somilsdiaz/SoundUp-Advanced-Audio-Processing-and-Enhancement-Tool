@@ -115,6 +115,7 @@ public class StartMenu extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -141,13 +142,20 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(47, 237, 203));
         jLabel1.setText("SoundUp ");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(80, 30, 390, 40);
+        jLabel1.setBounds(80, 30, 180, 40);
 
-        jLabel2.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Software development by Somil");
+        jLabel2.setBackground(new java.awt.Color(47, 237, 203));
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(47, 237, 203));
+        jLabel2.setText("v2.0");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(70, 70, 166, 15);
+        jLabel2.setBounds(240, 50, 160, 15);
+
+        jLabel11.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Software development by Somil");
+        jPanel1.add(jLabel11);
+        jLabel11.setBounds(70, 70, 166, 15);
 
         jLabel3.setText("jLabel3");
         jPanel1.add(jLabel3);
@@ -494,6 +502,7 @@ public class StartMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
