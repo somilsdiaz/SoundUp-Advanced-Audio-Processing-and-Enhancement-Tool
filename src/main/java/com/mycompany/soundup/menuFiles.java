@@ -10,7 +10,9 @@ import MsgEmergentes.MsgLoadd;
 import RMS.AudioEnhanceFile;
 import RMS.FileSelection;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -33,6 +35,7 @@ public class menuFiles extends javax.swing.JFrame {
 
     public menuFiles(boolean stereo, boolean RMS, boolean PDA) {
         initComponents();
+        setIconImage(getIconImage());
         this.setLocationRelativeTo(this);
         this.stereo = stereo;
         this.RMS = RMS;
@@ -91,6 +94,17 @@ public class menuFiles extends javax.swing.JFrame {
         this.rutaPDA = rutaPDA;
     }
 
+    @Override
+    public Image getIconImage() {
+        java.net.URL url = ClassLoader.getSystemResource("resources/iconMain.png");
+        if (url != null) {
+            return Toolkit.getDefaultToolkit().getImage(url);
+        } else {
+            System.err.println("Resource not found: resources/iconMain.png");
+            return null;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,6 +128,7 @@ public class menuFiles extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menu");
         setMinimumSize(new java.awt.Dimension(550, 230));
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(550, 230));
@@ -134,22 +149,30 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setLayout(null);
 
-        jPanel2.setBackground(new java.awt.Color(153, 255, 153));
+        jPanel2.setBackground(new java.awt.Color(238, 100, 100));
+        jPanel2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel2MouseMoved(evt);
+            }
+        });
         jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel2MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel2MouseExited(evt);
             }
         });
         jPanel2.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Microsoft PhagsPa", 1, 36)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("RMS");
         jPanel2.add(jLabel3);
         jLabel3.setBounds(80, 20, 100, 40);
 
         jLabel6.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Mejoramiento");
         jPanel2.add(jLabel6);
         jLabel6.setBounds(70, 60, 130, 19);
@@ -158,9 +181,17 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel2.setBounds(20, 20, 250, 90);
 
         jPanel5.setBackground(new java.awt.Color(238, 100, 100));
+        jPanel5.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel5MouseMoved(evt);
+            }
+        });
         jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel5MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel5MouseExited(evt);
             }
         });
         jPanel5.setLayout(null);
@@ -181,9 +212,17 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel5.setBounds(280, 20, 250, 90);
 
         jPanel6.setBackground(new java.awt.Color(238, 100, 100));
+        jPanel6.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel6MouseMoved(evt);
+            }
+        });
         jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel6MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel6MouseExited(evt);
             }
         });
         jPanel6.setLayout(null);
@@ -204,9 +243,17 @@ public class menuFiles extends javax.swing.JFrame {
         jPanel6.setBounds(20, 120, 250, 90);
 
         jPanel7.setBackground(new java.awt.Color(238, 36, 45));
+        jPanel7.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jPanel7MouseMoved(evt);
+            }
+        });
         jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel7MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanel7MouseExited(evt);
             }
         });
 
@@ -220,7 +267,7 @@ public class menuFiles extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,9 +295,15 @@ public class menuFiles extends javax.swing.JFrame {
     }//GEN-LAST:event_formMousePressed
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
-        AudioEnhanceFile.eliminarArchivo(rutaRMS);
-        AudioEnhanceFile.eliminarArchivo(rutaPDA);
-        AudioEnhanceFile.eliminarArchivo(rutaArchivoWav);
+        if (rutaRMS != null) {
+            AudioEnhanceFile.eliminarArchivo(rutaRMS);
+        }
+        if (rutaPDA != null) {
+            AudioEnhanceFile.eliminarArchivo(rutaPDA);
+        }
+        if (rutaArchivoWav != null) {
+            AudioEnhanceFile.eliminarArchivo(rutaArchivoWav);
+        }
         this.dispose();
     }//GEN-LAST:event_jPanel7MouseClicked
 
@@ -271,13 +324,13 @@ public class menuFiles extends javax.swing.JFrame {
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
 
-        if (RMS) {
+        if (PDA) {
             FileSelection fileselection = new FileSelection(rutaOriginal, rutaArchivoWav, rutaPDA);
             fileselection.isMenu(true, stereo, RMS, PDA, rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA, false, true);
             fileselection.setVisible(true);
             this.dispose();
         } else {
-            MsgEmerge cambiosrealizados = new MsgEmerge("Esta cancion no necesita mejoramiento RMS");
+            MsgEmerge cambiosrealizados = new MsgEmerge("Esta cancion no necesita mejoramiento PDA");
             cambiosrealizados.setVisible(true);
         }
     }//GEN-LAST:event_jPanel5MouseClicked
@@ -321,17 +374,18 @@ public class menuFiles extends javax.swing.JFrame {
                                 });
                             });
                             backgroundProcessThread.start();
-                            jPanel6.setBackground(new Color(153, 255, 153));
+                            jPanel6.setBackground(new Color(238, 100, 100));
                             jPanel6.revalidate();
                             jPanel7.repaint();
 
-                            jLabel2.setForeground(new Color(0, 0, 0));
+                            jLabel2.setForeground(new Color(255, 255, 255));
                             jLabel2.revalidate();
                             jLabel2.repaint();
 
-                            jLabel5.setForeground(new Color(0, 0, 0));
+                            jLabel5.setForeground(new Color(255, 255, 255));
                             jLabel5.revalidate();
                             jLabel5.repaint();
+                            stereo = false;
                             MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
                             cambiosrealizados.setVisible(true);
                             System.out.println("El usuario confirmó.");
@@ -348,6 +402,96 @@ public class menuFiles extends javax.swing.JFrame {
             cambiosrealizados.setVisible(true);
         }
     }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jPanel2MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseMoved
+        if (RMS) {
+            jPanel2.setBackground(new Color(183, 255, 183));
+            jPanel2.revalidate();
+            jPanel2.repaint();
+
+        } else {
+            jPanel2.setBackground(new Color(255, 150, 150));
+            jPanel2.revalidate();
+            jPanel2.repaint();
+        }
+    }//GEN-LAST:event_jPanel2MouseMoved
+
+    private void jPanel5MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseMoved
+        if (PDA) {
+            jPanel5.setBackground(new Color(183, 255, 183));
+            jPanel5.revalidate();
+            jPanel5.repaint();
+
+        } else {
+            jPanel5.setBackground(new Color(255, 150, 150));
+            jPanel5.revalidate();
+            jPanel5.repaint();
+        }
+    }//GEN-LAST:event_jPanel5MouseMoved
+
+    private void jPanel6MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseMoved
+        if (stereo) {
+            jPanel6.setBackground(new Color(183, 255, 183));
+            jPanel6.revalidate();
+            jPanel6.repaint();
+
+        } else {
+            jPanel6.setBackground(new Color(255, 150, 150));
+            jPanel6.revalidate();
+            jPanel6.repaint();
+        }
+    }//GEN-LAST:event_jPanel6MouseMoved
+
+    private void jPanel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseExited
+        if (RMS) {
+            jPanel2.setBackground(new Color(153, 255, 153));
+            jPanel2.revalidate();
+            jPanel2.repaint();
+
+        } else {
+            jPanel2.setBackground(new Color(238, 100, 100));
+            jPanel2.revalidate();
+            jPanel2.repaint();
+        }
+    }//GEN-LAST:event_jPanel2MouseExited
+
+    private void jPanel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseExited
+        if (PDA) {
+            jPanel5.setBackground(new Color(153, 255, 153));
+            jPanel5.revalidate();
+            jPanel5.repaint();
+
+        } else {
+            jPanel5.setBackground(new Color(238, 100, 100));
+            jPanel5.revalidate();
+            jPanel5.repaint();
+        }
+    }//GEN-LAST:event_jPanel5MouseExited
+
+    private void jPanel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseExited
+        if (stereo) {
+            jPanel6.setBackground(new Color(153, 255, 153));
+            jPanel6.revalidate();
+            jPanel6.repaint();
+
+        } else {
+            jPanel6.setBackground(new Color(238, 100, 100));
+            jPanel6.revalidate();
+            jPanel6.repaint();
+        }
+    }//GEN-LAST:event_jPanel6MouseExited
+
+    private void jPanel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseMoved
+        jPanel7.setBackground(new Color(255, 96, 105));
+        jPanel7.revalidate();
+        jPanel7.repaint();
+    }//GEN-LAST:event_jPanel7MouseMoved
+
+    private void jPanel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseExited
+        jPanel7.setBackground(new Color(238, 36, 45));
+        jPanel7.revalidate();
+        jPanel7.repaint();
+    }//GEN-LAST:event_jPanel7MouseExited
 
     /**
      * @param args the command line arguments

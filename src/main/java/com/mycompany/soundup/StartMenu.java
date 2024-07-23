@@ -354,8 +354,6 @@ public class StartMenu extends javax.swing.JFrame {
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
 
-        boolean rms = false;
-        boolean pda = false;
         Path tempFilesDirectory = Paths.get("tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
             try {
@@ -390,9 +388,6 @@ public class StartMenu extends javax.swing.JFrame {
 
                         /*    FileSelection fileselection = new FileSelection(rutaOriginal, AudioOriginalWavPath, AudioRMS, need.value);
                         fileselection.setVisible(true);*/
-                    } else {
-                        MsgEmerge cambiosrealizados = new MsgEmerge("Este archivo de audio no necesita mejora");
-                        cambiosrealizados.setVisible(true);
                     }
                     //---------------------------PDA---------------------------------------------------
                     File AudioOriginalWav = new File(AudioOriginalWavPath);
