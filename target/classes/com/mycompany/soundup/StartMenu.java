@@ -362,7 +362,7 @@ public class StartMenu extends javax.swing.JFrame {
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
 
-        Path tempFilesDirectory = Paths.get("tempfiles");
+        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
             try {
                 Files.createDirectory(tempFilesDirectory);

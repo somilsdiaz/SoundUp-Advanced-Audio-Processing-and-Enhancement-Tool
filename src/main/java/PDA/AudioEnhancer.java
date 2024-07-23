@@ -29,7 +29,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AudioEnhancer {
 
-    static Path tempFilesDirectory = Paths.get("tempfiles");
+    static Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
 
     public static void enhanceAudio(File inputFile, File outputFile) throws UnsupportedAudioFileException, IOException {
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputFile);
@@ -292,7 +292,7 @@ public class AudioEnhancer {
     }
 
     public static void main(String[] args) throws IOException {
-        Path tempFilesDirectory = Paths.get("tempfiles");
+        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
             Files.createDirectory(tempFilesDirectory);
         }

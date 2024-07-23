@@ -29,7 +29,7 @@ public class AudioEnhanceDir {
     public static DirectoryTree treePDA;
     public int cantidad = 0;
     public static AtomicInteger totalAudioFiles = new AtomicInteger();
-    static Path tempFilesDirectory = Paths.get("tempfiles");
+    static Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
 
     public static int returnNumeroActual() {
         return totalAudioFiles.get();

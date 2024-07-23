@@ -8,6 +8,7 @@ MsgEmergentes\MsgConfirmar.class
 RMS\AudioEnhanceFile.class
 ConvertirStereo\panelStereos$3.class
 PDA\AudioEnhancer$1.class
+com\mycompany\soundup\menuFiles$11.class
 com\mycompany\soundup\FileSelectionDir$1.class
 com\mycompany\soundup\principal$11.class
 com\mycompany\soundup\panelMusic$1.class
@@ -79,6 +80,7 @@ Directorios\DirectoryTree.class
 com\mycompany\soundup\FileSelectionDir$5.class
 com\mycompany\soundup\principal$9.class
 ConvertirStereo\panelStereos.class
+com\mycompany\soundup\menuFiles$9.class
 com\mycompany\soundup\menuFiles.class
 MsgEmergentes\MsgLoadd$1.class
 MsgEmergentes\MsgConfirmar$1.class
@@ -103,3 +105,4 @@ RMS\FileSelection$6.class
 com\mycompany\soundup\StartMenu$3.class
 VisualComponent\AudioNormalizer$2.class
 com\mycompany\soundup\FileSelectionDir.class
+com\mycompany\soundup\menuFiles$10.class

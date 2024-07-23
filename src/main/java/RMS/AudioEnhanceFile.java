@@ -133,7 +133,7 @@ public class AudioEnhanceFile {
     }
 
     public static File convertToWav(File inputFile) throws IOException {
-        Path tempFilesDirectory = Paths.get("tempfiles");
+        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
             Files.createDirectory(tempFilesDirectory);
         }
@@ -170,7 +170,7 @@ public class AudioEnhanceFile {
     }
 
     public static String convertToWavString(String inputFilePath) throws IOException {
-        Path tempFilesDirectory = Paths.get("tempfiles");
+        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
         if (!Files.exists(tempFilesDirectory)) {
             Files.createDirectory(tempFilesDirectory);
         }
@@ -212,7 +212,7 @@ public class AudioEnhanceFile {
     private static String normalizeAudioVolume(File audioFile, File originalFile, double currentRMS) {
         try {
             // Crear la carpeta "tempfiles" si no existe
-            Path tempFilesDirectory = Paths.get("tempfiles");
+            Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
             if (!Files.exists(tempFilesDirectory)) {
                 Files.createDirectory(tempFilesDirectory);
             }

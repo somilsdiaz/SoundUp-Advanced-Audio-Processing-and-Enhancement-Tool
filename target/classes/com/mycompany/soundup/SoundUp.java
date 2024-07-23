@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class SoundUp {
 
     public static void main(String[] args) {
-        Path tempFilesDirectory = Paths.get("tempfiles");
+        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
 
         try {
             // Crear la carpeta si no existe

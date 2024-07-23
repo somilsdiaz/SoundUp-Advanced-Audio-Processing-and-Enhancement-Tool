@@ -55,6 +55,18 @@ public class menuFiles extends javax.swing.JFrame {
             jLabel6.revalidate();
             jLabel6.repaint();
 
+        } else {
+            jPanel2.setBackground(new Color(238, 100, 100));
+            jPanel2.revalidate();
+            jPanel2.repaint();
+
+            jLabel3.setForeground(new Color(255, 255, 255));
+            jLabel3.revalidate();
+            jLabel3.repaint();
+
+            jLabel6.setForeground(new Color(255, 255, 255));
+            jLabel6.revalidate();
+            jLabel6.repaint();
         }
         //PDA
         if (PDA) {
@@ -69,18 +81,42 @@ public class menuFiles extends javax.swing.JFrame {
             jLabel7.setForeground(new Color(0, 0, 0));
             jLabel7.revalidate();
             jLabel7.repaint();
+        } else {
+            jPanel5.setBackground(new Color(238, 100, 100));
+            jPanel5.revalidate();
+            jPanel5.repaint();
+
+            jLabel4.setForeground(new Color(255, 255, 255));
+            jLabel4.revalidate();
+            jLabel4.repaint();
+
+            jLabel7.setForeground(new Color(255, 255, 255));
+            jLabel7.revalidate();
+            jLabel7.repaint();
         }
         //STEREO
         if (stereo) {
             jPanel6.setBackground(new Color(153, 255, 153));
             jPanel6.revalidate();
-            jPanel7.repaint();
+            jPanel6.repaint();
 
             jLabel2.setForeground(new Color(0, 0, 0));
             jLabel2.revalidate();
             jLabel2.repaint();
 
             jLabel5.setForeground(new Color(0, 0, 0));
+            jLabel5.revalidate();
+            jLabel5.repaint();
+        } else {
+            jPanel6.setBackground(new Color(238, 100, 100));
+            jPanel6.revalidate();
+            jPanel6.repaint();
+
+            jLabel2.setForeground(new Color(255, 255, 255));
+            jLabel2.revalidate();
+            jLabel2.repaint();
+
+            jLabel5.setForeground(new Color(255, 255, 255));
             jLabel5.revalidate();
             jLabel5.repaint();
         }
@@ -376,7 +412,7 @@ public class menuFiles extends javax.swing.JFrame {
                             backgroundProcessThread.start();
                             jPanel6.setBackground(new Color(238, 100, 100));
                             jPanel6.revalidate();
-                            jPanel7.repaint();
+                            jPanel6.repaint();
 
                             jLabel2.setForeground(new Color(255, 255, 255));
                             jLabel2.revalidate();

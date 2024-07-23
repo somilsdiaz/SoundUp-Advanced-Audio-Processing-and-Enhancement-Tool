@@ -96,7 +96,7 @@ public class FileSelection extends javax.swing.JFrame {
     }
 
     public void AppyMenu() {
-        menuFiles mf = new menuFiles(stereo, RMS, PDA);
+        menuFiles mf = new menuFiles(false, RMS, PDA);
         mf.Asignar(rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA);
         mf.setVisible(true);
     }
@@ -349,6 +349,9 @@ public class FileSelection extends javax.swing.JFrame {
                                 } else if (isPDA == true) {
                                     PDA = false;
                                 }
+                                AppyMenu();
+                                MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+                                cambiosrealizados.setVisible(true);
                             }
 
                             cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
@@ -361,13 +364,12 @@ public class FileSelection extends javax.swing.JFrame {
                         });
                         backgroundProcessThread.start();
                         if (isMenu) {
-                            AppyMenu();
+
                         } else {
                             StartMenu menu = new StartMenu();
                             menu.setVisible(true);
                         }
-                        MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
-                        cambiosrealizados.setVisible(true);
+
                         System.out.println("El usuario confirmó.");
                         cerrar();
                     } else if (resultado == 0) {

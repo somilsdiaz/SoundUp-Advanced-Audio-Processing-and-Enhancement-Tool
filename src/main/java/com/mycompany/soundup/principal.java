@@ -15,7 +15,6 @@ import RMS.AudioEnhanceDir.ListasRMS_PDA;
 import static RMS.AudioEnhanceDir.isAudioFile;
 import RMS.panelDir;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -450,7 +449,7 @@ public class principal extends javax.swing.JFrame {
             MsgLoadd ml = new MsgLoadd();
             ml.setVisible(true);
             Thread backgroundProcessThread = new Thread(() -> {
-                if (statusStereo == 0) {
+                if ((statusStereo == 0)||(cambiosAplicadosRMS != 0)||(cambiosAplicadosPDA != 0)) {
                     RecorrerDirectorioFindStereos(route);
                     statusStereo = 1;
                     if (numeroCancionesStereo != 0) {
