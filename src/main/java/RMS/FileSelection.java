@@ -271,13 +271,12 @@ public class FileSelection extends javax.swing.JFrame {
         AudioNormalizer.finalizarProcesoCancion(route2);
         AudioNormalizer.finalizarProcesoCancion(route1);
 
-        AudioEnhanceFile.eliminarArchivo(route2);
-
         if (isMenu) {
             AppyMenu();
-            
+
         } else {
             AudioEnhanceFile.eliminarArchivo(route1);
+            AudioEnhanceFile.eliminarArchivo(route2);
             StartMenu menu = new StartMenu();
             menu.setVisible(true);
         }
@@ -308,14 +307,6 @@ public class FileSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_formMousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (isMenu) {
-
-            if (isRMS) {
-                RMS = false;
-            } else if (isPDA == true) {
-                PDA = false;
-            }
-        }
 
         SwingUtilities.invokeLater(() -> {
             MsgConfirmar msgConfirmar = new MsgConfirmar("¿Estás seguro de aplicar los cambios?");
@@ -351,9 +342,14 @@ public class FileSelection extends javax.swing.JFrame {
                             AudioEnhanceFile.replaceFile(routeOriginal, route2);
                             if (!isMenu) {
                                 AudioEnhanceFile.eliminarArchivo(route1);
-
+                                AudioEnhanceFile.eliminarArchivo(route2);
+                            } else {
+                                if (isRMS) {
+                                    RMS = false;
+                                } else if (isPDA == true) {
+                                    PDA = false;
+                                }
                             }
-                            AudioEnhanceFile.eliminarArchivo(route2);
 
                             cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
                             //termine el proceso haz que se quite la ventana de cargando.
