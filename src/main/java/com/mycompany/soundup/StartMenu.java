@@ -294,7 +294,6 @@ public class StartMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-
         JnaFileChooser ch = new JnaFileChooser();
         ch.setMode(JnaFileChooser.Mode.Directories);
         boolean action = ch.showOpenDialog(this);
@@ -313,13 +312,10 @@ public class StartMenu extends javax.swing.JFrame {
                         asignar(AudioEnhanceDir.returnNumeroActual(), 0);
                     }, 0, 1, TimeUnit.SECONDS);
 
-                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion;
-
                     AudioEnhanceDir.ListasRMS_PDA listas = RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
-                    NecesitaNormalizacion = listas.listaRMS;
+                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = listas.listaRMS;
                     scheduler.shutdown();
                     scheduler.awaitTermination(1, TimeUnit.MINUTES);
-                    //List<AudioEnhanceDir.Rutas> estanMejorados = null;
 
                     if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
@@ -328,36 +324,28 @@ public class StartMenu extends javax.swing.JFrame {
                             asignar(AudioEnhanceDir.returnNumeroActual(), 1);
                         }, 0, 1, TimeUnit.SECONDS);
                         List<AudioEnhanceDir.Rutas> estanMejorados = RMS.AudioEnhanceDir.vamosAmejorar(NecesitaNormalizacion);
-                        scheduler.shutdown();
-                        scheduler.awaitTermination(1, TimeUnit.MINUTES);
+                        scheduler2.shutdown();
+                        scheduler2.awaitTermination(1, TimeUnit.MINUTES);
                         pp = new principal(estanMejorados, filePath, listas);
-
                     } else {
                         List<AudioEnhanceDir.Rutas> estanMejorados = null;
                         pp = new principal(estanMejorados, filePath, listas);
-
                     }
                     pp.setVisible(true);
                     this.dispose();
-                    /*    
-                     */
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    Thread.currentThread().interrupt();
+                } finally {
+                    cargando.setVisible(false);
+                    SwingUtilities.invokeLater(() -> {
+                        // Actualizar el estado del JFrame
+                    });
                 }
             }
-
-            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
-            //termine el proceso haz que se quite la ventana de cargando.
-            // Actualizar el estado del JFrame
-            SwingUtilities.invokeLater(() -> {
-
-            });
         });
         backgroundProcessThread.start();
-        /*      } else {
-            MsgEmerge mg = new MsgEmerge("Selecione un archivo");
-            mg.setVisible(true);
-        }*/
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
