@@ -251,7 +251,7 @@ public class principal extends javax.swing.JFrame {
         jPanel2.add(jLabel1);
         jLabel1.setBounds(0, 0, 70, 60);
 
-        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Microsoft Tai Le", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(47, 237, 203));
         jLabel2.setText("SoundUp ");
         jPanel2.add(jLabel2);

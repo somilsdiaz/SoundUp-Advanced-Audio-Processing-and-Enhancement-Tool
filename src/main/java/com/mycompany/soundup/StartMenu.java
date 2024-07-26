@@ -115,6 +115,8 @@ public class StartMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -124,10 +126,8 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -135,6 +135,18 @@ public class StartMenu extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));
         jPanel1.setLayout(null);
+
+        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("SELECCIONAR MUSICA");
+        jPanel1.add(jLabel9);
+        jLabel9.setBounds(650, 490, 190, 30);
+
+        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText(" SELECCIONAR CARPETA");
+        jPanel1.add(jLabel10);
+        jLabel10.setBounds(170, 500, 190, 30);
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0, 0));
         jPanel2.setOpaque(false);
@@ -148,11 +160,11 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel1.setBounds(80, 30, 180, 40);
 
         jLabel2.setBackground(new java.awt.Color(47, 237, 203));
-        jLabel2.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(47, 237, 203));
         jLabel2.setText("v2.0.1 ");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(240, 50, 160, 15);
+        jLabel2.setBounds(240, 50, 160, 17);
 
         jLabel11.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
@@ -185,7 +197,7 @@ public class StartMenu extends javax.swing.JFrame {
         jPanel5.setOpaque(false);
         jPanel5.setLayout(null);
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icon_music.png"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mp3.png"))); // NOI18N
         jLabel8.setText("jLabel8");
         jLabel8.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
@@ -201,21 +213,15 @@ public class StartMenu extends javax.swing.JFrame {
             }
         });
         jPanel5.add(jLabel8);
-        jLabel8.setBounds(0, 0, 250, 250);
-
-        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("SELECCIONAR MUSICA");
-        jPanel5.add(jLabel9);
-        jLabel9.setBounds(40, 230, 190, 19);
+        jLabel8.setBounds(0, 0, 250, 256);
 
         jPanel1.add(jPanel5);
-        jPanel5.setBounds(560, 260, 250, 250);
+        jPanel5.setBounds(580, 230, 256, 256);
 
         jPanel3.setOpaque(false);
         jPanel3.setLayout(null);
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icon_dir.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/carpeta.png"))); // NOI18N
         jLabel7.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jLabel7MouseMoved(evt);
@@ -230,16 +236,10 @@ public class StartMenu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jLabel7);
-        jLabel7.setBounds(0, 0, 250, 240);
+        jLabel7.setBounds(0, 0, 256, 256);
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(170, 260, 250, 240);
-
-        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText(" SELECCIONAR CARPETA");
-        jPanel1.add(jLabel10);
-        jLabel10.setBounds(210, 490, 190, 30);
+        jPanel3.setBounds(120, 240, 256, 256);
 
         jLabel4.setFont(new java.awt.Font("Microsoft YaHei", 0, 14)); // NOI18N
         jLabel4.setText("jLabel4");
@@ -443,20 +443,20 @@ public class StartMenu extends javax.swing.JFrame {
 
     private void jLabel7MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseMoved
         // TODO add your handling code here:
-        SetImageLabel(jLabel7, "/resources/icon_dir_selection.png");
+        SetImageLabel(jLabel7, "/resources/carpetaselect.png");
 
     }//GEN-LAST:event_jLabel7MouseMoved
 
     private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
-        SetImageLabel(jLabel7, "/resources/icon_dir.png");
+        SetImageLabel(jLabel7, "/resources/carpeta.png");
     }//GEN-LAST:event_jLabel7MouseExited
 
     private void jLabel8MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseMoved
-        SetImageLabel(jLabel8, "/resources/icon_music_selection.png");
+        SetImageLabel(jLabel8, "/resources/mp3select.png");
     }//GEN-LAST:event_jLabel8MouseMoved
 
     private void jLabel8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseExited
-        SetImageLabel(jLabel8, "/resources/icon_music.png");
+        SetImageLabel(jLabel8, "/resources/mp3.png");
     }//GEN-LAST:event_jLabel8MouseExited
 
     /**

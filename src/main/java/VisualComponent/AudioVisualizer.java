@@ -56,7 +56,7 @@ public class AudioVisualizer extends JPanel implements ActionListener {
 
         for (int i = 0; i < barHeights.length; i++) {
             int barHeight = barHeights[i];
-            g.setColor(new Color(255, 0, 255)); // Color rosa
+            g.setColor(new Color(57, 255, 20)); // Color verde
             g.fillRect(i * barWidth, maxHeight - barHeight, barWidth - 2, barHeight);
         }
     }
