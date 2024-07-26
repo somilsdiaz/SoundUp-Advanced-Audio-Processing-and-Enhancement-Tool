@@ -35,6 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +51,7 @@ public class StartMenu extends javax.swing.JFrame {
     private static AtomicInteger totalAudioFiles = new AtomicInteger(0);
     MsgLoadNumeric cargando = new MsgLoadNumeric();
     private static principal pp;
+    private JnaFileChooser ch;
 
     public StartMenu() {
         setUndecorated(true);
@@ -147,7 +150,7 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel2.setBackground(new java.awt.Color(47, 237, 203));
         jLabel2.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(47, 237, 203));
-        jLabel2.setText("v2.0");
+        jLabel2.setText("v2.0.1 ");
         jPanel1.add(jLabel2);
         jLabel2.setBounds(240, 50, 160, 15);
 
@@ -294,36 +297,44 @@ public class StartMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        JnaFileChooser ch = new JnaFileChooser();
+        ch = new JnaFileChooser();
         ch.setMode(JnaFileChooser.Mode.Directories);
         boolean action = ch.showOpenDialog(this);
 
-        cargando.setVisible(true);
-
-        Thread backgroundProcessThread = new Thread(() -> {
-            if (action) {
+        if (action) {
+            cargando.setVisible(true);
+            CompletableFuture.runAsync(() -> {
                 try {
                     File selectedFile = ch.getSelectedFile();
                     String filePath = selectedFile.getAbsolutePath();
 
                     totalAudioFiles.set(AudioEnhanceDir.contarArchivosDeAudio(filePath));
-                    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                    scheduler.scheduleAtFixedRate(() -> {
-                        asignar(AudioEnhanceDir.returnNumeroActual(), 0);
-                    }, 0, 1, TimeUnit.SECONDS);
 
-                    AudioEnhanceDir.ListasRMS_PDA listas = RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath);
-                    List<AudioEnhanceDir.RutaRmsPar> NecesitaNormalizacion = listas.listaRMS;
+                    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+                    CompletableFuture<Void> scheduleTask1 = CompletableFuture.runAsync(() -> {
+                        scheduler.scheduleAtFixedRate(() -> {
+                            asignar(AudioEnhanceDir.returnNumeroActual(), 0);
+                        }, 0, 1, TimeUnit.SECONDS);
+                    });
+
+                    CompletableFuture<AudioEnhanceDir.ListasRMS_PDA> listasFuture = CompletableFuture.supplyAsync(() -> RMS.AudioEnhanceDir.EncontrarNecesitanNormalizar(filePath));
+
+                    AudioEnhanceDir.ListasRMS_PDA listas = listasFuture.get();
+                    List<AudioEnhanceDir.RutaRmsPar> necesitaNormalizacion = listas.listaRMS;
                     scheduler.shutdown();
                     scheduler.awaitTermination(1, TimeUnit.MINUTES);
 
-                    if (NecesitaNormalizacion != null && !NecesitaNormalizacion.isEmpty()) {
+                    if (necesitaNormalizacion != null && !necesitaNormalizacion.isEmpty()) {
                         System.out.println("Archivos que necesitan normalización:");
-                        ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
-                        scheduler2.scheduleAtFixedRate(() -> {
-                            asignar(AudioEnhanceDir.returnNumeroActual(), 1);
-                        }, 0, 1, TimeUnit.SECONDS);
-                        List<AudioEnhanceDir.Rutas> estanMejorados = RMS.AudioEnhanceDir.vamosAmejorar(NecesitaNormalizacion);
+
+                        ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+                        CompletableFuture<Void> scheduleTask2 = CompletableFuture.runAsync(() -> {
+                            scheduler2.scheduleAtFixedRate(() -> {
+                                asignar(AudioEnhanceDir.returnNumeroActual(), 1);
+                            }, 0, 1, TimeUnit.SECONDS);
+                        });
+
+                        List<AudioEnhanceDir.Rutas> estanMejorados = RMS.AudioEnhanceDir.vamosAmejorar(necesitaNormalizacion);
                         scheduler2.shutdown();
                         scheduler2.awaitTermination(1, TimeUnit.MINUTES);
                         pp = new principal(estanMejorados, filePath, listas);
@@ -334,18 +345,17 @@ public class StartMenu extends javax.swing.JFrame {
                     pp.setVisible(true);
                     this.dispose();
 
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
                     Thread.currentThread().interrupt();
                 } finally {
-                    cargando.setVisible(false);
                     SwingUtilities.invokeLater(() -> {
+                        cargando.setVisible(false);
                         // Actualizar el estado del JFrame
                     });
                 }
-            }
-        });
-        backgroundProcessThread.start();
+            });
+        }
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked

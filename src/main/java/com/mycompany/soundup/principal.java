@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -42,27 +43,30 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
-    int statusStereo = 0;
-    static int cambiosAplicadosStereo = 0;
-    static int cambiosAplicadosRMS = 0;
-    static int cambiosAplicadosPDA = 0;
-    List<AudioEnhanceDir.Rutas> estanMejorados;
-    int statusPDA = 0;
-    String route;
-    private Point point;
+    public static int cambiosAplicadosStereo = 0;
+    public static int cambiosAplicadosRMS = 0;
+    public static int cambiosAplicadosPDA = 0;
     public static DirectoryTree treeStereo;
-    panelStereos ps;
-    NoFound nf;
-    panelDir pdPDA;
-    boolean yaBuscoStereos = false;
-    int numeroCancionesStereo = 0;
-    int numeroCancionePDA = 0;
-    panelDir pd;
-    int cop1 = 0;
-    int cop2 = 0;
-    int cop3 = 0;
-    int cop4 = 0;
-    ListasRMS_PDA listas;
+    private int statusStereo = 0;
+    private int statusPDA = 0;
+    private int numeroCancionePDA = 0;
+    private int cop1 = 0;
+    private int cop2 = 0;
+    private int cop3 = 0;
+    private int cop4 = 0;
+    private boolean yaBuscoStereos = false;
+
+    private AtomicInteger numeroCancionesStereo = new AtomicInteger();
+
+    private String route;
+    private Point point;
+    private List<AudioEnhanceDir.Rutas> estanMejorados;
+    private ListasRMS_PDA listas;
+
+    private panelStereos ps;
+    private NoFound nf;
+    private panelDir pdPDA;
+    private panelDir pd;
 
     public principal(List<AudioEnhanceDir.Rutas> estanMejorados, String ruta, ListasRMS_PDA listas) {
         initComponents();
@@ -121,49 +125,44 @@ public class principal extends javax.swing.JFrame {
     }
 
     public static boolean isStereo(File audioFile) {
-        boolean is = false;
         try {
             AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(audioFile);
             AudioFormat format = fileFormat.getFormat();
             int channels = format.getChannels();
 
-            if (channels == 1) {
-                is = false;
-            } else if (channels == 2) {
-                is = true;
-            } else {
+            if (channels == 2) {
+                return true;
+            } else if (channels != 1) {
                 System.out.println("The audio file has " + channels + " channels.");
             }
         } catch (IOException | UnsupportedAudioFileException e) {
             System.err.println("Error reading audio file: " + e.getMessage());
         }
-
-        return is;
+        return false;
     }
 
     private void RecorrerDirectorioFindStereos(String ruta) {
         yaBuscoStereos = true;
         treeStereo = new DirectoryTree(ruta);
-        String directoryPath = ruta;
 
         try {
-            List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
+            List<Path> audioFiles = Files.walk(Paths.get(ruta))
                     .filter(Files::isRegularFile)
                     .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
 
             ForkJoinPool customThreadPool = new ForkJoinPool(Math.min(audioFiles.size(), Runtime.getRuntime().availableProcessors()));
 
-            customThreadPool.submit(()
-                    -> audioFiles.parallelStream().forEach(audioFile -> {
-                        boolean is = isStereo(audioFile.toFile());
-                        if (!is) {
+            customThreadPool.submit(() -> {
+                audioFiles.parallelStream().forEach(audioFile -> {
+                    if (!isStereo(audioFile.toFile())) {
+                        synchronized (this) {
                             treeStereo.addFile(audioFile.toAbsolutePath().toString());
-                            numeroCancionesStereo = numeroCancionesStereo + 1;
+                            numeroCancionesStereo.incrementAndGet();
                         }
-                    })
-            ).get();
-
+                    }
+                });
+            }).get();
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -443,17 +442,17 @@ public class principal extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(51, 51, 51));
         cop3 = 1;
         cop4 = 0;
-       // jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        // jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         if (cambiosAplicadosStereo != 1) {
-            numeroCancionesStereo = 0;
+            numeroCancionesStereo.set(0); 
             MsgLoadd ml = new MsgLoadd();
             ml.setVisible(true);
             Thread backgroundProcessThread = new Thread(() -> {
-                if ((statusStereo == 0)||(cambiosAplicadosRMS != 0)||(cambiosAplicadosPDA != 0)) {
+                if ((statusStereo == 0) || (cambiosAplicadosRMS != 0) || (cambiosAplicadosPDA != 0)) {
                     RecorrerDirectorioFindStereos(route);
                     statusStereo = 1;
-                    if (numeroCancionesStereo != 0) {
-                        ps = new panelStereos(route, numeroCancionesStereo, treeStereo);
+                    if (numeroCancionesStereo.get() != 0) {
+                        ps = new panelStereos(route, numeroCancionesStereo.get(), treeStereo);
                         jPanel3.setLayout(new BorderLayout());
                         jPanel3.add(ps);
                         this.add(jPanel3);
@@ -512,7 +511,7 @@ public class principal extends javax.swing.JFrame {
         cop3 = 0;
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
         cop4 = 0;
-     //   jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        //   jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         if (cambiosAplicadosRMS != 2) {
             if (!(estanMejorados == null)) {
                 jPanel3.setLayout(new BorderLayout());
@@ -552,7 +551,7 @@ public class principal extends javax.swing.JFrame {
         cop3 = 0;
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
         cop4 = 0;
-    //    jPanel7.setBackground(new java.awt.Color(51, 51, 51));
+        //    jPanel7.setBackground(new java.awt.Color(51, 51, 51));
         if (cambiosAplicadosPDA != 3) {
             if (statusPDA == 0) {
                 numeroCancionePDA = listas.listaPDA.size();

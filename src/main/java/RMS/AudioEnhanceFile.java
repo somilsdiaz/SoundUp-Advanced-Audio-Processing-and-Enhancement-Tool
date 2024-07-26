@@ -18,90 +18,97 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class AudioEnhanceFile {
 
-    public static void main(String[] args) {
-        String rutaDirectorio = "C:/Users/Somils/Desktop/Muestra/U Roy   Dread In A Babylon   Fire In A Trenchtown[1].mp3"; // Reemplaza con la ruta de tu directorio de archivos de audio
-        int reemplazar = 0; // 1 para reemplazar el archivo original, 0 para no reemplazar
-        // Probar método necesitaNormalizacion
-        String rutaArchivo = "C:/Users/Somils/Desktop/Muestra/U Roy   Dread In A Babylon   Fire In A Trenchtown[1].mp3"; // Reemplaza con la ruta de tu archivo de audio
-        BooleanDoublePair necesitaNormalizar = AudioEnhanceFile.necesitaNormalizacion(rutaArchivo);
-        System.out.println("¿Necesita normalización?: " + necesitaNormalizar.flag);
+    private static final int THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+    private static final double TARGET_RMS = 0.1;
+    private static final Path TEMP_FILES_DIRECTORY = Paths.get(System.getProperty("user.home"), "tempfiles");
 
-        // Llamar al método Mejorar
-        if (necesitaNormalizar.flag) {
-            String resultado = AudioEnhanceFile.Mejorar(rutaDirectorio, reemplazar, necesitaNormalizar.value);
-            if (resultado != null) {
-                System.out.println("Archivo mejorado: " + resultado);
-            } else {
-                System.out.println("No se pudo mejorar el archivo.");
-            }
-
-            /*   // Probar método eliminarArchivo
-        boolean eliminado = AudioEnhanceFile.eliminarArchivo(rutaArchivo);
-        System.out.println("¿Archivo eliminado?: " + eliminado);*/
-        } else {
-            System.out.println("El archivo no necesita mejora");
-        }
-    }
-
-    public static String Mejorar(String ruta, int reemplazar, double currentRMS) {
-        String directoryPath = ruta; // Reemplaza con la ruta de tu directorio
+    static {
         try {
-            List<Path> audioFiles = Files.walk(Paths.get(directoryPath))
-                    .filter(Files::isRegularFile)
-                    .filter(path -> isAudioFile(path.toFile()))
-                    .collect(Collectors.toList());
-
-            for (Path audioFile : audioFiles) {
-                File wavFile = convertToWav(audioFile.toFile());
-                String normalizedFilePath = normalizeAudioVolume(wavFile, audioFile.toFile(), currentRMS);
-                deleteTemporaryFile(wavFile);
-
-                if (reemplazar == 1) {
-                    // Reemplazar archivo original con el archivo normalizado
-                    Files.copy(Paths.get(normalizedFilePath), audioFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(Paths.get(normalizedFilePath)); // Eliminar el archivo temporal normalizado
-                }
-                // Retornar la ruta del archivo normalizado u original
-                return (reemplazar == 1) ? audioFile.toString() : normalizedFilePath;
+            if (!Files.exists(TEMP_FILES_DIRECTORY)) {
+                Files.createDirectory(TEMP_FILES_DIRECTORY);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null; // Retornar null en caso de error o si no se encuentra ningún archivo de audio
+    }
+
+    public static String Mejorar(String ruta, int reemplazar, double currentRMS) {
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        try {
+            List<Path> audioFiles = Files.walk(Paths.get(ruta))
+                    .filter(Files::isRegularFile)
+                    .filter(path -> isAudioFile(path.toFile()))
+                    .collect(Collectors.toList());
+
+            List<Future<String>> futures = audioFiles.stream()
+                    .map(audioFile -> executor.submit(() -> processFile(audioFile, reemplazar, currentRMS)))
+                    .collect(Collectors.toList());
+
+            for (Future<String> future : futures) {
+                try {
+                    String result = future.get();
+                    if (result != null) {
+                        return result;
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            executor.shutdown();
+        }
+        return null;
+    }
+
+    private static String processFile(Path audioFile, int reemplazar, double currentRMS) throws IOException {
+        File wavFile = convertToWav(audioFile.toFile());
+        String normalizedFilePath = normalizeAudioVolume(wavFile, audioFile.toFile(), currentRMS);
+        deleteTemporaryFile(wavFile);
+
+        if (reemplazar == 1) {
+            Files.copy(Paths.get(normalizedFilePath), audioFile, StandardCopyOption.REPLACE_EXISTING);
+            Files.delete(Paths.get(normalizedFilePath));
+            return audioFile.toString();
+        }
+        return normalizedFilePath;
     }
 
     public static BooleanDoublePair necesitaNormalizacion(String ruta) {
-        try {
-            File audioFile = new File(ruta);
-            if (!audioFile.exists() || !isAudioFile(audioFile)) {
-                throw new IllegalArgumentException("El archivo no existe o no es un archivo de audio válido.");
-            }
+        File audioFile = new File(ruta);
+        if (!audioFile.exists() || !isAudioFile(audioFile)) {
+            throw new IllegalArgumentException("El archivo no existe o no es un archivo de audio válido.");
+        }
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<BooleanDoublePair> future = executor.submit(() -> {
             AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 2048, 2);
             RMSProcessor rmsProcessor = new RMSProcessor();
             dispatcher.addAudioProcessor(rmsProcessor);
-
             dispatcher.run();
 
-            double targetRMS = 0.1; // Target RMS value
             double currentRMS = rmsProcessor.getRMS();
-            boolean need;
-            if ((currentRMS < targetRMS) && ((targetRMS - currentRMS) > 0.01)) {
-                need = true;
-            } else {
-                need = false;
-            }
-            BooleanDoublePair resultado = new BooleanDoublePair(need, currentRMS);
+            boolean needNormalization = (currentRMS < TARGET_RMS) && ((TARGET_RMS - currentRMS) > 0.01);
+            return new BooleanDoublePair(needNormalization, currentRMS);
+        });
 
-            return resultado; // Retornar true si necesita normalización
-        } catch (Exception e) {
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            executor.shutdown();
         }
-        return null; // Retornar false en caso de error
+        return null;
     }
 
     public static boolean eliminarArchivo(String ruta) {
@@ -121,8 +128,8 @@ public class AudioEnhanceFile {
         }
     }
 
-    private static boolean isAudioFile(File file) {
-        String[] audioExtensions = {".wav", ".mp3", ".flac", ".ogg", ".m4a"};
+    public static boolean isAudioFile(File file) {
+        String[] audioExtensions = {".wav", ".mp3", ".flac", ".ogg", ".m4a", ".wma"};
         String fileName = file.getName().toLowerCase();
         for (String ext : audioExtensions) {
             if (fileName.endsWith(ext)) {
@@ -133,27 +140,16 @@ public class AudioEnhanceFile {
     }
 
     public static File convertToWav(File inputFile) throws IOException {
-        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
-        if (!Files.exists(tempFilesDirectory)) {
-            Files.createDirectory(tempFilesDirectory);
-        }
-        // Obtener la ruta del archivo de salida con la extensión .wav
         String inputFileName = inputFile.getName();
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
-
-        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = tempFilesDirectory.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
+        String outputFilePath = TEMP_FILES_DIRECTORY.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
-        // Atributos de audio mejorados para mantener la calidad
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("pcm_s16le");
-
-        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
-        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
         audio.setBitRate(320000);
-        audio.setChannels(2); // Mantén el número de canales estéreo
-        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+        audio.setChannels(2);
+        audio.setSamplingRate(44100);
 
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setFormat("wav");
@@ -170,30 +166,21 @@ public class AudioEnhanceFile {
     }
 
     public static String convertToWavString(String inputFilePath) throws IOException {
-        Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
-        if (!Files.exists(tempFilesDirectory)) {
-            Files.createDirectory(tempFilesDirectory);
-        }
-        // Crear un objeto File a partir de la ruta del archivo de entrada
         File inputFile = new File(inputFilePath);
+        if (!inputFile.exists() || !isAudioFile(inputFile)) {
+            throw new IllegalArgumentException("El archivo no existe o no es un archivo de audio válido.");
+        }
 
-        // Obtener la ruta del archivo de salida con la extensión .wav
         String inputFileName = inputFile.getName();
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
-
-        // Generar la ruta del archivo de salida con "temp_" al inicio y la extensión .wav
-        String outputFilePath = tempFilesDirectory.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
+        String outputFilePath = TEMP_FILES_DIRECTORY.toString() + "/temp_" + inputFileNameWithoutExtension + ".wav";
         File target = new File(outputFilePath);
 
-        // Atributos de audio mejorados para mantener la calidad
         AudioAttributes audio = new AudioAttributes();
         audio.setCodec("pcm_s16le");
-
-        // Aquí podemos aumentar la tasa de bits para mejorar la calidad
-        // Establece la tasa de bits en 320 kbps, una calidad bastante alta
         audio.setBitRate(320000);
-        audio.setChannels(2); // Mantén el número de canales estéreo
-        audio.setSamplingRate(44100); // Mantén la tasa de muestreo en 44.1 kHz
+        audio.setChannels(2);
+        audio.setSamplingRate(44100);
 
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setFormat("wav");
@@ -209,48 +196,39 @@ public class AudioEnhanceFile {
         }
     }
 
-    private static String normalizeAudioVolume(File audioFile, File originalFile, double currentRMS) {
+    public static String normalizeAudioVolume(File audioFile, File originalFile, double currentRMS) {
         try {
-            // Crear la carpeta "tempfiles" si no existe
-            Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
-            if (!Files.exists(tempFilesDirectory)) {
-                Files.createDirectory(tempFilesDirectory);
-            }
-
-            // Calculate target RMS value
-            double targetRMS = 0.1; // Target RMS value
-
-            // Calculate current volume in dB
             double currentVolume = 20 * Math.log10(currentRMS);
-            // Calculate target volume in dB
-            double targetVolume = 20 * Math.log10(targetRMS);
-            // Calculate adjustment factor in dB
+            double targetVolume = 20 * Math.log10(TARGET_RMS);
             double adjustmentFactor = targetVolume - currentVolume;
 
-            // Apply normalization
             if (adjustmentFactor > 0) {
-                // If adjustmentFactor > 0, we need to increase volume
-                AudioDispatcher normalizationDispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
-                normalizationDispatcher.addAudioProcessor(new GainProcessor(adjustmentFactor));
+                ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+                Future<String> future = executor.submit(() -> {
+                    AudioDispatcher normalizationDispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
+                    normalizationDispatcher.addAudioProcessor(new GainProcessor(adjustmentFactor));
 
-                // Write the normalized audio to a temporary file
-                File normalizedTempFile = new File(tempFilesDirectory.toString() + "/normalized_" + audioFile.getName());
-                WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), normalizedTempFile.getAbsolutePath());
-                normalizationDispatcher.addAudioProcessor(writer);
+                    File normalizedTempFile = new File(TEMP_FILES_DIRECTORY.toString() + "/normalized_" + audioFile.getName());
+                    WaveformWriter writer = new WaveformWriter(normalizationDispatcher.getFormat(), normalizedTempFile.getAbsolutePath());
+                    normalizationDispatcher.addAudioProcessor(writer);
 
-                normalizationDispatcher.run();
-                String stereoNormalizedPatch = convertToWavString(normalizedTempFile.getAbsolutePath());
-                deleteTemporaryFile(normalizedTempFile);
-                return stereoNormalizedPatch; // Retornar la ruta del archivo normalizado
+                    normalizationDispatcher.run();
+                    String stereoNormalizedPath = convertToWavString(normalizedTempFile.getAbsolutePath());
+                    deleteTemporaryFile(normalizedTempFile);
+                    return stereoNormalizedPath;
+                });
+
+                String result = future.get();
+                executor.shutdown();
+                return result;
             } else {
-                // If adjustmentFactor <= 0, no adjustment needed
                 System.out.println("Already normalized: " + originalFile.getName());
-                return originalFile.getAbsolutePath(); // Retornar la ruta del archivo original si ya está normalizado
+                return originalFile.getAbsolutePath();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // Retornar null en caso de error
+        return null;
     }
 
     private static void deleteTemporaryFile(File file) {
@@ -267,34 +245,22 @@ public class AudioEnhanceFile {
         File oldFile = new File(oldFilePath);
         File newFile = new File(newFilePath);
 
-        if (!oldFile.exists()) {
-            System.out.println("El archivo antiguo no existe: " + oldFilePath);
+        if (!oldFile.exists() || !newFile.exists()) {
+            System.out.println("Uno de los archivos no existe.");
             return false;
         }
 
-        if (!newFile.exists()) {
-            System.out.println("El archivo nuevo no existe: " + newFilePath);
-            return false;
-        }
-
-        // Intentar borrar el archivo antiguo
-        if (!oldFile.delete()) {
-            System.out.println("No se pudo eliminar el archivo antiguo: " + oldFilePath);
-            return false;
-        }
-
-        // Copiar y renombrar el nuevo archivo a la ubicación del archivo antiguo
         try {
+            Files.deleteIfExists(oldFile.toPath());
             Files.copy(newFile.toPath(), oldFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("El archivo fue reemplazado exitosamente.");
             return true;
         } catch (IOException e) {
-            System.out.println("Error al copiar el archivo nuevo a la ubicación del archivo antiguo: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    // RMSProcessor to calculate the RMS value of the audio
     public static class RMSProcessor implements AudioProcessor {
 
         private double rms = 0;
@@ -331,6 +297,5 @@ public class AudioEnhanceFile {
             this.flag = flag;
             this.value = value;
         }
-
     }
 }

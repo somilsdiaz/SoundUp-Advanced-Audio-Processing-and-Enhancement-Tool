@@ -11,6 +11,7 @@ import be.tarsos.dsp.effects.FlangerEffect;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.WaveformWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
@@ -32,28 +33,29 @@ public class AudioEnhancer {
     static Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
 
     public static void enhanceAudio(File inputFile, File outputFile) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputFile);
-        AudioFormat format = audioInputStream.getFormat();
+        AudioFormat format;
+        double[] audioData;
 
-        byte[] audioBytes = audioInputStream.readAllBytes();
-        audioInputStream.close();
+        try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputFile)) {
+            format = audioInputStream.getFormat();
+            byte[] audioBytes = audioInputStream.readAllBytes();
+            audioData = byteArrayToDoubleArray(audioBytes, format);
+        }
 
-        double[] audioData = byteArrayToDoubleArray(audioBytes, format);
-        double gain = 1.0f; // Ganancia para aumentar brillo
+        double gain = 1.0; // Ganancia para aumentar brillo
         applyHighShelfFilter(audioData, format.getSampleRate(), 600.0, gain);
 
         // Aplicar el filtro de pasa banda para aumentar medios-bajos
         applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
 
-        // Normalize volume
+        // Normalizar volumen
         normalizeVolume(audioData);
 
         byte[] enhancedBytes = doubleArrayToByteArray(audioData, format);
-        ByteArrayInputStream bais = new ByteArrayInputStream(enhancedBytes);
-        AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, audioData.length);
 
-        AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
-        enhancedAudioInputStream.close();
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(enhancedBytes); AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, audioData.length)) {
+            AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
+        }
 
         System.out.println("Audio enhancement complete. Output saved to: " + outputFile.getAbsolutePath());
     }
@@ -190,12 +192,6 @@ public class AudioEnhancer {
             dispatcher.addAudioProcessor(rmsProcessor);
 
             dispatcher.run();
-            double targetRMS = 0.1;
-            double currentRMS = rmsProcessor.getRMS();
-            double currentVolume = 20 * Math.log10(currentRMS);
-            double targetVolume = 20 * Math.log10(targetRMS);
-            double adjustmentFactor = targetVolume - currentVolume;
-
             AudioDispatcher normalizationDispatcher = AudioDispatcherFactory.fromPipe(audioFile.getAbsolutePath(), 44100, 1024, 0);
             normalizationDispatcher.addAudioProcessor(new GainProcessor(1.0f));
             double sampleRate = 44100.0;
@@ -219,43 +215,49 @@ public class AudioEnhancer {
     }
 
     public static void mixAudioFiles(File inputFile1, File inputFile2, File outputFile) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(inputFile1);
-        AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(inputFile2);
+        try (AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(inputFile1); AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(inputFile2)) {
 
-        AudioFormat format1 = audioInputStream1.getFormat();
-        AudioFormat format2 = audioInputStream2.getFormat();
+            AudioFormat format1 = audioInputStream1.getFormat();
+            AudioFormat format2 = audioInputStream2.getFormat();
 
-        if (!format1.matches(format2)) {
-            throw new UnsupportedAudioFileException("Los formatos de los archivos de audio no coinciden.");
+            if (!format1.matches(format2)) {
+                throw new UnsupportedAudioFileException("Los formatos de los archivos de audio no coinciden.");
+            }
+
+            byte[] audioBytes1 = readAllBytes(audioInputStream1);
+            byte[] audioBytes2 = readAllBytes(audioInputStream2);
+
+            int maxLength = Math.max(audioBytes1.length, audioBytes2.length);
+            byte[] mixedBytes = new byte[maxLength];
+
+            for (int i = 0; i < maxLength; i++) {
+                int sample1 = i < audioBytes1.length ? audioBytes1[i] : 0;
+                int sample2 = i < audioBytes2.length ? audioBytes2[i] : 0;
+
+                int mixedSample = sample1 + sample2;
+                mixedSample = Math.min(mixedSample, Byte.MAX_VALUE);
+                mixedSample = Math.max(mixedSample, Byte.MIN_VALUE);
+
+                mixedBytes[i] = (byte) mixedSample;
+            }
+
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(mixedBytes); AudioInputStream mixedAudioInputStream = new AudioInputStream(bais, format1, mixedBytes.length / format1.getFrameSize())) {
+
+                AudioSystem.write(mixedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
+            }
+
+            System.out.println("Audio mix complete. Output saved to: " + outputFile.getAbsolutePath());
         }
+    }
 
-        byte[] audioBytes1 = audioInputStream1.readAllBytes();
-        byte[] audioBytes2 = audioInputStream2.readAllBytes();
-
-        audioInputStream1.close();
-        audioInputStream2.close();
-
-        int maxLength = Math.max(audioBytes1.length, audioBytes2.length);
-        byte[] mixedBytes = new byte[maxLength];
-
-        for (int i = 0; i < maxLength; i++) {
-            int sample1 = i < audioBytes1.length ? audioBytes1[i] : 0;
-            int sample2 = i < audioBytes2.length ? audioBytes2[i] : 0;
-
-            int mixedSample = sample1 + sample2;
-            mixedSample = Math.min(mixedSample, Byte.MAX_VALUE);
-            mixedSample = Math.max(mixedSample, Byte.MIN_VALUE);
-
-            mixedBytes[i] = (byte) mixedSample;
+    private static byte[] readAllBytes(AudioInputStream audioInputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] tempBuffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
+            buffer.write(tempBuffer, 0, bytesRead);
         }
-
-        ByteArrayInputStream bais = new ByteArrayInputStream(mixedBytes);
-        AudioInputStream mixedAudioInputStream = new AudioInputStream(bais, format1, mixedBytes.length / format1.getFrameSize());
-
-        AudioSystem.write(mixedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
-        mixedAudioInputStream.close();
-
-        System.out.println("Audio mix complete. Output saved to: " + outputFile.getAbsolutePath());
+        return buffer.toByteArray();
     }
 
     public static void eliminarArchivosPDA() {
