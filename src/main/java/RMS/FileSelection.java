@@ -96,7 +96,7 @@ public class FileSelection extends javax.swing.JFrame {
     }
 
     public void AppyMenu() {
-        menuFiles mf = new menuFiles(false, RMS, PDA);
+        menuFiles mf = new menuFiles(stereo, RMS, PDA);
         mf.Asignar(rutaOriginal, rutaArchivoWav, rutaRMS, rutaPDA);
         mf.setVisible(true);
     }

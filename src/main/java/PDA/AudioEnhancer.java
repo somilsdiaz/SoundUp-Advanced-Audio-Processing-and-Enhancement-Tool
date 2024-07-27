@@ -43,10 +43,20 @@ public class AudioEnhancer {
         }
 
         double gain = 1.0; // Ganancia para aumentar brillo
-        applyHighShelfFilter(audioData, format.getSampleRate(), 600.0, gain);
 
-        // Aplicar el filtro de pasa banda para aumentar medios-bajos
-        applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
+        // Comprobar memoria disponible antes de aplicar el filtro High Shelf
+        if (isMemorySufficient(audioData.length)) {
+            applyHighShelfFilter(audioData, format.getSampleRate(), 600.0, gain);
+        } else {
+            System.out.println("Memoria insuficiente para aplicar el filtro High Shelf. Se omite el proceso.");
+        }
+
+        // Comprobar memoria disponible antes de aplicar el filtro Band Pass
+        if (isMemorySufficient(audioData.length)) {
+            applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
+        } else {
+            System.out.println("Memoria insuficiente para aplicar el filtro Band Pass. Se omite el proceso.");
+        }
 
         // Normalizar volumen
         normalizeVolume(audioData);
@@ -58,6 +68,13 @@ public class AudioEnhancer {
         }
 
         System.out.println("Audio enhancement complete. Output saved to: " + outputFile.getAbsolutePath());
+    }
+
+    private static boolean isMemorySufficient(int dataLength) {
+        // Calcular memoria necesaria para procesar el audio (aproximación)
+        long memoryNeeded = dataLength * Double.BYTES * 1; // Doble del tamaño para procesamiento intermedio
+        long freeMemory = Runtime.getRuntime().freeMemory();
+        return freeMemory > memoryNeeded;
     }
 
     private static double[] byteArrayToDoubleArray(byte[] audioBytes, AudioFormat format) {
