@@ -34,52 +34,33 @@ public class AudioEnhancer {
 
     public static void enhanceAudio(File inputFile, File outputFile) throws UnsupportedAudioFileException, IOException {
         AudioFormat format;
-        double[] audioData;
-
         try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputFile)) {
             format = audioInputStream.getFormat();
-            byte[] audioBytes = audioInputStream.readAllBytes();
-            audioData = byteArrayToDoubleArray(audioBytes, format);
+            File tempFile = File.createTempFile("enhanced", ".wav");
+            tempFile.deleteOnExit();
+
+            try (AudioInputStream ais = AudioSystem.getAudioInputStream(format, audioInputStream); ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+                byte[] buffer = new byte[1024 * 1024]; // Bloque de 1 MB
+                int bytesRead;
+                while ((bytesRead = ais.read(buffer)) != -1) {
+                    double[] audioData = byteArrayToDoubleArray(buffer, format, bytesRead);
+                    applyEnhancements(audioData, format.getSampleRate());
+                    byte[] enhancedBytes = doubleArrayToByteArray(audioData, format, bytesRead);
+                    byteArrayOutputStream.write(enhancedBytes, 0, enhancedBytes.length);
+                }
+
+                try (ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayOutputStream.toByteArray()); AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, byteArrayOutputStream.size() / format.getFrameSize())) {
+                    AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
+                }
+            }
         }
-
-        double gain = 1.0; // Ganancia para aumentar brillo
-
-        // Comprobar memoria disponible antes de aplicar el filtro High Shelf
-        if (isMemorySufficient(audioData.length)) {
-            applyHighShelfFilter(audioData, format.getSampleRate(), 600.0, gain);
-        } else {
-            System.out.println("Memoria insuficiente para aplicar el filtro High Shelf. Se omite el proceso.");
-        }
-
-        // Comprobar memoria disponible antes de aplicar el filtro Band Pass
-        if (isMemorySufficient(audioData.length)) {
-            applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
-        } else {
-            System.out.println("Memoria insuficiente para aplicar el filtro Band Pass. Se omite el proceso.");
-        }
-
-        // Normalizar volumen
-        normalizeVolume(audioData);
-
-        byte[] enhancedBytes = doubleArrayToByteArray(audioData, format);
-
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(enhancedBytes); AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, audioData.length)) {
-            AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
-        }
-
         System.out.println("Audio enhancement complete. Output saved to: " + outputFile.getAbsolutePath());
     }
 
-    private static boolean isMemorySufficient(int dataLength) {
-        // Calcular memoria necesaria para procesar el audio (aproximación)
-        long memoryNeeded = dataLength * Double.BYTES * 1; // Doble del tamaño para procesamiento intermedio
-        long freeMemory = Runtime.getRuntime().freeMemory();
-        return freeMemory > memoryNeeded;
-    }
-
-    private static double[] byteArrayToDoubleArray(byte[] audioBytes, AudioFormat format) {
+    private static double[] byteArrayToDoubleArray(byte[] audioBytes, AudioFormat format, int bytesRead) {
         int bytesPerSample = format.getSampleSizeInBits() / 8;
-        int numSamples = audioBytes.length / bytesPerSample;
+        int numSamples = bytesRead / bytesPerSample;
         double[] audioData = new double[numSamples];
 
         for (int i = 0; i < numSamples; i++) {
@@ -100,11 +81,12 @@ public class AudioEnhancer {
         return audioData;
     }
 
-    private static byte[] doubleArrayToByteArray(double[] audioData, AudioFormat format) {
+    private static byte[] doubleArrayToByteArray(double[] audioData, AudioFormat format, int bytesRead) {
         int bytesPerSample = format.getSampleSizeInBits() / 8;
-        byte[] audioBytes = new byte[audioData.length * bytesPerSample];
+        int numSamples = bytesRead / bytesPerSample;
+        byte[] audioBytes = new byte[numSamples * bytesPerSample];
 
-        for (int i = 0; i < audioData.length; i++) {
+        for (int i = 0; i < numSamples; i++) {
             int sample = (int) (audioData[i] * Math.pow(2, format.getSampleSizeInBits() - 1));
 
             for (int byteIndex = 0; byteIndex < bytesPerSample; byteIndex++) {
@@ -113,6 +95,13 @@ public class AudioEnhancer {
         }
 
         return audioBytes;
+    }
+
+    private static void applyEnhancements(double[] audioData, float sampleRate) {
+        double gain = 1.0; // Ganancia para aumentar brillo
+        applyHighShelfFilter(audioData, sampleRate, 600.0, gain);
+        applyBandPassFilter(audioData, sampleRate, 250.0, 500.0, 6.0);
+        normalizeVolume(audioData);
     }
 
     private static void applyHighShelfFilter(double[] audioData, float sampleRate, double cutoffFrequency, double gain) {
