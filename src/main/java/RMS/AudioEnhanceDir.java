@@ -1,6 +1,7 @@
 package RMS;
 
 import Directorios.DirectoryTree;
+import VisualComponent.AudioNormalizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import org.jaudiotagger.tag.TagException;
 
 public class AudioEnhanceDir {
 
@@ -29,6 +31,7 @@ public class AudioEnhanceDir {
 
     public static int contarArchivosDeAudio(String ruta) {
         AtomicInteger audioFileCount = new AtomicInteger(0);
+        AtomicInteger cancionesMenores7min = new AtomicInteger(0);
 
         try {
             List<Path> audioFiles = Files.walk(Paths.get(ruta))
@@ -36,7 +39,24 @@ public class AudioEnhanceDir {
                     .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
 
-            audioFileCount.set(audioFiles.size());
+            List<CompletableFuture<Void>> futures = audioFiles.parallelStream()
+                    .map(path -> CompletableFuture.runAsync(() -> {
+                String absolutePath = path.toAbsolutePath().toString();
+                try {
+                    int duracion = AudioNormalizer.DuracionCancion(absolutePath);
+                    if (duracion < 420) {
+                        cancionesMenores7min.incrementAndGet();
+                    }
+                } catch (TagException ex) {
+                    Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }))
+                    .collect(Collectors.toList());
+
+            // Esperar a que todas las tareas completen
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+            audioFileCount.set(cancionesMenores7min.get());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,18 +91,26 @@ public class AudioEnhanceDir {
 
                 List<CompletableFuture<Void>> futures = chunk.stream()
                         .map(audioFile -> CompletableFuture.runAsync(() -> {
-                            AudioEnhanceFile.BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(audioFile.toAbsolutePath().toString());
-                            if (need.flag) {
-                                necesitaNormalizacion.add(new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value));
-                                tree.addFile(audioFile.toAbsolutePath().toString());
-                                synchronized (AudioEnhanceDir.class) {
-                                    TotalCanciones++;
-                                }
-                            } else {
+                    AudioEnhanceFile.BooleanDoublePair need = AudioEnhanceFile.necesitaNormalizacion(audioFile.toAbsolutePath().toString());
+                    if (need.flag) {
+                        necesitaNormalizacion.add(new RutaRmsPar(audioFile.toAbsolutePath().toString(), need.value));
+                        tree.addFile(audioFile.toAbsolutePath().toString());
+                        synchronized (AudioEnhanceDir.class) {
+                            TotalCanciones++;
+                        }
+                    } else {
+                        try {
+                            int duracion = AudioNormalizer.DuracionCancion(audioFile.toAbsolutePath().toString());
+                            System.out.println("LA DURACION ES: "+duracion);
+                            if (duracion < 420) {
                                 processAudioFile(audioFile, goPDA, treePDA);
                             }
-                            totalAudioFiles.decrementAndGet();
-                        }, executorService))
+                        } catch (TagException ex) {
+                            Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    totalAudioFiles.decrementAndGet();
+                }, executorService))
                         .collect(Collectors.toList());
 
                 CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -160,11 +188,11 @@ public class AudioEnhanceDir {
         try {
             List<CompletableFuture<Void>> futures = necesitanNormalizar.stream()
                     .map(archivo -> CompletableFuture.runAsync(() -> {
-                        String rutaOriginal = archivo.rutaOriginal;
-                        String rutaMejorada = AudioEnhanceFile.Mejorar(rutaOriginal, 0, archivo.RMS);
-                        Rutas ruta = new Rutas(rutaOriginal, rutaMejorada, archivo.RMS);
-                        estanNormalizados.add(ruta);
-                    }, executorService))
+                String rutaOriginal = archivo.rutaOriginal;
+                String rutaMejorada = AudioEnhanceFile.Mejorar(rutaOriginal, 0, archivo.RMS);
+                Rutas ruta = new Rutas(rutaOriginal, rutaMejorada, archivo.RMS);
+                estanNormalizados.add(ruta);
+            }, executorService))
                     .collect(Collectors.toList());
 
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -223,6 +251,7 @@ public class AudioEnhanceDir {
     }
 
     public static class RutaRmsPar {
+
         public String rutaOriginal;
         public double RMS;
 
@@ -233,6 +262,7 @@ public class AudioEnhanceDir {
     }
 
     public static class ListasRMS_PDA {
+
         public List<RutaRmsPar> listaRMS;
         public List<Rutas> listaPDA;
 
@@ -243,6 +273,7 @@ public class AudioEnhanceDir {
     }
 
     public static class Rutas {
+
         public String rutaOriginal;
         public String rutaMejorada;
         public double RMS;
