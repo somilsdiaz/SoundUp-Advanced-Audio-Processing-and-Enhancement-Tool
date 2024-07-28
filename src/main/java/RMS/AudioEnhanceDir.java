@@ -38,25 +38,7 @@ public class AudioEnhanceDir {
                     .filter(Files::isRegularFile)
                     .filter(path -> isAudioFile(path.toFile()))
                     .collect(Collectors.toList());
-
-            List<CompletableFuture<Void>> futures = audioFiles.parallelStream()
-                    .map(path -> CompletableFuture.runAsync(() -> {
-                String absolutePath = path.toAbsolutePath().toString();
-                try {
-                    int duracion = AudioNormalizer.DuracionCancion(absolutePath);
-                    if (duracion < 420) {
-                        cancionesMenores7min.incrementAndGet();
-                    }
-                } catch (TagException ex) {
-                    Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }))
-                    .collect(Collectors.toList());
-
-            // Esperar a que todas las tareas completen
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-
-            audioFileCount.set(cancionesMenores7min.get());
+            audioFileCount.set(audioFiles.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,15 +81,7 @@ public class AudioEnhanceDir {
                             TotalCanciones++;
                         }
                     } else {
-                        try {
-                            int duracion = AudioNormalizer.DuracionCancion(audioFile.toAbsolutePath().toString());
-                            System.out.println("LA DURACION ES: "+duracion);
-                            if (duracion < 420) {
-                                processAudioFile(audioFile, goPDA, treePDA);
-                            }
-                        } catch (TagException ex) {
-                            Logger.getLogger(AudioEnhanceDir.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        processAudioFile(audioFile, goPDA, treePDA);
                     }
                     totalAudioFiles.decrementAndGet();
                 }, executorService))

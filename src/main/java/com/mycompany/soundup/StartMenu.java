@@ -119,7 +119,6 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -130,7 +129,7 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SoundUp");
 
         jPanel1.setBackground(new java.awt.Color(35, 35, 35));
@@ -158,13 +157,6 @@ public class StartMenu extends javax.swing.JFrame {
         jLabel1.setText("SoundUp ");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(80, 30, 180, 40);
-
-        jLabel2.setBackground(new java.awt.Color(47, 237, 203));
-        jLabel2.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(47, 237, 203));
-        jLabel2.setText("v2.0.4");
-        jPanel1.add(jLabel2);
-        jLabel2.setBounds(240, 50, 160, 17);
 
         jLabel11.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
@@ -213,7 +205,7 @@ public class StartMenu extends javax.swing.JFrame {
             }
         });
         jPanel5.add(jLabel8);
-        jLabel8.setBounds(0, 0, 250, 256);
+        jLabel8.setBounds(0, 0, 256, 256);
 
         jPanel1.add(jPanel5);
         jPanel5.setBounds(580, 230, 256, 256);
@@ -501,7 +493,6 @@ public class StartMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
