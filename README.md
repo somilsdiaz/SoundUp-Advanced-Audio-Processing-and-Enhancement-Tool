@@ -1,71 +1,82 @@
 # SoundUp - Audio Processing Application
 
-**SoundUp** es una aplicación avanzada para la gestión y procesamiento de archivos de audio, diseñada para tareas como normalización de volumen, eliminación de duplicados, y mejoras de calidad de audio. El proyecto está desarrollado principalmente en **Java** y utiliza una serie de bibliotecas especializadas para la manipulación de archivos de audio.
+**SoundUp** is an advanced application for the management and processing of audio files, designed for tasks such as volume normalization, duplicate removal, and audio quality enhancement. The project is primarily developed in **Java** and leverages a series of specialized libraries for audio file manipulation.
 
-## Descripción del Proyecto
+## Project Description
 
-SoundUp permite a los usuarios cargar archivos de audio, aplicar normalizaciones y mejoras, y visualizar comparaciones entre los archivos originales y los procesados. Además, la interfaz gráfica facilita la interacción del usuario con las herramientas avanzadas que ofrece el sistema. La aplicación también incluye un visualizador de audio en tiempo real que representa gráficamente la amplitud del sonido durante la reproducción.
+SoundUp enables users to upload audio files, apply normalizations and enhancements, and visualize comparisons between the original and processed files. Additionally, the graphical interface simplifies user interaction with the advanced tools offered by the system. The application also includes a real-time audio visualizer that graphically represents the sound amplitude during playback.
 
-### Principales Funcionalidades
-- **Normalización de audio**: Aumenta el volumen de los archivos de audio de manera uniforme, sin reducir la calidad.
-- **Mejoras de sonido**: Incrementa la calidad de graves, medios, brillos y otras características del sonido.
-- **Eliminación de duplicados**: Elimina los archivos de audio convertidos que ya han sido normalizados o mejorados.
-- **Interfaz gráfica amigable**: Permite a los usuarios visualizar comparaciones entre los archivos originales y los procesados, junto con una representación gráfica del audio en tiempo real mediante barras que indican la amplitud del sonido en distintos momentos.
+### Key Features
+
+- **Audio Normalization**: Increases the volume of audio files uniformly without reducing quality.
+- **Sound Enhancements**: Improves bass, midrange, treble, and other sound characteristics.
+- **Duplicate Removal**: Deletes audio files that have already been normalized or enhanced.
+- **User-Friendly Graphical Interface**: Allows users to visualize comparisons between the original and processed files, along with a real-time graphical representation of audio through bars indicating the sound amplitude at various moments.
+- **Gain Adjustment**: Enhances the brightness of the audio signal.
+- **High-Frequency Filter**: Improves high-frequency sounds while minimizing low-frequency sounds.
+- **Band-Pass Filter**: Allows frequencies within a specified range to pass and attenuates frequencies outside that range.
+- **Volume Normalization**: Adjusts audio to ensure consistent volume levels.
+- **Memory Management**: Checks available memory before applying filters to avoid memory errors.
+
+---
+
+## Features and General Code Structure
+
+### Common Features:
+
+- **File Visualization**: Loads and displays both original and processed audio files, enabling users to perform direct comparisons. The `AudioVisualizer` component also draws real-time bars to represent the amplitude of the processed audio waves.
   
----
+- **Path Handling**: Ensures the application has access to the correct paths for the audio files.
 
-## Funcionalidades y Estructura General del Código
+- **User Interaction**: Handles events such as minimizing or closing windows, and manages the deletion of temporary files to keep the system clean.
 
-**Funcionalidades Comunes**:
-- **Visualización de Archivos**: Carga y muestra los archivos de audio originales y procesados, permitiendo a los usuarios realizar comparaciones directas. Además, el componente `AudioVisualizer` dibuja barras en tiempo real para representar la amplitud de las ondas de audio procesadas.
-- **Manejo de Rutas**: Asegura que la aplicación tenga acceso a las rutas correctas de los archivos de audio.
-- **Interacción con el Usuario**: Maneja eventos como minimizar o cerrar ventanas, y gestiona la eliminación de archivos temporales para mantener el sistema limpio.
-- **Animación y Feedback Visual**: Utiliza componentes visuales, como un círculo de carga, para indicar que el procesamiento está en curso, mejorando la experiencia del usuario. Durante la reproducción, el `AudioVisualizer` actualiza las barras visuales para representar las amplitudes del audio.
+- **Animation and Visual Feedback**: Utilizes visual components, such as a loading circle (`LoadingCircle`), to indicate that processing is underway, enhancing the user experience. During playback, the `AudioVisualizer` updates the visual bars to represent the audio amplitudes.
 
-**Estructura General del Código**:
-- **Constructores**: Inicializan las interfaces gráficas y los componentes necesarios, configurando los paneles y animaciones adecuadamente. El visualizador de audio `AudioVisualizer` es una extensión de `JPanel`, configurado para recibir los bytes del archivo de audio como entrada y dibujar las barras de amplitud en la interfaz gráfica.
-- **Métodos de Procesamiento**: Incluyen lógica para limpiar nombres de archivo y gestionar la visualización. En el caso del `AudioVisualizer`, los bytes de audio se transforman en datos visuales que son convertidos en barras verticales, cuya altura representa la amplitud del audio.
-- **Métodos de Redibujo y Actualización**: Actualizan la interfaz gráfica en respuesta a eventos. El método `paintComponent` en `AudioVisualizer` se encarga de dibujar tanto el fondo como las barras de amplitud. Además, un `Timer` se utiliza para actualizar las alturas de las barras (`BarHeights`) a intervalos regulares, lo que permite una visualización fluida y dinámica del audio.
+- **Audio File Control**: Uses static variables, such as `totalAudioFiles`, which is an `AtomicInteger`, to safely track the total number of audio files being processed. This allows multiple execution threads to update this variable without concurrency issues.
 
----
+### General Code Structure:
 
-## Contribuciones
+- **Constructors**: Initialize graphical interfaces and necessary components, setting up panels and animations accordingly. The `AudioVisualizer` is an extension of `JPanel`, configured to receive the audio file's bytes as input and draw amplitude bars in the graphical interface.
 
-Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, sigue los siguientes pasos:
+- **Processing Methods**: Include logic for cleaning file names and managing visualization. In the case of `AudioVisualizer`, the audio bytes are transformed into visual data that are rendered as vertical bars, whose heights represent the audio's amplitude.
 
-1. Haz un fork del repositorio.
-2. Crea una nueva rama con tu funcionalidad (`git checkout -b feature/AmazingFeature`).
-3. Realiza los cambios necesarios.
-4. Asegúrate de que los cambios no rompen el proyecto (`./gradlew test`).
-5. Realiza un pull request.
-
-### Requerimientos de Contribución
-
-- Sigue el estilo de codificación y convenciones utilizadas en el proyecto.
-- Mantén un historial de commits limpio y claro.
-- Documenta los cambios en el archivo `CHANGELOG.md`.
+- **Redraw and Update Methods**: Update the graphical interface in response to events. The `paintComponent` method in `AudioVisualizer` is responsible for drawing both the background and amplitude bars. Additionally, a `Timer` is used to update the bar heights (`BarHeights`) at regular intervals, allowing for a smooth and dynamic visualization of the audio.
 
 ---
 
-## Licencia
+## Contributions
 
-Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
+Contributions are welcome. If you would like to contribute to the project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).
+3. Make the necessary changes.
+4. Ensure the changes do not break the project (`./gradlew test`).
+5. Submit a pull request.
+
+### Contribution Requirements
+
+- Follow the project's coding style and conventions.
+- Maintain a clean and clear commit history.
+- Document changes in the `CHANGELOG.md` file.
 
 ---
 
-## Recursos Adicionales
+## Additional Resources
 
-Si tienes dudas o problemas, puedes consultar la siguiente documentación y recursos:
+If you have any questions or issues, feel free to consult the following documentation and resources:
 
-- [Documentación de Java](https://docs.oracle.com/javase/8/docs/)
-- [Guía de uso de JAudioTagger](http://www.jthink.net/jaudiotagger/)
-- [Tutoriales de Swing](https://docs.oracle.com/javase/tutorial/uiswing/)
+- [Java Documentation](https://docs.oracle.com/javase/8/docs/)
+- [JAudioTagger Usage Guide](http://www.jthink.net/jaudiotagger/)
+- [Swing Tutorials](https://docs.oracle.com/javase/tutorial/uiswing/)
+- [Java Sound Documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/sound/)
+- [Audio Processing Articles](https://www.audiosecrets.com/articles)
 
 ---
 
-## Contacto
+## Contact
 
-Para cualquier consulta o sugerencia relacionada con el proyecto, puedes contactar a **Somils** a través de:
+For any inquiries or suggestions related to the project, you can reach out to **Somils** at:
 
-- **Email**: somils@example.com
-- **GitHub**: [somils](https://github.com/somils)
+- **Email**: somilasd27@gmail.com
+- **GitHub**: [somils](https://github.com/somilsdiaz)
