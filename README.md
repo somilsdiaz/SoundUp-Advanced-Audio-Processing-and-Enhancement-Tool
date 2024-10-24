@@ -42,21 +42,10 @@ To give a better understanding of **SoundUp** and its functionalities, here are 
 _This screenshot shows the main interface, where users can upload and manage their audio files._
 
 #### Sound Processing
-![Sound Processing](![image](https://github.com/user-attachments/assets/23bb86da-01ea-4606-b007-befa5ddd29d0)
-)
+Sound Processing
+![image](![image](https://github.com/user-attachments/assets/03ccd927-a17c-41e2-b12f-1740e46a51cc))
 _An example of the filters and enhancements applied to an audio file._
 
-### Demo Videos
-
-#### 1. Full Walkthrough
-[![Watch the video](path/to/video-thumbnail.png)](https://www.youtube.com/watch?v=example)
-_A comprehensive walkthrough of SoundUp, demonstrating key features like audio normalization, enhancements, and the duplicate removal tool._
-
-#### 2. Real-Time Audio Visualization
-[![Watch the video](path/to/visualizer-video-thumbnail.png)](https://www.youtube.com/watch?v=example)
-_A short video showing the real-time visualization of audio waves while playing a track._
-
----
 
 ## Features and General Code Structure
 
