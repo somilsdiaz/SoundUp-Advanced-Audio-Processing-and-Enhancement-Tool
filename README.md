@@ -29,8 +29,8 @@ To give a better understanding of **SoundUp** and its functionalities, here are 
 ### Screenshots
 
 #### Main Interface
-![Main Interface](![image](https://github.com/user-attachments/assets/a6e27ede-a236-44f4-9da9-e5ab116e7b68)
-)
+![image](https://github.com/user-attachments/assets/a6e27ede-a236-44f4-9da9-e5ab116e7b68)
+
 ![image](https://github.com/user-attachments/assets/68b82703-4200-47d4-b6d8-5e6ddb5fab99)
 
 ![image](https://github.com/user-attachments/assets/ff981e37-a654-45a7-b659-9ec7461c04a2)
@@ -42,8 +42,7 @@ To give a better understanding of **SoundUp** and its functionalities, here are 
 _This screenshot shows the main interface, where users can upload and manage their audio files._
 
 #### Sound Processing
-Sound Processing
-![image](![image](https://github.com/user-attachments/assets/03ccd927-a17c-41e2-b12f-1740e46a51cc))
+![image](https://github.com/user-attachments/assets/b6bee3ef-dd2c-4ad8-adb2-dd992b39d17f)
 _An example of the filters and enhancements applied to an audio file._
 
 
