@@ -20,6 +20,44 @@ SoundUp enables users to upload audio files, apply normalizations and enhancemen
 
 ---
 
+---
+
+## Media Showcase
+
+To give a better understanding of **SoundUp** and its functionalities, here are some screenshots and videos demonstrating the interface, the audio visualizer, and the processing tools in action.
+
+### Screenshots
+
+#### Main Interface
+![Main Interface](![image](https://github.com/user-attachments/assets/a6e27ede-a236-44f4-9da9-e5ab116e7b68)
+)
+![image](https://github.com/user-attachments/assets/68b82703-4200-47d4-b6d8-5e6ddb5fab99)
+
+![image](https://github.com/user-attachments/assets/ff981e37-a654-45a7-b659-9ec7461c04a2)
+
+![image](https://github.com/user-attachments/assets/13363a51-8382-4cce-9a18-93c167f1d045)
+
+![image](https://github.com/user-attachments/assets/349f34dd-7932-465c-b25b-c650475dd8be)
+
+_This screenshot shows the main interface, where users can upload and manage their audio files._
+
+#### Sound Processing
+![Sound Processing](![image](https://github.com/user-attachments/assets/23bb86da-01ea-4606-b007-befa5ddd29d0)
+)
+_An example of the filters and enhancements applied to an audio file._
+
+### Demo Videos
+
+#### 1. Full Walkthrough
+[![Watch the video](path/to/video-thumbnail.png)](https://www.youtube.com/watch?v=example)
+_A comprehensive walkthrough of SoundUp, demonstrating key features like audio normalization, enhancements, and the duplicate removal tool._
+
+#### 2. Real-Time Audio Visualization
+[![Watch the video](path/to/visualizer-video-thumbnail.png)](https://www.youtube.com/watch?v=example)
+_A short video showing the real-time visualization of audio waves while playing a track._
+
+---
+
 ## Features and General Code Structure
 
 ### Common Features:
