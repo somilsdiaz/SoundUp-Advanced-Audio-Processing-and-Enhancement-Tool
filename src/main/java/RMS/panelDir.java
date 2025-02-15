@@ -188,38 +188,161 @@ public class panelDir extends javax.swing.JPanel {
                     JMenuItem convertir = new JMenuItem("Convertir");
 
                     noConvertir.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(null, "No Convertir clicked for: " + item);
-                        for (FileEntry FileEntry : directoryFiles.files) {
-                            if (FileEntry.filePath == jList2.getSelectedValue()) {
-                                String rutaOriginal = FileEntry.absoluteFilePath;
-                                for (Rutas rutas : estanMejorados) {
-                                    if (rutas.rutaOriginal == rutaOriginal) {
-                                        System.out.println(rutas.rutaMejorada);
-                                        AudioEnhanceFile.eliminarArchivo(rutas.rutaMejorada);
-                                        listModel.remove(index);
+                        SwingUtilities.invokeLater(() -> {
+                            MsgConfirmar msgConfirmar = new MsgConfirmar("¿NO mejorar la cancion " + jList2.getSelectedValue() + " ?");
+                            msgConfirmar.setVisible(true);
 
-                                        break;
+                            // Crear un SwingWorker para esperar hasta que el usuario tome una decisión
+                            new SwingWorker<Void, Void>() {
+                                @Override
+                                protected Void doInBackground() {
+                                    // Esperar hasta que el usuario tome una decisión
+                                    while (msgConfirmar.isConfirmed() == -1) {
+                                        try {
+                                            Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+                                    return null;
                                 }
-                                break;
-                            }
 
-                        }
-                        int cancionesAcuales = listModel.getSize();
-                        jLabel3.setText("¡Se han detectado " + cancionesAcuales + " canciones que necesitan ser mejoradas! ");
-                        if (listModel.getSize() == 1) {
-                            jLabel1.setText(listModel.getSize() + " cancion");
+                                @Override
+                                protected void done() {
+                                    // Obtener el resultado y continuar con la lógica
+                                    int resultado = msgConfirmar.isConfirmed();
+                                    if (resultado == 1) {
+                                        MsgLoadd cargando = new MsgLoadd();
+                                        cargando.setVisible(true);
+                                        Thread backgroundProcessThread = new Thread(() -> {
+                                            String rutaOriginal = "";
+                                            String rutaMejorada = "";
+                                            for (FileEntry FileEntry : directoryFiles.files) {
+                                                if (FileEntry.filePath == jList2.getSelectedValue()) {
+                                                    rutaOriginal = FileEntry.absoluteFilePath;
+                                                    for (Rutas rutas : estanMejorados) {
+                                                        if (rutas.rutaOriginal == rutaOriginal) {
+                                                            rutaMejorada = rutas.rutaMejorada;
+                                                            System.out.println(rutas.rutaMejorada);
 
-                        } else {
-                            jLabel1.setText(listModel.getSize() + " canciones");
+                                                            break;
+                                                        }
+                                                    }
+                                                    break;
+                                                }
 
-                        }
-// AudioEnhanceFile.eliminarArchivo(route1);
+                                            }
+                                            AudioEnhanceFile.eliminarArchivo(rutaMejorada);
+                                            listModel.remove(index);
+                                            int cancionesAcuales = listModel.getSize();
+                                            jLabel3.setText("¡Se han detectado " + cancionesAcuales + " canciones que necesitan ser mejoradas! ");
+                                            if (listModel.getSize() == 1) {
+                                                jLabel1.setText(listModel.getSize() + " cancion");
+
+                                            } else {
+                                                jLabel1.setText(listModel.getSize() + " canciones");
+
+                                            }
+                                            MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+                                            cambiosrealizados.setVisible(true);
+                                            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                                            //termine el proceso haz que se quite la ventana de cargando.
+                                            // Actualizar el estado del JFrame
+                                            SwingUtilities.invokeLater(() -> {
+                                            });
+                                        });
+                                        backgroundProcessThread.start();
+                                        System.out.println("El usuario confirmó.");
+                                    } else if (resultado == 0) {
+                                        // Código a ejecutar si el usuario cancela
+                                        System.out.println("El usuario canceló.");
+                                    }
+                                    msgConfirmar.setVisible(false);
+                                }
+                            }.execute();
+                        });
                     });
 
                     convertir.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(null, "Convertir clicked for: " + item);
-                        // TODO: Add logic for "Convertir"
+                        SwingUtilities.invokeLater(() -> {
+                            MsgConfirmar msgConfirmar = new MsgConfirmar("¿Aplicar mejoras a la cancion " + jList2.getSelectedValue() + " ?");
+                            msgConfirmar.setVisible(true);
+
+                            // Crear un SwingWorker para esperar hasta que el usuario tome una decisión
+                            new SwingWorker<Void, Void>() {
+                                @Override
+                                protected Void doInBackground() {
+                                    // Esperar hasta que el usuario tome una decisión
+                                    while (msgConfirmar.isConfirmed() == -1) {
+                                        try {
+                                            Thread.sleep(100); // Dormir por 100 milisegundos para no bloquear el hilo de UI
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                protected void done() {
+                                    // Obtener el resultado y continuar con la lógica
+                                    int resultado = msgConfirmar.isConfirmed();
+                                    if (resultado == 1) {
+                                        MsgLoadd cargando = new MsgLoadd();
+                                        cargando.setVisible(true);
+                                        Thread backgroundProcessThread = new Thread(() -> {
+                                            String rutaOriginal = "";
+                                            String rutaMejorada = "";
+                                            for (FileEntry FileEntry : directoryFiles.files) {
+                                                if (FileEntry.filePath == jList2.getSelectedValue()) {
+                                                    rutaOriginal = FileEntry.absoluteFilePath;
+                                                    for (Rutas rutas : estanMejorados) {
+                                                        if (rutas.rutaOriginal == rutaOriginal) {
+                                                            rutaMejorada = rutas.rutaMejorada;
+                                                            System.out.println(rutas.rutaMejorada);
+
+                                                            break;
+                                                        }
+                                                    }
+                                                    break;
+                                                }
+
+                                            }
+                                            AudioEnhanceFile.replaceFile(rutaOriginal, rutaMejorada);
+                                            AudioEnhanceFile.eliminarArchivo(rutaMejorada);
+                                            listModel.remove(index);
+                                            int cancionesAcuales = listModel.getSize();
+                                            jLabel3.setText("¡Se han detectado " + cancionesAcuales + " canciones que necesitan ser mejoradas! ");
+                                            if (listModel.getSize() == 1) {
+                                                jLabel1.setText(listModel.getSize() + " cancion");
+
+                                            } else {
+                                                jLabel1.setText(listModel.getSize() + " canciones");
+
+                                            }
+                                            MsgEmerge cambiosrealizados = new MsgEmerge("Los cambios han sido realizados");
+                                            cambiosrealizados.setVisible(true);
+
+                                            cargando.setVisible(false);  //por ejemplo pones para que se ejecute una ventana de cargando, cuando
+                                            //termine el proceso haz que se quite la ventana de cargando.
+
+                                            // Actualizar el estado del JFrame
+                                            SwingUtilities.invokeLater(() -> {
+
+                                            });
+                                        });
+                                        backgroundProcessThread.start();
+
+                                        System.out.println("El usuario confirmó.");
+
+                                    } else if (resultado == 0) {
+                                        // Código a ejecutar si el usuario cancela
+                                        System.out.println("El usuario canceló.");
+                                    }
+                                    msgConfirmar.setVisible(false);
+                                }
+                            }.execute();
+                        });
                     });
 
                     popup.add(noConvertir);
