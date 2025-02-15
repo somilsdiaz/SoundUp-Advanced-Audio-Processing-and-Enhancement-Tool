@@ -74,35 +74,6 @@ public class panelDir extends javax.swing.JPanel {
 
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
-        jList2.setCellRenderer(new AudioListRenderer());
-
-        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int index = jList2.locationToIndex(evt.getPoint());
-                if (index != -1) {
-                    String item = listModel.getElementAt(index);
-
-                    JPopupMenu popup = new JPopupMenu();
-                    JMenuItem noConvertir = new JMenuItem("No Convertir");
-                    JMenuItem convertir = new JMenuItem("Convertir");
-
-                    noConvertir.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(null, "No Convertir clicked for: " + item);
-                        // TODO: Add logic for "No Convertir"
-                    });
-
-                    convertir.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(null, "Convertir clicked for: " + item);
-                        // TODO: Add logic for "Convertir"
-                    });
-
-                    popup.add(noConvertir);
-                    popup.add(convertir);
-
-                    popup.show(jList2, evt.getX(), evt.getY());
-                }
-            }
-        });
 
         numerodecanciones = RMS.AudioEnhanceDir.TotalCanciones;
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");
@@ -203,6 +174,62 @@ public class panelDir extends javax.swing.JPanel {
         });
 
         System.out.println("\nTodos los archivos:");
+
+        jList2.setCellRenderer(new AudioListRenderer());
+
+        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int index = jList2.locationToIndex(evt.getPoint());
+                if (index != -1) {
+                    String item = listModel.getElementAt(index);
+
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem noConvertir = new JMenuItem("No Convertir");
+                    JMenuItem convertir = new JMenuItem("Convertir");
+
+                    noConvertir.addActionListener(e -> {
+                        JOptionPane.showMessageDialog(null, "No Convertir clicked for: " + item);
+                        for (FileEntry FileEntry : directoryFiles.files) {
+                            if (FileEntry.filePath == jList2.getSelectedValue()) {
+                                String rutaOriginal = FileEntry.absoluteFilePath;
+                                for (Rutas rutas : estanMejorados) {
+                                    if (rutas.rutaOriginal == rutaOriginal) {
+                                        System.out.println(rutas.rutaMejorada);
+                                        AudioEnhanceFile.eliminarArchivo(rutas.rutaMejorada);
+                                        listModel.remove(index);
+
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+
+                        }
+                        int cancionesAcuales = listModel.getSize();
+                        jLabel3.setText("¡Se han detectado " + cancionesAcuales + " canciones que necesitan ser mejoradas! ");
+                        if (listModel.getSize() == 1) {
+                            jLabel1.setText(listModel.getSize() + " cancion");
+
+                        } else {
+                            jLabel1.setText(listModel.getSize() + " canciones");
+
+                        }
+// AudioEnhanceFile.eliminarArchivo(route1);
+                    });
+
+                    convertir.addActionListener(e -> {
+                        JOptionPane.showMessageDialog(null, "Convertir clicked for: " + item);
+                        // TODO: Add logic for "Convertir"
+                    });
+
+                    popup.add(noConvertir);
+                    popup.add(convertir);
+
+                    popup.show(jList2, evt.getX(), evt.getY());
+                }
+            }
+        });
+
     }
 
     /**
