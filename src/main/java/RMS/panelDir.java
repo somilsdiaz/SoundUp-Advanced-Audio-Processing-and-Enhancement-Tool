@@ -31,6 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -71,6 +74,35 @@ public class panelDir extends javax.swing.JPanel {
 
         listModel = new DefaultListModel<>();
         jList2.setModel(listModel);
+        jList2.setCellRenderer(new AudioListRenderer());
+
+        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int index = jList2.locationToIndex(evt.getPoint());
+                if (index != -1) {
+                    String item = listModel.getElementAt(index);
+
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem noConvertir = new JMenuItem("No Convertir");
+                    JMenuItem convertir = new JMenuItem("Convertir");
+
+                    noConvertir.addActionListener(e -> {
+                        JOptionPane.showMessageDialog(null, "No Convertir clicked for: " + item);
+                        // TODO: Add logic for "No Convertir"
+                    });
+
+                    convertir.addActionListener(e -> {
+                        JOptionPane.showMessageDialog(null, "Convertir clicked for: " + item);
+                        // TODO: Add logic for "Convertir"
+                    });
+
+                    popup.add(noConvertir);
+                    popup.add(convertir);
+
+                    popup.show(jList2, evt.getX(), evt.getY());
+                }
+            }
+        });
 
         numerodecanciones = RMS.AudioEnhanceDir.TotalCanciones;
         jLabel3.setText("¡Se han detectado " + numerodecanciones + " canciones que necesitan ser mejoradas! ");

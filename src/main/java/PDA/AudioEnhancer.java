@@ -56,6 +56,8 @@ public class AudioEnhancer {
         // Comprobar memoria disponible antes de aplicar el filtro Band Pass
         if (isMemorySufficient(audioData.length)) {
             applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
+            applyLowShelfFilter(audioData, 44100, 200, 6);
+
         } else {
             System.out.println("Memoria insuficiente para aplicar el filtro Band Pass. Se omite el proceso.");
         }
@@ -200,6 +202,53 @@ public class AudioEnhancer {
         System.arraycopy(filteredData, 0, audioData, 0, n);
     }
 
+private static void applyLowShelfFilter(double[] audioData, float sampleRate, double cutoffFrequency, double gain) {
+    int n = audioData.length;
+
+    // Convert gain from dB to linear scale
+    double A = Math.pow(10, gain / 40); // Gain factor
+
+    // Compute normalized angular frequency
+    double w0 = 2 * Math.PI * cutoffFrequency / sampleRate;
+    double cosw0 = Math.cos(w0);
+    double sinw0 = Math.sin(w0);
+
+    // Compute intermediate terms
+    double alpha = sinw0 / 2 * Math.sqrt((A + 1 / A) * (1 / 0.9 - 1) + 2);
+
+    // Compute filter coefficients
+    double a0 = (A + 1) + (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha;
+    double a1 = -2 * ((A - 1) + (A + 1) * cosw0);
+    double a2 = (A + 1) + (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha;
+
+    double b0 = A * ((A + 1) - (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha);
+    double b1 = 2 * A * ((A - 1) - (A + 1) * cosw0);
+    double b2 = A * ((A + 1) - (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha);
+
+    // Normalize coefficients by a0
+    double normA0 = 1 / a0;
+    b0 *= normA0;
+    b1 *= normA0;
+    b2 *= normA0;
+    a1 *= normA0;
+    a2 *= normA0;
+
+    // Apply the filter
+    double[] filteredData = new double[n];
+    filteredData[0] = b0 * audioData[0];
+    filteredData[1] = b0 * audioData[1] + b1 * audioData[0] - a1 * filteredData[0];
+
+    for (int i = 2; i < n; i++) {
+        filteredData[i] = b0 * audioData[i] + b1 * audioData[i - 1] + b2 * audioData[i - 2]
+                - a1 * filteredData[i - 1] - a2 * filteredData[i - 2];
+    }
+
+    // Copy the filtered data back to the original array
+    System.arraycopy(filteredData, 0, audioData, 0, n);
+}
+    
+    
+    
     private static void normalizeVolume(double[] audioData) {
         double max = 0.0;
         for (double sample : audioData) {
@@ -227,7 +276,7 @@ public class AudioEnhancer {
             normalizationDispatcher.addAudioProcessor(new GainProcessor(1.0f));
             double sampleRate = 44100.0;
             double maxFlangerLength = 0.003;
-            double wet = 0.5;
+            double wet = 0.0;
             double lfoFrequency = 0.25;
             FlangerEffect flangerEffect = new FlangerEffect(maxFlangerLength, wet, sampleRate, lfoFrequency);
             normalizationDispatcher.addAudioProcessor(flangerEffect);
