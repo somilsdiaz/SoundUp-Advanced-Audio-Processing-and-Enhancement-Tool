@@ -155,7 +155,6 @@ public class StartMenu extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(47, 237, 203));
-        jLabel1.setText("v4.4");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(240, 40, 180, 40);
 

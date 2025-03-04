@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package PDA;
 
 import RMS.AudioEnhanceFile;
@@ -31,9 +27,15 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AudioEnhancer {
+    // Add professional audio processing constants
+    private static final double WARM_BASS_FREQ = 120.0;
+    private static final double PRESENCE_FREQ = 5000.0;
+    private static final double AIR_FREQ = 12000.0;
+    private static final double CLARITY_FREQ = 2500.0;
 
     static Path tempFilesDirectory = Paths.get(System.getProperty("user.home"), "tempfiles");
 
+    // Enhanced audio processing method
     public static void enhanceAudio(File inputFile, File outputFile) throws UnsupportedAudioFileException, IOException {
         AudioFormat format;
         double[] audioData;
@@ -44,34 +46,35 @@ public class AudioEnhancer {
             audioData = byteArrayToDoubleArray(audioBytes, format);
         }
 
-        double gain = 1.0f; // Ganancia para aumentar brillo
-
-        // Comprobar memoria disponible antes de aplicar el filtro High Shelf
+        // Professional multi-stage processing pipeline
         if (isMemorySufficient(audioData.length)) {
-            applyHighShelfFilter(audioData, format.getSampleRate(), 600.0, gain);
+            /*
+            // Stage 1: Frequency Balance
+            applyLowShelfFilter(audioData, format.getSampleRate(), WARM_BASS_FREQ, 3.0); // Warm bass
+            applyHighShelfFilter(audioData, format.getSampleRate(), AIR_FREQ, 2.0); // Air and brightness
+
+            // Stage 2: Presence and Clarity
+            applyParametricEQ(audioData, format.getSampleRate(), PRESENCE_FREQ, 1.5, 0.7); // Presence
+            applyParametricEQ(audioData, format.getSampleRate(), CLARITY_FREQ, 2.0, 0.5); // Clarity
+
+            // Stage 3: Dynamic Processing
+            applyMultibandCompression(audioData, format.getSampleRate());
+            applyHarmonicExciter(audioData, format.getSampleRate());
+
+            // Stage 4: Stereo Enhancement
+            if (format.getChannels() == 2) {
+                applyStereoWidening(audioData);
+            }
+
+            // Final Stage: Mastering
+            applyLimiter(audioData, -0.3); // Prevent clipping
+            normalizeVolume(audioData);*/
         } else {
-            System.out.println("Memoria insuficiente para aplicar el filtro High Shelf. Se omite el proceso.");
+            System.out.println("No pasa No pasa No pasa");
         }
-
-        // Comprobar memoria disponible antes de aplicar el filtro Band Pass
-        if (isMemorySufficient(audioData.length)) {
-            applyBandPassFilter(audioData, format.getSampleRate(), 250.0, 500.0, 6.0);
-            applyLowShelfFilter(audioData, 44100, 200, 6);
-
-        } else {
-            System.out.println("Memoria insuficiente para aplicar el filtro Band Pass. Se omite el proceso.");
-        }
-
-        // Normalizar volumen
-        normalizeVolume(audioData);
 
         byte[] enhancedBytes = doubleArrayToByteArray(audioData, format);
-
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(enhancedBytes); AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, audioData.length)) {
-            AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
-        }
-
-        System.out.println("Audio enhancement complete. Output saved to: " + outputFile.getAbsolutePath());
+        writeEnhancedAudio(enhancedBytes, format, outputFile);
     }
 
     private static boolean isMemorySufficient(int dataLength) {
@@ -202,53 +205,51 @@ public class AudioEnhancer {
         System.arraycopy(filteredData, 0, audioData, 0, n);
     }
 
-private static void applyLowShelfFilter(double[] audioData, float sampleRate, double cutoffFrequency, double gain) {
-    int n = audioData.length;
+    private static void applyLowShelfFilter(double[] audioData, float sampleRate, double cutoffFrequency, double gain) {
+        int n = audioData.length;
 
-    // Convert gain from dB to linear scale
-    double A = Math.pow(10, gain / 40); // Gain factor
+        // Convert gain from dB to linear scale
+        double A = Math.pow(10, gain / 40); // Gain factor
 
-    // Compute normalized angular frequency
-    double w0 = 2 * Math.PI * cutoffFrequency / sampleRate;
-    double cosw0 = Math.cos(w0);
-    double sinw0 = Math.sin(w0);
+        // Compute normalized angular frequency
+        double w0 = 2 * Math.PI * cutoffFrequency / sampleRate;
+        double cosw0 = Math.cos(w0);
+        double sinw0 = Math.sin(w0);
 
-    // Compute intermediate terms
-    double alpha = sinw0 / 2 * Math.sqrt((A + 1 / A) * (1 / 0.9 - 1) + 2);
+        // Compute intermediate terms
+        double alpha = sinw0 / 2 * Math.sqrt((A + 1 / A) * (1 / 0.9 - 1) + 2);
 
-    // Compute filter coefficients
-    double a0 = (A + 1) + (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha;
-    double a1 = -2 * ((A - 1) + (A + 1) * cosw0);
-    double a2 = (A + 1) + (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha;
+        // Compute filter coefficients
+        double a0 = (A + 1) + (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha;
+        double a1 = -2 * ((A - 1) + (A + 1) * cosw0);
+        double a2 = (A + 1) + (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha;
 
-    double b0 = A * ((A + 1) - (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha);
-    double b1 = 2 * A * ((A - 1) - (A + 1) * cosw0);
-    double b2 = A * ((A + 1) - (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha);
+        double b0 = A * ((A + 1) - (A - 1) * cosw0 + 2 * Math.sqrt(A) * alpha);
+        double b1 = 2 * A * ((A - 1) - (A + 1) * cosw0);
+        double b2 = A * ((A + 1) - (A - 1) * cosw0 - 2 * Math.sqrt(A) * alpha);
 
-    // Normalize coefficients by a0
-    double normA0 = 1 / a0;
-    b0 *= normA0;
-    b1 *= normA0;
-    b2 *= normA0;
-    a1 *= normA0;
-    a2 *= normA0;
+        // Normalize coefficients by a0
+        double normA0 = 1 / a0;
+        b0 *= normA0;
+        b1 *= normA0;
+        b2 *= normA0;
+        a1 *= normA0;
+        a2 *= normA0;
 
-    // Apply the filter
-    double[] filteredData = new double[n];
-    filteredData[0] = b0 * audioData[0];
-    filteredData[1] = b0 * audioData[1] + b1 * audioData[0] - a1 * filteredData[0];
+        // Apply the filter
+        double[] filteredData = new double[n];
+        filteredData[0] = b0 * audioData[0];
+        filteredData[1] = b0 * audioData[1] + b1 * audioData[0] - a1 * filteredData[0];
 
-    for (int i = 2; i < n; i++) {
-        filteredData[i] = b0 * audioData[i] + b1 * audioData[i - 1] + b2 * audioData[i - 2]
-                - a1 * filteredData[i - 1] - a2 * filteredData[i - 2];
+        for (int i = 2; i < n; i++) {
+            filteredData[i] = b0 * audioData[i] + b1 * audioData[i - 1] + b2 * audioData[i - 2]
+                    - a1 * filteredData[i - 1] - a2 * filteredData[i - 2];
+        }
+
+        // Copy the filtered data back to the original array
+        System.arraycopy(filteredData, 0, audioData, 0, n);
     }
 
-    // Copy the filtered data back to the original array
-    System.arraycopy(filteredData, 0, audioData, 0, n);
-}
-    
-    
-    
     private static void normalizeVolume(double[] audioData) {
         double max = 0.0;
         for (double sample : audioData) {
@@ -276,7 +277,7 @@ private static void applyLowShelfFilter(double[] audioData, float sampleRate, do
             normalizationDispatcher.addAudioProcessor(new GainProcessor(1.0f));
             double sampleRate = 44100.0;
             double maxFlangerLength = 0.003;
-            double wet = 0.0;
+            double wet = 0.25;
             double lfoFrequency = 0.25;
             FlangerEffect flangerEffect = new FlangerEffect(maxFlangerLength, wet, sampleRate, lfoFrequency);
             normalizationDispatcher.addAudioProcessor(flangerEffect);
@@ -384,24 +385,213 @@ private static void applyLowShelfFilter(double[] audioData, float sampleRate, do
         String inputFileName = AudioOriginalWav.getName();
         String inputFileNameWithoutExtension = inputFileName.substring(0, inputFileName.lastIndexOf('.'));
 
-        String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav"; //ESTE HAY QUE ELIMINARLO8
+        String mascaraAudioPDApatch = tempFilesDirectory.toString() + "/pdaMask_" + inputFileNameWithoutExtension + ".wav";
         File mascaraAudioPDA = new File(mascaraAudioPDApatch);
 
         try {
+            // Enhance the audio
             enhanceAudio(AudioOriginalWav, mascaraAudioPDA);
-            String normalized_mask = normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
-            String normalized_temp = AudioEnhanceFile.convertToWavString(normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav));
-            File AudioMidlePDA = new File(normalized_temp);
 
+            // Normalize the enhanced audio
+            String normalizedMaskPath = normalizeAudioVolume(mascaraAudioPDA, AudioOriginalWav);
+            File normalizedMaskFile = new File(normalizedMaskPath);
+
+            // Convert the normalized audio to WAV format
+            String normalizedTempPath = AudioEnhanceFile.convertToWavString(normalizedMaskPath);
+            File AudioMidlePDA = new File(normalizedTempPath);
+
+            // Mix the normalized audio with the original audio
             String AudioPDApatch = tempFilesDirectory.toString() + "/PDA_" + inputFileNameWithoutExtension + ".wav";
             File AudioPDA = new File(AudioPDApatch);
             mixAudioFiles(AudioMidlePDA, AudioOriginalWav, AudioPDA);
+
+            // Clean up temporary files
             RMS.AudioEnhanceFile.eliminarArchivo(mascaraAudioPDApatch);
-            RMS.AudioEnhanceFile.eliminarArchivo(normalized_temp);
-            RMS.AudioEnhanceFile.eliminarArchivo(normalized_mask);
+            RMS.AudioEnhanceFile.eliminarArchivo(normalizedTempPath);
+            RMS.AudioEnhanceFile.eliminarArchivo(normalizedMaskPath);
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
 
+    // New professional-grade processing methods
+    private static void applyParametricEQ(double[] audioData, float sampleRate, double centerFreq, double gain, double q) {
+        double w0 = 2.0 * Math.PI * centerFreq / sampleRate;
+        double alpha = Math.sin(w0) / (2.0 * q);
+        double A = Math.pow(10.0, gain / 40.0);
+
+        double b0 = 1.0 + alpha * A;
+        double b1 = -2.0 * Math.cos(w0);
+        double b2 = 1.0 - alpha * A;
+        double a0 = 1.0 + alpha / A;
+        double a1 = -2.0 * Math.cos(w0);
+        double a2 = 1.0 - alpha / A;
+
+        applyBiquadFilter(audioData, b0, b1, b2, a0, a1, a2);
+    }
+
+    private static void applyMultibandCompression(double[] audioData, float sampleRate) {
+        double[] lowBand = new double[audioData.length];
+        double[] midBand = new double[audioData.length];
+        double[] highBand = new double[audioData.length];
+
+        // Crossover frequencies
+        double lowCrossover = 200.0;
+        double highCrossover = 2000.0;
+
+        // Split into frequency bands
+        splitBands(audioData, lowBand, midBand, highBand, sampleRate, lowCrossover, highCrossover);
+
+        // Apply compression to each band
+        compressBand(lowBand, -24.0, 4.0, 0.1, 0.2); // Bass
+        compressBand(midBand, -18.0, 3.0, 0.1, 0.15); // Mids
+        compressBand(highBand, -12.0, 2.0, 0.05, 0.1); // Highs
+
+        // Sum the bands back together
+        for (int i = 0; i < audioData.length; i++) {
+            audioData[i] = lowBand[i] + midBand[i] + highBand[i];
+        }
+    }
+
+    private static void applyHarmonicExciter(double[] audioData, float sampleRate) {
+        double driveAmount = 0.3;
+        double mixAmount = 0.2;
+
+        double[] harmonics = new double[audioData.length];
+        for (int i = 0; i < audioData.length; i++) {
+            // Generate harmonics using wave shaping
+            double shaped = Math.tanh(audioData[i] * driveAmount);
+            harmonics[i] = shaped - audioData[i]; // Extract harmonics
+
+            // Mix harmonics back with dry signal
+            audioData[i] = audioData[i] + (harmonics[i] * mixAmount);
+        }
+    }
+
+    private static void applyStereoWidening(double[] audioData) {
+        double widthAmount = 0.3;
+
+        for (int i = 0; i < audioData.length - 1; i += 2) {
+            double left = audioData[i];
+            double right = audioData[i + 1];
+
+            // Mid-Side processing
+            double mid = (left + right) * 0.5;
+            double side = (left - right) * 0.5;
+
+            // Enhance stereo width
+            side *= (1.0 + widthAmount);
+
+            // Convert back to Left-Right
+            audioData[i] = mid + side;
+            audioData[i + 1] = mid - side;
+        }
+    }
+
+    private static void applyLimiter(double[] audioData, double threshold) {
+        double releaseTime = 0.1; // seconds
+        double ceiling = Math.pow(10.0, threshold / 20.0);
+        double release = Math.exp(-1.0 / (releaseTime * 44100.0));
+
+        double gain = 1.0;
+        for (int i = 0; i < audioData.length; i++) {
+            double absample = Math.abs(audioData[i]);
+            if (absample * gain > ceiling) {
+                gain = ceiling / absample;
+            } else {
+                gain = gain * release + (1.0 - release);
+            }
+            audioData[i] *= gain;
+        }
+    }
+
+    private static void applyBiquadFilter(double[] audioData, double b0, double b1, double b2, double a0, double a1, double a2) {
+        int n = audioData.length;
+        double[] filteredData = new double[n];
+        filteredData[0] = (b0 / a0) * audioData[0];
+        filteredData[1] = (b0 / a0) * audioData[1] + (b1 / a0) * audioData[0] - (a1 / a0) * filteredData[0];
+
+        for (int i = 2; i < n; i++) {
+            filteredData[i] = (b0 / a0) * audioData[i] + (b1 / a0) * audioData[i - 1] + (b2 / a0) * audioData[i - 2]
+                    - (a1 / a0) * filteredData[i - 1] - (a2 / a0) * filteredData[i - 2];
+        }
+
+        System.arraycopy(filteredData, 0, audioData, 0, n);
+    }
+
+    private static void splitBands(double[] audioData, double[] lowBand, double[] midBand, double[] highBand, float sampleRate, double lowCrossover, double highCrossover) {
+        int n = audioData.length;
+        double[] lowPass = new double[n];
+        double[] highPass = new double[n];
+
+        // Low-pass filter for low band
+        applyLowPassFilter(audioData, lowPass, sampleRate, lowCrossover);
+
+        // High-pass filter for high band
+        applyHighPassFilter(audioData, highPass, sampleRate, highCrossover);
+
+        // Mid band is the difference between original and low+high bands
+        for (int i = 0; i < n; i++) {
+            lowBand[i] = lowPass[i];
+            highBand[i] = highPass[i];
+            midBand[i] = audioData[i] - lowPass[i] - highPass[i];
+        }
+    }
+
+    private static void applyLowPassFilter(double[] audioData, double[] lowPass, float sampleRate, double cutoffFrequency) {
+        int n = audioData.length;
+        double w0 = 2.0 * Math.PI * cutoffFrequency / sampleRate;
+        double alpha = Math.sin(w0) / 2.0;
+        double b0 = (1.0 - Math.cos(w0)) / 2.0;
+        double b1 = 1.0 - Math.cos(w0);
+        double b2 = (1.0 - Math.cos(w0)) / 2.0;
+        double a0 = 1.0 + alpha;
+        double a1 = -2.0 * Math.cos(w0);
+        double a2 = 1.0 - alpha;
+
+        applyBiquadFilter(audioData, b0, b1, b2, a0, a1, a2);
+    }
+
+    private static void applyHighPassFilter(double[] audioData, double[] highPass, float sampleRate, double cutoffFrequency) {
+        int n = audioData.length;
+        double w0 = 2.0 * Math.PI * cutoffFrequency / sampleRate;
+        double alpha = Math.sin(w0) / 2.0;
+        double b0 = (1.0 + Math.cos(w0)) / 2.0;
+        double b1 = -(1.0 + Math.cos(w0));
+        double b2 = (1.0 + Math.cos(w0)) / 2.0;
+        double a0 = 1.0 + alpha;
+        double a1 = -2.0 * Math.cos(w0);
+        double a2 = 1.0 - alpha;
+
+        applyBiquadFilter(audioData, b0, b1, b2, a0, a1, a2);
+    }
+
+    private static void compressBand(double[] band, double threshold, double ratio, double attackTime, double releaseTime) {
+        double attack = Math.exp(-1.0 / (attackTime * 44100.0));
+        double release = Math.exp(-1.0 / (releaseTime * 44100.0));
+        double gain = 1.0;
+        double thresholdLinear = Math.pow(10.0, threshold / 20.0);
+
+        for (int i = 0; i < band.length; i++) {
+            double absample = Math.abs(band[i]);
+            if (absample > thresholdLinear) {
+                double overThreshold = absample - thresholdLinear;
+                double compressed = thresholdLinear + overThreshold / ratio;
+                gain = compressed / absample;
+            } else {
+                gain = 1.0;
+            }
+
+            gain = gain * attack + (1.0 - attack);
+            band[i] *= gain;
+        }
+    }
+
+    private static void writeEnhancedAudio(byte[] enhancedBytes, AudioFormat format, File outputFile) throws IOException {
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(enhancedBytes); AudioInputStream enhancedAudioInputStream = new AudioInputStream(bais, format, enhancedBytes.length / format.getFrameSize())) {
+            AudioSystem.write(enhancedAudioInputStream, AudioFileFormat.Type.WAVE, outputFile);
+        }
+
+        System.out.println("Audio enhancement complete. Output saved to: " + outputFile.getAbsolutePath());
+    }
 }
