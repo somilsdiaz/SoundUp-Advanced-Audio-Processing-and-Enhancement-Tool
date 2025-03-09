@@ -8,6 +8,7 @@
 ## 🎵 Overview
 
 SoundUp is a professional-grade audio enhancement and processing application designed to improve the quality of audio files. Built with Java and leveraging advanced digital signal processing techniques, SoundUp provides a comprehensive suite of tools for audio professionals and enthusiasts alike.
+![image](https://github.com/user-attachments/assets/35740a5f-a228-4636-ad44-6959321490a9)
 
 ## ✨ Features
 
@@ -28,12 +29,14 @@ SoundUp is a professional-grade audio enhancement and processing application des
 - Directory tree navigation
 - Intelligent file sorting and filtering
 - Support for multiple audio formats including WAV, MP3, and more
+![image](https://github.com/user-attachments/assets/e03acf07-3575-4238-9882-749f8900285a)
 
 ### 🎛️ User Experience
 - Modern and intuitive graphical user interface
 - Real-time audio visualization
 - Comparative before/after listening options
 - Customizable processing parameters
+![image](https://github.com/user-attachments/assets/5d28451c-969c-4ff0-a3da-68e45fde95ec)
 
 ## 🚀 Installation
 
@@ -83,6 +86,9 @@ SoundUp is organized into several key modules:
 - **ConvertirStereo**: Stereo processing and channel management
 - **MsgEmergentes**: User interface notifications and dialogs
 - **Directorios**: File system navigation and management
+
+![image](https://github.com/user-attachments/assets/04242ec6-367b-4f3e-b26e-b0efeef5f795)
+![image](https://github.com/user-attachments/assets/2fa38ebe-4821-454f-832f-254b97f66286)
 
 ## 🔧 Development
 
