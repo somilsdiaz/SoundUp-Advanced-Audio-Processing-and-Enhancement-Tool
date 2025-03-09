@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="https://github.com/user/SoundUp/raw/main/src/main/java/resources/logo.png" alt="SoundUp Logo" width="200"/>
+  <img src="https://github.com/somilsdiaz/SoundUp-Advanced-Audio-Processing-and-Enhancement-Tool/blob/main/src/main/java/resources/iconMain.png" alt="SoundUp Logo" width="200"/>
 </p>
 
 ## 🎵 Overview
