@@ -20,7 +20,7 @@
 - [Technical Implementation](#-technical-implementation)
 - [Screenshots](#-screenshots)
 - [Installation Guide](#-installation-guide)
-- [Development Tools](#-development-process)
+- [Development Tools](#-development-tools)
 - [Architectural Design](#-architectural-design)
 - [Contributing](#-contributing)
 - [Contact](#-contact)
